@@ -36,22 +36,23 @@ extern const clap_plugin *makePlugin(const clap_host *, bool);
  */
 const clap_plugin_descriptor *getDescriptor()
 {
-    static const char *features[] = {CLAP_PLUGIN_FEATURE_INSTRUMENT,
-                                     CLAP_PLUGIN_FEATURE_SYNTHESIZER, "Free and Open Source",
-                                     "Subtractive", nullptr};
+    static const char *features[] = {CLAP_PLUGIN_FEATURE_AUDIO_EFFECT,
+                                     CLAP_PLUGIN_FEATURE_ANALYZER,
+                                     CLAP_PLUGIN_FEATURE_STEREO,
+                                     "Free and Open Source", nullptr};
 
     static char versionNum[1024];
 
     static clap_plugin_descriptor desc = {
         CLAP_VERSION,
-        "org.baconpaul.sidequest",
+        "com.soundemote.prettyscope",
         PRODUCT_NAME,
-        "BaconPaul",
-        "https://baconpaul.org",
+        "Soundemote",
+        "https://soundemote.com",
         "",
         "",
         sst::plugininfra::VersionInformation::project_version_and_hash,
-        "Run of the mill subtractive synth. Almost.",
+        "OpenGL oscilloscope and signal visualizer.",
         &features[0]};
     return &desc;
 }
@@ -120,15 +121,15 @@ const void *get_factory(const char *factory_id)
     if (strcmp(factory_id, CLAP_PLUGIN_FACTORY_INFO_AUV2) == 0)
     {
         static const struct clap_plugin_factory_as_auv2 sidequest_auv2_factory = {
-            "BcPL",      // manu
-            "BaconPaul", // manu name
+            "SndE",      // manu
+            "Soundemote", // manu name
             clap_get_auv2_info};
         return &sidequest_auv2_factory;
     }
     if (strcmp(factory_id, CLAP_PLUGIN_FACTORY_INFO_VST3) == 0)
     {
         static const struct clap_plugin_factory_as_vst3 sidequest_vst3_factory = {
-            "BaconPaul", "https://baconpaul.org", "", clap_get_vst3_info};
+            "Soundemote", "https://soundemote.com", "", clap_get_vst3_info};
 
         return &sidequest_vst3_factory;
     }
@@ -138,7 +139,7 @@ const void *get_factory(const char *factory_id)
 bool clap_init(const char *p)
 {
     // sst::plugininfra::misc_platform::allocateConsole();
-    SQLOG("Initializing SideQuest "
+    SQLOG("Initializing Prettyscope "
           << sst::plugininfra::VersionInformation::project_version_and_hash << " / "
           << sst::plugininfra::VersionInformation::git_implied_display_version);
     return true;

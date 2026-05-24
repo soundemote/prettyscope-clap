@@ -22,7 +22,7 @@
 
 #include <cmrc/cmrc.hpp>
 
-CMRC_DECLARE(sidequest_patches);
+CMRC_DECLARE(prettyscope_patches);
 
 namespace baconpaul::sidequest_ns::presets
 {
@@ -32,7 +32,7 @@ PresetManager::PresetManager(const clap_host_t *ch) : clapHost(ch)
     try
     {
         userPath =
-            sst::plugininfra::paths::bestDocumentsVendorFolderPathFor("BaconPaul", "SideQuest");
+            sst::plugininfra::paths::bestDocumentsVendorFolderPathFor("Soundemote", "Prettyscope");
         if (clapHost)
             fs::create_directories(userPath);
         userPatchesPath = userPath / "Patches";
@@ -46,7 +46,7 @@ PresetManager::PresetManager(const clap_host_t *ch) : clapHost(ch)
 
     try
     {
-        auto fs = cmrc::sidequest_patches::get_filesystem();
+        auto fs = cmrc::prettyscope_patches::get_filesystem();
         for (const auto &d : fs.iterate_directory(factoryPath))
         {
             if (d.is_directory())
@@ -192,7 +192,7 @@ void PresetManager::loadFactoryPreset(Patch &patch, Engine::mainToAudioQueue_T &
 {
     try
     {
-        auto fs = cmrc::sidequest_patches::get_filesystem();
+        auto fs = cmrc::prettyscope_patches::get_filesystem();
         auto f = fs.open(std::string() + factoryPath + "/" + cat + "/" + pat);
         auto pb = std::string(f.begin(), f.end());
         patch.fromState(pb);

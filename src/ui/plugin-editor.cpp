@@ -37,13 +37,13 @@ struct IdleTimer : juce::Timer
 
 namespace jstl = sst::jucegui::style;
 using sheet_t = jstl::StyleSheet;
-static constexpr sheet_t::Class PatchMenu("sidequest.patch-menu");
+static constexpr sheet_t::Class PatchMenu("prettyscope.patch-menu");
 
 PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQueue_T &utoa,
                            const clap_host_t *h)
     : jcmp::WindowPanel(true), audioToUI(atou), mainToAudio(utoa), clapHost(h)
 {
-    setTitle("Side Quest - Replace this");
+    setTitle("Prettyscope");
     setAccessible(true);
     sst::jucegui::style::StyleSheet::initializeStyleSheets([]() {});
 
@@ -92,7 +92,7 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
 
     // this needs a cleanup
     defaultsProvider = std::make_unique<defaultsProvder_t>(
-        presetManager->userPath, "SideQuest", defaultName,
+        presetManager->userPath, "Prettyscope", defaultName,
         [](auto e, auto b) { SQLOG("[ERROR]" << e << " " << b); });
     setSkinFromDefaults();
 
@@ -577,7 +577,7 @@ void PluginEditor::showPresetPopup()
     p.addItem("Read the Manual", false, false, []() {});
     p.addItem("Get the Source",
               []() {
-                  juce::URL("https://github.com/baconpaul/sidequest-startingpoint/")
+                  juce::URL("https://github.com/soundemote/prettyscope-clap/")
                       .launchInDefaultBrowser();
               });
     p.addItem("Acknowledgements", false, false, []() {});
