@@ -284,6 +284,22 @@ TEST_CASE("Engine handles parameter rescan requests without CLAP host", "[params
     REQUIRE(message->action == baconpaul::sidequest_ns::Engine::AudioToUIMsg::DO_PARAM_RESCAN);
 }
 
+TEST_CASE("Engine ignores unknown parameter updates", "[params]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+    constexpr uint32_t unknownParameterId{0xffffffff};
+
+    REQUIRE(engine->patch.paramById(unknownParameterId) == nullptr);
+
+    engine->mainToAudio.push({baconpaul::sidequest_ns::Engine::MainToAudioMsg::SET_PARAM,
+                              unknownParameterId, 0.5f});
+    engine->process(nullptr, nullptr, 0, 0);
+    REQUIRE_FALSE(engine->patch.dirty);
+
+    engine->handleParamValue(nullptr, unknownParameterId, 0.25f);
+    REQUIRE_FALSE(engine->audioToUi.pop().has_value());
+}
+
 TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;

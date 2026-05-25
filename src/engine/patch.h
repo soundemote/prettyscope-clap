@@ -190,6 +190,28 @@ struct Patch : pats::PatchBase<Patch, Param>
 
     char name[256]{"Init"};
 
+    Param *paramById(uint32_t id)
+    {
+        auto it = paramMap.find(id);
+        if (it == paramMap.end())
+        {
+            return nullptr;
+        }
+
+        return it->second;
+    }
+
+    const Param *paramById(uint32_t id) const
+    {
+        auto it = paramMap.find(id);
+        if (it == paramMap.end())
+        {
+            return nullptr;
+        }
+
+        return it->second;
+    }
+
     float migrateParamValueFromVersion(Param *p, float value, uint32_t version);
     void migratePatchFromVersion(uint32_t version);
 };

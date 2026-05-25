@@ -282,7 +282,13 @@ void Engine::processUIQueue(const clap_output_events_t *outq)
         {
             bool notify = uiM->action == MainToAudioMsg::SET_PARAM;
 
-            auto dest = patch.paramMap.at(uiM->paramId);
+            auto *dest = patch.paramById(uiM->paramId);
+            if (!dest)
+            {
+                SQLOG("Ignoring update for unknown parameter id " << uiM->paramId);
+                break;
+            }
+
             if (notify)
             {
                 if (beginEndParamGestureCount == 0)
@@ -422,7 +428,12 @@ void Engine::handleParamValue(Param *p, uint32_t pid, float value)
 {
     if (!p)
     {
-        p = patch.paramMap.at(pid);
+        p = patch.paramById(pid);
+        if (!p)
+        {
+            SQLOG("Ignoring host update for unknown parameter id " << pid);
+            return;
+        }
     }
 
     // p->value = value;
