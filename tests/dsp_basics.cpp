@@ -185,6 +185,25 @@ TEST_CASE("Scope audio snapshot queue returns the latest published block", "[aud
     }
 }
 
+TEST_CASE("Scope audio snapshot queue ignores publishes while unsubscribed", "[audio]")
+{
+    baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;
+    float block[2][baconpaul::sidequest_ns::blockSize]{};
+    block[0][0] = 1.0f;
+    block[1][0] = -1.0f;
+
+    queue.publishFromPlanarStereo(block);
+    REQUIRE_FALSE(queue.readLatest().has_value());
+
+    queue.subscribe();
+    queue.publishFromPlanarStereo(block);
+    REQUIRE(queue.readLatest().has_value());
+
+    queue.unsubscribe();
+    queue.publishFromPlanarStereo(block);
+    REQUIRE_FALSE(queue.readLatest().has_value());
+}
+
 TEST_CASE("Engine publishes subscribed scope snapshots", "[audio]")
 {
     auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
