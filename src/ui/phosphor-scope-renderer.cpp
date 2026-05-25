@@ -16,6 +16,7 @@
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -52,10 +53,19 @@ struct SignalBuffer
 {
     std::vector<float> left;
     std::vector<float> right;
-    uint64_t lastSnapshotSerial{};
+    uint64_t lastSnapshotSerial{std::numeric_limits<uint64_t>::max()};
+    float lastTimeScale{};
 
     void append(const ScopeAudioSnapshot &snapshot, float timeScale, uint64_t snapshotSerial)
     {
+        const auto clampedScale = std::clamp(timeScale, 0.25f, 4.0f);
+        if (std::abs(clampedScale - lastTimeScale) > 0.001f)
+        {
+            left.clear();
+            right.clear();
+            lastTimeScale = clampedScale;
+        }
+
         if (snapshotSerial == lastSnapshotSerial)
         {
             return;
@@ -70,7 +80,6 @@ struct SignalBuffer
             return;
         }
 
-        const auto clampedScale = std::clamp(timeScale, 0.25f, 4.0f);
         const auto step = std::max<uint32_t>(1, static_cast<uint32_t>(std::round(clampedScale)));
         for (uint32_t i = 0; i < sourceFrames; i += step)
         {
@@ -698,7 +707,8 @@ struct PhosphorScopeRenderer::Impl
         quad.destroy();
         signal.left.clear();
         signal.right.clear();
-        signal.lastSnapshotSerial = 0;
+        signal.lastSnapshotSerial = std::numeric_limits<uint64_t>::max();
+        signal.lastTimeScale = 0.0f;
         initialised = false;
     }
 
