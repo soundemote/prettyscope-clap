@@ -186,6 +186,32 @@ TEST_CASE("Scope audio snapshot queue returns the latest published block", "[aud
     }
 }
 
+TEST_CASE("Scope audio snapshot queue stamps new snapshots", "[audio]")
+{
+    baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;
+    queue.subscribe();
+
+    float block[2][baconpaul::sidequest_ns::blockSize]{};
+    block[0][0] = 1.0f;
+    block[1][0] = -1.0f;
+
+    queue.publishFromPlanarStereo(block);
+    const auto first = queue.readLatest();
+    REQUIRE(first.has_value());
+    REQUIRE(first->serial > 0);
+
+    queue.publishFromPlanarStereo(block);
+    const auto second = queue.readLatest();
+    REQUIRE(second.has_value());
+    REQUIRE(second->serial > first->serial);
+
+    queue.publishEmpty();
+    const auto empty = queue.readLatest();
+    REQUIRE(empty.has_value());
+    REQUIRE(empty->serial > second->serial);
+    REQUIRE_FALSE(empty->hasSignal);
+}
+
 TEST_CASE("Scope audio snapshot queue ignores publishes while unsubscribed", "[audio]")
 {
     baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;

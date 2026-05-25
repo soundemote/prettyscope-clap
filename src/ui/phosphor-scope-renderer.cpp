@@ -52,9 +52,16 @@ struct SignalBuffer
 {
     std::vector<float> left;
     std::vector<float> right;
+    uint64_t lastSnapshotSerial{};
 
-    void assign(const ScopeAudioSnapshot &snapshot, float timeScale)
+    void append(const ScopeAudioSnapshot &snapshot, float timeScale, uint64_t snapshotSerial)
     {
+        if (snapshotSerial == lastSnapshotSerial)
+        {
+            return;
+        }
+        lastSnapshotSerial = snapshotSerial;
+
         const auto sourceFrames = snapshot.validFrameCount();
         if (!snapshot.hasRenderableTrace() || sourceFrames < 2)
         {
@@ -64,16 +71,19 @@ struct SignalBuffer
         }
 
         const auto clampedScale = std::clamp(timeScale, 0.25f, 4.0f);
-        const auto targetFrames =
-            std::clamp<uint32_t>(static_cast<uint32_t>(std::round(sourceFrames / clampedScale)), 2,
-                                 sourceFrames);
-        left.resize(targetFrames);
-        right.resize(targetFrames);
-
-        for (uint32_t i = 0; i < targetFrames; ++i)
+        const auto step = std::max<uint32_t>(1, static_cast<uint32_t>(std::round(clampedScale)));
+        for (uint32_t i = 0; i < sourceFrames; i += step)
         {
-            left[i] = snapshot.samples[0][i];
-            right[i] = snapshot.samples[1][i];
+            left.push_back(snapshot.samples[0][i]);
+            right.push_back(snapshot.samples[1][i]);
+        }
+
+        constexpr size_t maxVisualFrames = 2048;
+        if (left.size() > maxVisualFrames)
+        {
+            const auto removeCount = left.size() - maxVisualFrames;
+            left.erase(left.begin(), left.begin() + static_cast<ptrdiff_t>(removeCount));
+            right.erase(right.begin(), right.begin() + static_cast<ptrdiff_t>(removeCount));
         }
     }
 
@@ -688,6 +698,7 @@ struct PhosphorScopeRenderer::Impl
         quad.destroy();
         signal.left.clear();
         signal.right.clear();
+        signal.lastSnapshotSerial = 0;
         initialised = false;
     }
 
@@ -712,7 +723,7 @@ struct PhosphorScopeRenderer::Impl
         params.fastDecay = 0.25f;
         params.afterglow = 0.95f;
 
-        signal.assign(snapshot, visualState.timeScale);
+        signal.append(snapshot, visualState.timeScale, snapshot.serial);
         const auto vertexCount = beam.uploadSegments(signal, params, width, height);
 
         persistence.beginFrame(params, width, height, quad);

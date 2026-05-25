@@ -25,12 +25,14 @@ struct ScopeAudioSnapshot
 {
     float samples alignas(16)[2][blockSize]{};
     uint32_t frameCount{0};
+    uint64_t serial{0};
     bool hasSignal{false};
 
     void clear()
     {
         std::memset(samples, 0, sizeof(samples));
         frameCount = 0;
+        serial = 0;
         hasSignal = false;
     }
 
@@ -85,7 +87,9 @@ class ScopeAudioSnapshotQueue
     {
         if (snapshots.subscribed())
         {
-            snapshots.push(snapshot);
+            auto stamped = snapshot;
+            stamped.serial = nextSerial++;
+            snapshots.push(stamped);
         }
     }
 
@@ -98,6 +102,7 @@ class ScopeAudioSnapshotQueue
 
         ScopeAudioSnapshot snapshot;
         snapshot.copyFromPlanarStereo(source, frames);
+        snapshot.serial = nextSerial++;
         snapshots.push(snapshot);
     }
 
@@ -105,7 +110,9 @@ class ScopeAudioSnapshotQueue
     {
         if (snapshots.subscribed())
         {
-            snapshots.push(ScopeAudioSnapshot{});
+            ScopeAudioSnapshot snapshot;
+            snapshot.serial = nextSerial++;
+            snapshots.push(snapshot);
         }
     }
 
@@ -129,6 +136,7 @@ class ScopeAudioSnapshotQueue
 
   private:
     sst::cpputils::SimpleRingBuffer<ScopeAudioSnapshot, 8, std::memory_order_seq_cst> snapshots;
+    uint64_t nextSerial{1};
 };
 } // namespace baconpaul::sidequest_ns
 
