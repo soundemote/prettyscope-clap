@@ -16,12 +16,23 @@
 
 namespace baconpaul::sidequest_ns
 {
+inline float defaultVisualFloat(std::string_view id, float fallback)
+{
+    const auto *descriptor = visualFloatParameterById(id);
+    if (!descriptor)
+    {
+        return fallback;
+    }
+
+    return descriptor->defaultValue;
+}
+
 struct ScopeVisualState
 {
-    float phosphorDecay{0.98f};
-    float beamIntensity{1.6f};
-    float inputGain{1.0f};
-    float timeScale{1.0f};
+    float phosphorDecay{defaultVisualFloat(kPhosphorDecayVisualParameterId, 0.98f)};
+    float beamIntensity{defaultVisualFloat(kBeamIntensityVisualParameterId, 1.6f)};
+    float inputGain{defaultVisualFloat(kInputGainVisualParameterId, 1.0f)};
+    float timeScale{defaultVisualFloat(kTimeScaleVisualParameterId, 1.0f)};
 };
 
 inline float clampVisualFloat(std::string_view id, float value)
