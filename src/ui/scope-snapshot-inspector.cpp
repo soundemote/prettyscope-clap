@@ -16,7 +16,7 @@ namespace baconpaul::sidequest_ns::ui
 void ScopeSnapshotInspector::setSnapshot(const ScopeAudioSnapshot &snapshot)
 {
     hasSignal = snapshot.hasSignal;
-    frameCount = snapshot.frameCount;
+    frameCount = snapshot.validFrameCount();
     leftPeak = snapshot.peak(0);
     rightPeak = snapshot.peak(1);
 
