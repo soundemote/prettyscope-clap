@@ -117,9 +117,14 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
     {
         auto fpuguard = sst::plugininfra::cpufeatures::FPUStateGuard();
 
+        if (process == nullptr)
+        {
+            return CLAP_PROCESS_ERROR;
+        }
+
         auto ev = process->in_events;
         auto outq = process->out_events;
-        auto sz = ev->size(ev);
+        auto sz = ev ? ev->size(ev) : 0;
 
         const clap_event_header_t *nextEvent{nullptr};
         uint32_t nextEventIndex{0};
@@ -146,7 +151,8 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
             process->audio_outputs_count > 0 ? &process->audio_outputs[0] : nullptr;
 
         if (mainOutput == nullptr || mainOutput->channel_count < outChan ||
-            mainOutput->data32 == nullptr)
+            mainOutput->data32 == nullptr || mainOutput->data32[0] == nullptr ||
+            mainOutput->data32[1] == nullptr)
         {
             return CLAP_PROCESS_ERROR;
         }
@@ -171,9 +177,13 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
                     handleEvent(nextEvent);
                     nextEventIndex++;
                     if (nextEventIndex < sz)
+                    {
                         nextEvent = ev->get(ev, nextEventIndex);
+                    }
                     else
+                    {
                         nextEvent = nullptr;
+                    }
                 }
 
                 for (uint32_t channel = 0; channel < inputChannelCount; ++channel)
@@ -202,9 +212,13 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
             handleEvent(nextEvent);
             nextEventIndex++;
             if (nextEventIndex < sz)
+            {
                 nextEvent = ev->get(ev, nextEventIndex);
+            }
             else
+            {
                 nextEvent = nullptr;
+            }
         }
         return CLAP_PROCESS_CONTINUE;
     }
@@ -337,13 +351,16 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
     }
     void paramsFlush(const clap_input_events *in, const clap_output_events *out) noexcept override
     {
-        auto sz = in->size(in);
+        auto sz = in ? in->size(in) : 0;
 
         for (int i = 0; i < sz; ++i)
         {
             const clap_event_header_t *nextEvent{nullptr};
             nextEvent = in->get(in, i);
-            handleEvent(nextEvent);
+            if (nextEvent)
+            {
+                handleEvent(nextEvent);
+            }
         }
 
         engine->processUIQueue(out);
