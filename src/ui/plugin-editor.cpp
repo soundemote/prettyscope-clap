@@ -842,7 +842,11 @@ void PluginEditor::sneakyStartupGrabFrom(Patch &other)
 {
     for (auto &p : other.params)
     {
-        patchCopy.paramMap.at(p->meta.id)->value = p->value;
+        auto *destination = patchCopy.paramById(p->meta.id);
+        if (destination)
+        {
+            destination->value = p->value;
+        }
     }
     strncpy(patchCopy.name, other.name, 255);
     refreshScopeVisualState();
