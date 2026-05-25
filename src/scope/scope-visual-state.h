@@ -10,6 +10,10 @@
 #ifndef PRETTYSCOPE_SCOPE_VISUAL_STATE_H
 #define PRETTYSCOPE_SCOPE_VISUAL_STATE_H
 
+#include <algorithm>
+
+#include "scope/visual-parameters.h"
+
 namespace baconpaul::sidequest_ns
 {
 struct ScopeVisualState
@@ -19,6 +23,26 @@ struct ScopeVisualState
     float inputGain{1.0f};
     float timeScale{1.0f};
 };
+
+inline float clampVisualFloat(std::string_view id, float value)
+{
+    const auto *descriptor = visualFloatParameterById(id);
+    if (!descriptor)
+    {
+        return value;
+    }
+
+    return std::clamp(value, descriptor->minValue, descriptor->maxValue);
+}
+
+inline ScopeVisualState sanitizedScopeVisualState(ScopeVisualState state)
+{
+    state.phosphorDecay = clampVisualFloat("phosphor_decay", state.phosphorDecay);
+    state.beamIntensity = clampVisualFloat("beam_intensity", state.beamIntensity);
+    state.inputGain = clampVisualFloat("input_gain", state.inputGain);
+    state.timeScale = clampVisualFloat("time_scale", state.timeScale);
+    return state;
+}
 } // namespace baconpaul::sidequest_ns
 
 #endif // PRETTYSCOPE_SCOPE_VISUAL_STATE_H

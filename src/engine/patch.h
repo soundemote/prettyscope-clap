@@ -181,7 +181,7 @@ struct Patch : pats::PatchBase<Patch, Param>
             state.beamIntensity = beamIntensity.value;
             state.inputGain = inputGain.value;
             state.timeScale = timeScale.value;
-            return state;
+            return sanitizedScopeVisualState(state);
         }
     };
 

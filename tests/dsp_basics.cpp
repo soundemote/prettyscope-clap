@@ -243,3 +243,19 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     REQUIRE(state.inputGain == Approx(3.5f));
     REQUIRE(state.timeScale == Approx(1.75f));
 }
+
+TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    patch.visualParams.phosphorDecay.value = 2.0f;
+    patch.visualParams.beamIntensity.value = -1.0f;
+    patch.visualParams.inputGain.value = 99.0f;
+    patch.visualParams.timeScale.value = 0.01f;
+
+    const auto state = patch.visualParams.visualState();
+
+    REQUIRE(state.phosphorDecay == Approx(0.999f));
+    REQUIRE(state.beamIntensity == Approx(0.0f));
+    REQUIRE(state.inputGain == Approx(8.0f));
+    REQUIRE(state.timeScale == Approx(0.25f));
+}
