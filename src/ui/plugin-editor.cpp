@@ -680,7 +680,14 @@ void PluginEditor::resetToDefault() { presetManager->loadInit(patchCopy, mainToA
 void PluginEditor::setAndSendParamValue(uint32_t paramId, float value, bool notifyAudio,
                                         bool sendBeginEnd)
 {
-    patchCopy.paramMap[paramId]->value = value;
+    auto *param = patchCopy.paramById(paramId);
+    if (!param)
+    {
+        SQLOG("Ignoring editor update for unknown parameter id " << paramId);
+        return;
+    }
+
+    param->value = value;
 
     auto rit = componentRefreshByID.find(paramId);
     if (rit != componentRefreshByID.end())
@@ -702,7 +709,7 @@ void PluginEditor::setAndSendParamValue(uint32_t paramId, float value, bool noti
         requestParamsFlush();
     }
 
-    if (scopeOpenGLView && patchCopy.paramMap[paramId]->visualParameterId.size() > 0)
+    if (scopeOpenGLView && param->visualParameterId.size() > 0)
     {
         refreshScopeVisualState();
     }
