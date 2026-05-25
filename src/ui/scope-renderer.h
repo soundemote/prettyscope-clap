@@ -23,6 +23,9 @@ struct ScopeRenderContext
     juce::OpenGLContext &openGLContext;
     juce::Rectangle<int> bounds;
     float scale{1.0f};
+
+    int pixelWidth() const { return juce::roundToInt(scale * bounds.getWidth()); }
+    int pixelHeight() const { return juce::roundToInt(scale * bounds.getHeight()); }
 };
 
 struct IScopeRenderer

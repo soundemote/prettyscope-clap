@@ -25,8 +25,7 @@ void SimpleXyScopeRenderer::render(const ScopeRenderContext &context,
 
     juce::OpenGLHelpers::clear(juce::Colour(0xff05070a));
 
-    glViewport(0, 0, juce::roundToInt(context.scale * context.bounds.getWidth()),
-               juce::roundToInt(context.scale * context.bounds.getHeight()));
+    glViewport(0, 0, context.pixelWidth(), context.pixelHeight());
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
