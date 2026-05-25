@@ -36,8 +36,13 @@ struct ScopeAudioSnapshot
 
     void copyFromPlanarStereo(const float source[2][blockSize], uint32_t frames = blockSize)
     {
-        const auto framesToCopy = std::min<uint32_t>(frames, blockSize);
         clear();
+        if (!source)
+        {
+            return;
+        }
+
+        const auto framesToCopy = std::min<uint32_t>(frames, blockSize);
 
         for (uint32_t channel = 0; channel < 2; ++channel)
         {

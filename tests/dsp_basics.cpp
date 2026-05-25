@@ -136,6 +136,20 @@ TEST_CASE("Scope audio snapshot exposes renderable frame state", "[audio]")
     REQUIRE(snapshot.validFrameCount() == baconpaul::sidequest_ns::blockSize);
 }
 
+TEST_CASE("Scope audio snapshot clears on null source", "[audio]")
+{
+    baconpaul::sidequest_ns::ScopeAudioSnapshot snapshot;
+    snapshot.frameCount = 8;
+    snapshot.hasSignal = true;
+    snapshot.samples[0][0] = 1.0f;
+
+    snapshot.copyFromPlanarStereo(nullptr);
+
+    REQUIRE_FALSE(snapshot.hasSignal);
+    REQUIRE(snapshot.frameCount == 0);
+    REQUIRE(snapshot.samples[0][0] == 0.0f);
+}
+
 TEST_CASE("Scope audio snapshot queue returns the latest published block", "[audio]")
 {
     baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;
