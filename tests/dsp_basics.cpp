@@ -458,6 +458,28 @@ TEST_CASE("Prettyscope visual descriptor normalized helpers roundtrip raw values
             Approx(descriptor->maxValue));
 }
 
+TEST_CASE("Prettyscope visual state defaults match descriptors", "[params]")
+{
+    baconpaul::sidequest_ns::ScopeVisualState state;
+
+    REQUIRE(state.phosphorDecay ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kPhosphorDecayVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.beamIntensity ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kBeamIntensityVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.inputGain ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kInputGainVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.timeScale ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kTimeScaleVisualParameterId)
+                       ->defaultValue));
+}
+
 TEST_CASE("Prettyscope visual params appear through CLAP patch adapter", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;
