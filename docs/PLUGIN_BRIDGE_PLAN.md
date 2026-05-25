@@ -19,6 +19,9 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - Prettyscope visual float descriptors now adapt into the Sidequest `Patch` and
   `Param` system. Descriptor string IDs remain the visual source of truth, while
   descriptor stable numeric IDs become the host-facing CLAP/patch IDs.
+- Visual descriptors own simple raw/normalized conversion helpers. The current
+  mapping is linear and clamped; future perceptual mappings should extend the
+  descriptor layer rather than living only in a CLAP/JUCE adapter.
 - The editor's small `Visual Parameters` panel is descriptor-driven and exposes
   the first four adapted visual parameters through the existing Sidequest knob
   binding path.
