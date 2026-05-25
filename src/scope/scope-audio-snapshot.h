@@ -13,8 +13,10 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <optional>
 
 #include "configuration.h"
+#include "sst/cpputils/ring_buffer.h"
 
 namespace baconpaul::sidequest_ns
 {
@@ -44,6 +46,55 @@ struct ScopeAudioSnapshot
         frameCount = framesToCopy;
         hasSignal = frameCount > 0;
     }
+};
+
+class ScopeAudioSnapshotQueue
+{
+  public:
+    void subscribe() { snapshots.subscribe(); }
+    void unsubscribe() { snapshots.unsubscribe(); }
+    bool subscribed() const { return snapshots.subscribed(); }
+
+    void publish(const ScopeAudioSnapshot &snapshot)
+    {
+        if (snapshots.subscribed())
+        {
+            snapshots.push(snapshot);
+        }
+    }
+
+    void publishFromPlanarStereo(const float source[2][blockSize], uint32_t frames = blockSize)
+    {
+        if (!snapshots.subscribed())
+        {
+            return;
+        }
+
+        ScopeAudioSnapshot snapshot;
+        snapshot.copyFromPlanarStereo(source, frames);
+        snapshots.push(snapshot);
+    }
+
+    std::optional<ScopeAudioSnapshot> readLatest()
+    {
+        auto latest = snapshots.pop();
+        if (!latest.has_value())
+        {
+            return std::nullopt;
+        }
+
+        auto next = snapshots.pop();
+        while (next.has_value())
+        {
+            latest = std::move(next);
+            next = snapshots.pop();
+        }
+
+        return latest;
+    }
+
+  private:
+    sst::cpputils::SimpleRingBuffer<ScopeAudioSnapshot, 8, std::memory_order_seq_cst> snapshots;
 };
 } // namespace baconpaul::sidequest_ns
 

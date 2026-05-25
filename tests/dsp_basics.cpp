@@ -18,6 +18,7 @@
 #include "engine/engine.h"
 #include "scope/scope-audio-snapshot.h"
 
+#include <algorithm>
 #include <memory>
 
 TEST_CASE("Some DSP Test", "[dsp]") { REQUIRE(1 + 1 == 2); }
@@ -94,5 +95,68 @@ TEST_CASE("Scope audio snapshot copies the engine scope tap", "[audio]")
     {
         REQUIRE(snapshot.samples[0][i] == left[i]);
         REQUIRE(snapshot.samples[1][i] == right[i]);
+    }
+}
+
+TEST_CASE("Scope audio snapshot queue returns the latest published block", "[audio]")
+{
+    baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;
+    queue.subscribe();
+
+    float first[baconpaul::sidequest_ns::blockSize]{};
+    float second[baconpaul::sidequest_ns::blockSize]{};
+    float block[2][baconpaul::sidequest_ns::blockSize]{};
+
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        first[i] = static_cast<float>(i);
+        second[i] = 100.0f + static_cast<float>(i);
+    }
+
+    std::copy_n(first, baconpaul::sidequest_ns::blockSize, block[0]);
+    std::copy_n(first, baconpaul::sidequest_ns::blockSize, block[1]);
+    queue.publishFromPlanarStereo(block);
+
+    std::copy_n(second, baconpaul::sidequest_ns::blockSize, block[0]);
+    std::copy_n(second, baconpaul::sidequest_ns::blockSize, block[1]);
+    queue.publishFromPlanarStereo(block);
+
+    const auto snapshot = queue.readLatest();
+
+    REQUIRE(snapshot.has_value());
+    REQUIRE(snapshot->hasSignal);
+    REQUIRE(snapshot->frameCount == baconpaul::sidequest_ns::blockSize);
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        REQUIRE(snapshot->samples[0][i] == second[i]);
+        REQUIRE(snapshot->samples[1][i] == second[i]);
+    }
+}
+
+TEST_CASE("Engine publishes subscribed scope snapshots", "[audio]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+    engine->scopeSnapshots.subscribe();
+
+    float left[baconpaul::sidequest_ns::blockSize]{};
+    float right[baconpaul::sidequest_ns::blockSize]{};
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        left[i] = 0.75f + static_cast<float>(i) * 0.03f;
+        right[i] = -0.25f - static_cast<float>(i) * 0.04f;
+    }
+
+    const float *input[] = {left, right};
+    engine->process(nullptr, input, 2, baconpaul::sidequest_ns::blockSize);
+
+    const auto snapshot = engine->scopeSnapshots.readLatest();
+
+    REQUIRE(snapshot.has_value());
+    REQUIRE(snapshot->hasSignal);
+    REQUIRE(snapshot->frameCount == baconpaul::sidequest_ns::blockSize);
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        REQUIRE(snapshot->samples[0][i] == left[i]);
+        REQUIRE(snapshot->samples[1][i] == right[i]);
     }
 }

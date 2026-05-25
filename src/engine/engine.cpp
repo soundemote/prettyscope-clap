@@ -120,6 +120,8 @@ void Engine::process(const clap_output_events_t *outq, const float *const *input
 
     if (hasScopeInput)
     {
+        scopeSnapshots.publishFromPlanarStereo(scopeInput, inputFrameCount);
+
         if (isEditorAttached)
         {
             for (int i = 0; i < blockSize; ++i)

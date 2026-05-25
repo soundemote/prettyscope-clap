@@ -34,6 +34,7 @@
 
 #include "engine/voice.h"
 #include "engine/patch.h"
+#include "scope/scope-audio-snapshot.h"
 
 #include "sst/basic-blocks/dsp/LagCollection.h"
 
@@ -203,6 +204,7 @@ struct Engine
 
     float scopeInput alignas(16)[2][blockSize]{};
     bool hasScopeInput{false};
+    ScopeAudioSnapshotQueue scopeSnapshots;
 
     static_assert(sst::voicemanager::constraints::ConstraintsChecker<VMConfig, VMResponder,
                                                                      VMMonoResponder>::satisfies());
