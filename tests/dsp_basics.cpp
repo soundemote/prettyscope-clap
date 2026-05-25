@@ -434,6 +434,30 @@ TEST_CASE("Prettyscope visual params roundtrip through Sidequest values", "[para
     REQUIRE(param->meta.naturalToNormalized01(param->value) == normalized);
 }
 
+TEST_CASE("Prettyscope visual descriptor normalized helpers roundtrip raw values", "[params]")
+{
+    const auto *descriptor = baconpaul::sidequest_ns::visualFloatParameterById("input_gain");
+    REQUIRE(descriptor != nullptr);
+
+    const auto normalized = baconpaul::sidequest_ns::normalizedValueFor(
+        *descriptor, descriptor->midValue);
+    const auto raw = baconpaul::sidequest_ns::rawValueFor(*descriptor, normalized);
+
+    REQUIRE(normalized >= 0.0f);
+    REQUIRE(normalized <= 1.0f);
+    REQUIRE(raw == Approx(descriptor->midValue));
+    REQUIRE(baconpaul::sidequest_ns::normalizedValueFor(*descriptor,
+                                                        descriptor->minValue - 10.0f) ==
+            Approx(0.0f));
+    REQUIRE(baconpaul::sidequest_ns::normalizedValueFor(*descriptor,
+                                                        descriptor->maxValue + 10.0f) ==
+            Approx(1.0f));
+    REQUIRE(baconpaul::sidequest_ns::rawValueFor(*descriptor, -1.0f) ==
+            Approx(descriptor->minValue));
+    REQUIRE(baconpaul::sidequest_ns::rawValueFor(*descriptor, 2.0f) ==
+            Approx(descriptor->maxValue));
+}
+
 TEST_CASE("Prettyscope visual params appear through CLAP patch adapter", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;

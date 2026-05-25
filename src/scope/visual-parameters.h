@@ -10,6 +10,7 @@
 #ifndef PRETTYSCOPE_SCOPE_VISUAL_PARAMETERS_H
 #define PRETTYSCOPE_SCOPE_VISUAL_PARAMETERS_H
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <span>
@@ -83,6 +84,23 @@ inline const VisualFloatParameterDescriptor *visualFloatParameterById(std::strin
     }
 
     return nullptr;
+}
+
+inline float normalizedValueFor(const VisualFloatParameterDescriptor &descriptor, float rawValue)
+{
+    if (descriptor.maxValue <= descriptor.minValue)
+    {
+        return 0.0f;
+    }
+
+    const auto clamped = std::clamp(rawValue, descriptor.minValue, descriptor.maxValue);
+    return (clamped - descriptor.minValue) / (descriptor.maxValue - descriptor.minValue);
+}
+
+inline float rawValueFor(const VisualFloatParameterDescriptor &descriptor, float normalizedValue)
+{
+    const auto normalized = std::clamp(normalizedValue, 0.0f, 1.0f);
+    return descriptor.minValue + normalized * (descriptor.maxValue - descriptor.minValue);
 }
 } // namespace baconpaul::sidequest_ns
 
