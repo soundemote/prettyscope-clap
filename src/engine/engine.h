@@ -196,9 +196,13 @@ struct Engine
     template <bool multiOut> void processInternal(const clap_output_events_t *);
 
     void process(const clap_output_events_t *);
+    void process(const clap_output_events_t *, const float *const *, uint32_t, uint32_t);
     void processUIQueue(const clap_output_events_t *);
 
     void handleParamValue(Param *p, uint32_t pid, float value);
+
+    float scopeInput alignas(16)[2][blockSize]{};
+    bool hasScopeInput{false};
 
     static_assert(sst::voicemanager::constraints::ConstraintsChecker<VMConfig, VMResponder,
                                                                      VMMonoResponder>::satisfies());

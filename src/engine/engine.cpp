@@ -60,11 +60,19 @@ void Engine::setSampleRate(double sr)
 
 void Engine::process(const clap_output_events_t *outq)
 {
+    process(outq, nullptr, 0, 0);
+}
+
+void Engine::process(const clap_output_events_t *outq, const float *const *inputChannels,
+                     uint32_t inputChannelCount, uint32_t inputFrameCount)
+{
     processUIQueue(outq);
 
     if (!audioRunning)
     {
         memset(output, 0, sizeof(output));
+        memset(scopeInput, 0, sizeof(scopeInput));
+        hasScopeInput = false;
         return;
     }
 
@@ -85,6 +93,56 @@ void Engine::process(const clap_output_events_t *outq)
     midiCCLagCollection.processAll();
 
     lagHandler.process();
+
+    hasScopeInput = inputChannels != nullptr && inputChannelCount > 0 && inputFrameCount > 0;
+    if (hasScopeInput)
+    {
+        for (uint32_t i = 0; i < blockSize; ++i)
+        {
+            const bool validFrame = i < inputFrameCount;
+            const float left =
+                validFrame && inputChannels[0] != nullptr ? inputChannels[0][i] : 0.0f;
+            const float right = validFrame && inputChannelCount > 1 &&
+                                        inputChannels[1] != nullptr
+                                    ? inputChannels[1][i]
+                                    : left;
+
+            scopeInput[0][i] = left;
+            scopeInput[1][i] = right;
+            output[0][i] = left;
+            output[1][i] = right;
+        }
+    }
+    else
+    {
+        memset(scopeInput, 0, sizeof(scopeInput));
+    }
+
+    if (hasScopeInput)
+    {
+        if (isEditorAttached)
+        {
+            for (int i = 0; i < blockSize; ++i)
+            {
+                vuPeak.process(output[0][i], output[1][i]);
+            }
+
+            if (lastVuUpdate >= updateVuEvery)
+            {
+                AudioToUIMsg msg{AudioToUIMsg::UPDATE_VU, 0, vuPeak.vu_peak[0], vuPeak.vu_peak[1]};
+                audioToUi.push(msg);
+
+                AudioToUIMsg msg2{AudioToUIMsg::UPDATE_VOICE_COUNT, (uint32_t)voiceCount};
+                audioToUi.push(msg2);
+                lastVuUpdate = 0;
+            }
+            else
+            {
+                lastVuUpdate++;
+            }
+        }
+        return;
+    }
 
     memset(output, 0, sizeof(output));
 

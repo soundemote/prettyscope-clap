@@ -15,4 +15,56 @@
 
 #include "catch2/catch2.hpp"
 
+#include "engine/engine.h"
+
+#include <memory>
+
 TEST_CASE("Some DSP Test", "[dsp]") { REQUIRE(1 + 1 == 2); }
+
+TEST_CASE("Engine passes stereo input to output and scope tap", "[audio]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+
+    float left[baconpaul::sidequest_ns::blockSize]{};
+    float right[baconpaul::sidequest_ns::blockSize]{};
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        left[i] = static_cast<float>(i) * 0.1f;
+        right[i] = -left[i];
+    }
+
+    const float *input[] = {left, right};
+    engine->process(nullptr, input, 2, baconpaul::sidequest_ns::blockSize);
+
+    REQUIRE(engine->hasScopeInput);
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        REQUIRE(engine->output[0][i] == left[i]);
+        REQUIRE(engine->output[1][i] == right[i]);
+        REQUIRE(engine->scopeInput[0][i] == left[i]);
+        REQUIRE(engine->scopeInput[1][i] == right[i]);
+    }
+}
+
+TEST_CASE("Engine mirrors mono input to stereo output and scope tap", "[audio]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+
+    float mono[baconpaul::sidequest_ns::blockSize]{};
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        mono[i] = static_cast<float>(i) * 0.05f;
+    }
+
+    const float *input[] = {mono};
+    engine->process(nullptr, input, 1, baconpaul::sidequest_ns::blockSize);
+
+    REQUIRE(engine->hasScopeInput);
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        REQUIRE(engine->output[0][i] == mono[i]);
+        REQUIRE(engine->output[1][i] == mono[i]);
+        REQUIRE(engine->scopeInput[0][i] == mono[i]);
+        REQUIRE(engine->scopeInput[1][i] == mono[i]);
+    }
+}
