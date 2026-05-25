@@ -19,13 +19,15 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - Prettyscope visual float descriptors now adapt into the Sidequest `Patch` and
   `Param` system. Descriptor string IDs remain the visual source of truth, while
   descriptor stable numeric IDs become the host-facing CLAP/patch IDs.
+- The editor's small `Visual Parameters` panel is descriptor-driven and exposes
+  the first four adapted visual parameters through the existing Sidequest knob
+  binding path.
 
 ## Near-Term Bridge
 
-1. Expand descriptor coverage beyond the first four visual proof parameters.
-2. Add a minimal JUCE editor component that can inspect the latest snapshot.
-3. Embed a first OpenGL component without changing the standalone golden look.
-4. Port the standalone phosphor renderer into a reusable module boundary.
+1. Add a minimal JUCE editor component that can inspect the latest snapshot.
+2. Embed a first OpenGL component without changing the standalone golden look.
+3. Port the standalone phosphor renderer into a reusable module boundary.
 
 ## Boundaries
 
@@ -33,6 +35,8 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - Do not make CLAP/JUCE parameter types the source of truth.
 - Do not redesign the current standalone Prettyscope look during bridge work.
 - Keep the audio thread free of GUI or OpenGL dependencies.
+- Defer inherited synth UI cleanup until descriptor-driven parameter UI and host
+  state plumbing are proven stable.
 
 ## Future Shape
 

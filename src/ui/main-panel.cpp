@@ -16,18 +16,22 @@
 #include "main-panel.h"
 #include "plugin-editor.h"
 #include "patch-data-bindings.h"
+#include "scope/visual-parameters.h"
 
 namespace baconpaul::sidequest_ns::ui
 {
 
 MainPanel::MainPanel(PluginEditor &e)
-    : sst::jucegui::components::NamedPanel("Main Panel"), editor(e)
+    : sst::jucegui::components::NamedPanel("Visual Parameters"), editor(e)
 {
-    knobs.resize(e.patchCopy.params.size());
-    knobAs.resize(e.patchCopy.params.size());
-    for (int i = 0; i < e.patchCopy.params.size(); i++)
+    const auto descriptors = visualFloatParameters();
+    knobs.resize(descriptors.size());
+    knobAs.resize(descriptors.size());
+
+    for (size_t i = 0; i < descriptors.size(); ++i)
     {
-        createComponent(editor, *this, *editor.patchCopy.params[i], knobs[i], knobAs[i]);
+        auto *param = e.patchCopy.paramMap.at(descriptors[i].stableId.value);
+        createComponent(editor, *this, *param, knobs[i], knobAs[i]);
         addAndMakeVisible(*knobs[i]);
     }
 }
@@ -41,7 +45,7 @@ void MainPanel::resized()
     auto spw = 50;
     auto sph = 70;
 
-    for (int i = 0; i < editor.patchCopy.params.size(); i++)
+    for (size_t i = 0; i < knobs.size(); ++i)
     {
         knobs[i]->setBounds(x, y, spw - 5, sph - 5);
         x += spw;
