@@ -14,16 +14,15 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
   will use next.
 - `ScopeAudioSnapshotQueue` lets the audio side publish subscribed snapshots
   and lets the editor side drain to the newest available block.
+- The editor subscribes to the snapshot queue while it exists and stores the
+  latest block during its idle tick.
 
 ## Near-Term Bridge
 
 1. Replace inherited synth parameters with Prettyscope visual descriptors.
-2. Connect `ScopeAudioSnapshotQueue` to the editor lifetime: subscribe when the
-   editor opens, unsubscribe when it closes, and read snapshots on the UI/render
-   side.
-3. Add a minimal JUCE editor component that can inspect the latest snapshot.
-4. Embed a first OpenGL component without changing the standalone golden look.
-5. Port the standalone phosphor renderer into a reusable module boundary.
+2. Add a minimal JUCE editor component that can inspect the latest snapshot.
+3. Embed a first OpenGL component without changing the standalone golden look.
+4. Port the standalone phosphor renderer into a reusable module boundary.
 
 ## Boundaries
 

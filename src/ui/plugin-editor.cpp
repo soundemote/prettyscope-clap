@@ -40,8 +40,9 @@ using sheet_t = jstl::StyleSheet;
 static constexpr sheet_t::Class PatchMenu("prettyscope.patch-menu");
 
 PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQueue_T &utoa,
-                           const clap_host_t *h)
-    : jcmp::WindowPanel(true), audioToUI(atou), mainToAudio(utoa), clapHost(h)
+                           ScopeAudioSnapshotQueue &snapshots, const clap_host_t *h)
+    : jcmp::WindowPanel(true), audioToUI(atou), mainToAudio(utoa), scopeSnapshots(snapshots),
+      clapHost(h)
 {
     setTitle("Prettyscope");
     setAccessible(true);
@@ -99,6 +100,8 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
     lnf = std::make_unique<sst::jucegui::style::LookAndFeelManager>(this);
     lnf->setStyle(style());
 
+    scopeSnapshots.subscribe();
+
     vuMeter = std::make_unique<jcmp::VUMeter>(jcmp::VUMeter::HORIZONTAL);
     addAndMakeVisible(*vuMeter);
 
@@ -119,6 +122,7 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
 }
 PluginEditor::~PluginEditor()
 {
+    scopeSnapshots.unsubscribe();
     mainToAudio.push({Engine::MainToAudioMsg::EDITOR_ATTACH_DETATCH, false});
     idleTimer->stopTimer();
     setLookAndFeel(nullptr);
@@ -126,6 +130,12 @@ PluginEditor::~PluginEditor()
 
 void PluginEditor::idle()
 {
+    if (auto snapshot = scopeSnapshots.readLatest())
+    {
+        latestScopeSnapshot = *snapshot;
+        scopeSnapshotReadCount++;
+    }
+
     auto aum = audioToUI.pop();
     while (aum.has_value())
     {

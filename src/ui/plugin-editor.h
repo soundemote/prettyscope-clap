@@ -35,6 +35,7 @@
 #include "engine/engine.h"
 #include "engine/patch.h"
 #include "presets/preset-manager.h"
+#include "scope/scope-audio-snapshot.h"
 #include "preset-data-binding.h"
 #include "ui-defaults.h"
 
@@ -52,10 +53,11 @@ struct PluginEditor : jcmp::WindowPanel
 
     Engine::audioToUIQueue_t &audioToUI;
     Engine::mainToAudioQueue_T &mainToAudio;
+    ScopeAudioSnapshotQueue &scopeSnapshots;
     const clap_host_t *clapHost{nullptr};
 
     PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQueue_T &utoa,
-                 const clap_host_t *ch);
+                 ScopeAudioSnapshotQueue &snapshots, const clap_host_t *ch);
     virtual ~PluginEditor();
 
     std::unique_ptr<sst::jucegui::style::LookAndFeelManager> lnf;
@@ -66,6 +68,8 @@ struct PluginEditor : jcmp::WindowPanel
 
     void idle();
     std::unique_ptr<juce::Timer> idleTimer;
+    ScopeAudioSnapshot latestScopeSnapshot;
+    uint64_t scopeSnapshotReadCount{0};
 
     std::unique_ptr<MainPanel> mainPanel;
     void doSinglePanelHamburger();

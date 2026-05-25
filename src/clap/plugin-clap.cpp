@@ -357,7 +357,7 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
     std::unique_ptr<juce::Component> createEditor() override
     {
         auto res = std::make_unique<baconpaul::sidequest_ns::ui::PluginEditor>(
-            engine->audioToUi, engine->mainToAudio, _host.host());
+            engine->audioToUi, engine->mainToAudio, engine->scopeSnapshots, _host.host());
 
         res->onZoomChanged = [this](auto f)
         {
