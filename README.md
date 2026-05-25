@@ -48,6 +48,12 @@ DAW scanning:
 powershell -ExecutionPolicy Bypass -File .\scripts\install-local-plugin.ps1
 ```
 
+To build, run tests, and install the local artifacts in one step:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-test-install-local-plugin.ps1
+```
+
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads
 the same block stream.
