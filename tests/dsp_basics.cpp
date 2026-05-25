@@ -227,3 +227,19 @@ TEST_CASE("Prettyscope visual params appear through CLAP patch adapter", "[param
         REQUIRE(value == Approx(descriptor->defaultValue));
     }
 }
+
+TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    patch.visualParams.phosphorDecay.value = 0.991f;
+    patch.visualParams.beamIntensity.value = 2.25f;
+    patch.visualParams.inputGain.value = 3.5f;
+    patch.visualParams.timeScale.value = 1.75f;
+
+    const auto state = patch.visualParams.visualState();
+
+    REQUIRE(state.phosphorDecay == Approx(0.991f));
+    REQUIRE(state.beamIntensity == Approx(2.25f));
+    REQUIRE(state.inputGain == Approx(3.5f));
+    REQUIRE(state.timeScale == Approx(1.75f));
+}

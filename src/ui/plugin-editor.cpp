@@ -841,12 +841,7 @@ void PluginEditor::sneakyStartupGrabFrom(Patch &other)
 
 ScopeVisualState PluginEditor::currentScopeVisualState() const
 {
-    ScopeVisualState visualState;
-    visualState.phosphorDecay = patchCopy.visualParams.phosphorDecay.value;
-    visualState.beamIntensity = patchCopy.visualParams.beamIntensity.value;
-    visualState.inputGain = patchCopy.visualParams.inputGain.value;
-    visualState.timeScale = patchCopy.visualParams.timeScale.value;
-    return visualState;
+    return patchCopy.visualParams.visualState();
 }
 
 bool PluginEditor::toggleDebug()

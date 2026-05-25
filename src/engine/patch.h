@@ -28,6 +28,7 @@
 #include "sst/basic-blocks/dsp/Lag.h"
 #include "sst/basic-blocks/modulators/DAHDSREnvelope.h"
 #include "sst/plugininfra/patch-support/patch_base.h"
+#include "scope/scope-visual-state.h"
 #include "scope/visual-parameters.h"
 
 namespace baconpaul::sidequest_ns
@@ -171,6 +172,16 @@ struct Patch : pats::PatchBase<Patch, Param>
         {
             std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale};
             return res;
+        }
+
+        ScopeVisualState visualState() const
+        {
+            ScopeVisualState state;
+            state.phosphorDecay = phosphorDecay.value;
+            state.beamIntensity = beamIntensity.value;
+            state.inputGain = inputGain.value;
+            state.timeScale = timeScale.value;
+            return state;
         }
     };
 
