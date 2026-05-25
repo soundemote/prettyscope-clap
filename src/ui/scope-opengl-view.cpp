@@ -84,6 +84,9 @@ void ScopeOpenGLView::renderOpenGL()
         renderer->render({openGLContext, bounds,
                           static_cast<float>(openGLContext.getRenderingScale())},
                          snapshot, visualState);
+        return;
     }
+
+    juce::OpenGLHelpers::clear(juce::Colour(0xff05070a));
 }
 } // namespace baconpaul::sidequest_ns::ui
