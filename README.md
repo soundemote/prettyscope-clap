@@ -25,12 +25,25 @@ visualizer bridge is now in place:
 - visual parameter descriptors adapt into the Sidequest `Patch`/CLAP parameter path
 - the editor exposes the first descriptor-driven visual controls
 - the editor hosts a JUCE/OpenGL `ScopeOpenGLView`
-- `SimpleXyScopeRenderer` renders the current proof trace from snapshots
-- `ScopeOpenGLView` accepts an injected `IScopeRenderer` for the future phosphor renderer
+- `ScopeOpenGLView` accepts an injected `IScopeRenderer`
+- `PhosphorScopeRenderer` is the default renderer and ports the standalone
+  golden beam/persistence core into the plugin editor
 
-The next renderer milestone is to port the standalone golden phosphor scope into
-that renderer slot without importing standalone app ownership or making JUCE/CLAP
-the source of visual truth.
+The next renderer milestone is DAW/standalone verification with real audio input,
+then adapter-level scale tuning if the hosted signal feels different from the
+standalone golden reference.
+
+Useful local build artifacts after a Windows build:
+
+```text
+build-ninja\prettyscope-clap_assets\CLAP\Prettyscope.clap
+build-ninja\prettyscope-clap_assets\VST3\Prettyscope.vst3
+build-ninja\prettyscope-clap_assets\Standalone-prettyscope-clap_standalone\Prettyscope.exe
+```
+
+For first visual testing, load Prettyscope as an audio effect/analyzer and feed
+it a stereo signal. The plugin passes audio through while the editor scope reads
+the same block stream.
 
 Useful local verification command on Windows:
 
