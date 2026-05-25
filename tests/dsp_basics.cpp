@@ -401,6 +401,20 @@ TEST_CASE("Prettyscope visual descriptor ids are unique and stable", "[params]")
     REQUIRE(stableIds.size() == baconpaul::sidequest_ns::visualFloatParameters().size());
 }
 
+TEST_CASE("Prettyscope visual descriptor ranges contain defaults and midpoints", "[params]")
+{
+    for (const auto &descriptor : baconpaul::sidequest_ns::visualFloatParameters())
+    {
+        REQUIRE(descriptor.minValue < descriptor.maxValue);
+        REQUIRE(descriptor.defaultValue >= descriptor.minValue);
+        REQUIRE(descriptor.defaultValue <= descriptor.maxValue);
+        REQUIRE(descriptor.midValue >= descriptor.minValue);
+        REQUIRE(descriptor.midValue <= descriptor.maxValue);
+        REQUIRE_FALSE(descriptor.displayName.empty());
+        REQUIRE_FALSE(descriptor.category.empty());
+    }
+}
+
 TEST_CASE("Prettyscope visual params roundtrip through Sidequest values", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;
