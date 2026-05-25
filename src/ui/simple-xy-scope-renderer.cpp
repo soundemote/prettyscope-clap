@@ -24,6 +24,10 @@ void SimpleXyScopeRenderer::render(const ScopeRenderContext &context,
     using namespace juce::gl;
 
     juce::OpenGLHelpers::clear(juce::Colour(0xff05070a));
+    if (!context.hasDrawableArea())
+    {
+        return;
+    }
 
     glViewport(0, 0, context.pixelWidth(), context.pixelHeight());
     glDisable(GL_DEPTH_TEST);

@@ -10,6 +10,8 @@
 #ifndef PRETTYSCOPE_UI_SCOPE_RENDERER_H
 #define PRETTYSCOPE_UI_SCOPE_RENDERER_H
 
+#include <algorithm>
+
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_opengl/juce_opengl.h>
 
@@ -24,8 +26,9 @@ struct ScopeRenderContext
     juce::Rectangle<int> bounds;
     float scale{1.0f};
 
-    int pixelWidth() const { return juce::roundToInt(scale * bounds.getWidth()); }
-    int pixelHeight() const { return juce::roundToInt(scale * bounds.getHeight()); }
+    int pixelWidth() const { return std::max(0, juce::roundToInt(scale * bounds.getWidth())); }
+    int pixelHeight() const { return std::max(0, juce::roundToInt(scale * bounds.getHeight())); }
+    bool hasDrawableArea() const { return pixelWidth() > 0 && pixelHeight() > 0; }
 };
 
 struct IScopeRenderer
