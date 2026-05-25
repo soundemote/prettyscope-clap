@@ -41,6 +41,13 @@ build-ninja\prettyscope-clap_assets\VST3\Prettyscope.vst3
 build-ninja\prettyscope-clap_assets\Standalone-prettyscope-clap_standalone\Prettyscope.exe
 ```
 
+To copy the built plugin artifacts into user-local Windows plugin folders for
+DAW scanning:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install-local-plugin.ps1
+```
+
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads
 the same block stream.
