@@ -40,6 +40,8 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - `ScopeVisualState` gives renderers a plain descriptor-derived visual settings
   snapshot. The plugin/editor side still owns Sidequest/JUCE parameter plumbing;
   renderers consume values without knowing about host parameter objects.
+- `ScopeOpenGLView` sanitizes visual state before handing it to renderers, so
+  renderer implementations can assume descriptor ranges are already enforced.
 - CLAP, editor, and audio bridge paths now guard missing host pointers, unknown
   parameter IDs, empty render viewports, and unreadable input channel pointers.
   These guards are intentionally boring: they preserve the current proof renderer
