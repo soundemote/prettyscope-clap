@@ -20,10 +20,30 @@
 
 #include "libMTSClient.h"
 
+#include <algorithm>
+#include <cmath>
+
 namespace baconpaul::sidequest_ns
 {
 
 int debugLevel{0};
+
+namespace
+{
+bool stereoBlockHasSignal(const float block[2][blockSize])
+{
+    constexpr auto threshold = 1.0e-7f;
+    for (uint32_t i = 0; i < blockSize; ++i)
+    {
+        if (std::abs(block[0][i]) > threshold || std::abs(block[1][i]) > threshold)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+} // namespace
 
 namespace mech = sst::basic_blocks::mechanics;
 namespace sdsp = sst::basic_blocks::dsp;
@@ -118,7 +138,6 @@ void Engine::process(const clap_output_events_t *outq, const float *const *input
     else
     {
         memset(scopeInput, 0, sizeof(scopeInput));
-        scopeSnapshots.publishEmpty();
     }
 
     if (hasScopeInput)
@@ -183,6 +202,18 @@ void Engine::process(const clap_output_events_t *outq, const float *const *input
         removeVoice = removeVoice->next;
         v->next = nullptr;
         assert(!v->next && !v->prior);
+    }
+
+    if (stereoBlockHasSignal(output))
+    {
+        std::copy_n(output[0], blockSize, scopeInput[0]);
+        std::copy_n(output[1], blockSize, scopeInput[1]);
+        scopeSnapshots.publishFromPlanarStereo(scopeInput);
+    }
+    else
+    {
+        memset(scopeInput, 0, sizeof(scopeInput));
+        scopeSnapshots.publishEmpty();
     }
 
     if (isEditorAttached)
