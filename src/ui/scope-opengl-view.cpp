@@ -42,7 +42,7 @@ void ScopeOpenGLView::setSnapshot(const ScopeAudioSnapshot &snapshot)
 void ScopeOpenGLView::setVisualState(const ScopeVisualState &visualState)
 {
     const juce::ScopedLock lock(snapshotLock);
-    latestVisualState = visualState;
+    latestVisualState = sanitizedScopeVisualState(visualState);
 }
 
 void ScopeOpenGLView::resized()
