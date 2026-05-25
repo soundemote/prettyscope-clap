@@ -704,7 +704,7 @@ void PluginEditor::setAndSendParamValue(uint32_t paramId, float value, bool noti
 
     if (scopeOpenGLView && patchCopy.paramMap[paramId]->visualParameterId.size() > 0)
     {
-        scopeOpenGLView->setVisualState(currentScopeVisualState());
+        refreshScopeVisualState();
     }
 }
 
@@ -722,6 +722,7 @@ void PluginEditor::postPatchChange(const std::string &s)
     for (auto [id, f] : componentRefreshByID)
         f();
 
+    refreshScopeVisualState();
     repaint();
 }
 
@@ -832,16 +833,21 @@ void PluginEditor::sneakyStartupGrabFrom(Patch &other)
         patchCopy.paramMap.at(p->meta.id)->value = p->value;
     }
     strncpy(patchCopy.name, other.name, 255);
-    if (scopeOpenGLView)
-    {
-        scopeOpenGLView->setVisualState(currentScopeVisualState());
-    }
+    refreshScopeVisualState();
     postPatchChange(other.name);
 }
 
 ScopeVisualState PluginEditor::currentScopeVisualState() const
 {
     return patchCopy.visualParams.visualState();
+}
+
+void PluginEditor::refreshScopeVisualState()
+{
+    if (scopeOpenGLView)
+    {
+        scopeOpenGLView->setVisualState(currentScopeVisualState());
+    }
 }
 
 bool PluginEditor::toggleDebug()

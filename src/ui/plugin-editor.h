@@ -140,6 +140,7 @@ struct PluginEditor : jcmp::WindowPanel
     void sneakyStartupGrabFrom(Patch &other);
 
     ScopeVisualState currentScopeVisualState() const;
+    void refreshScopeVisualState();
 };
 
 struct HasEditor
