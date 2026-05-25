@@ -16,6 +16,7 @@
 #include "catch2/catch2.hpp"
 
 #include "engine/engine.h"
+#include "scope/scope-audio-snapshot.h"
 
 #include <memory>
 
@@ -66,5 +67,32 @@ TEST_CASE("Engine mirrors mono input to stereo output and scope tap", "[audio]")
         REQUIRE(engine->output[1][i] == mono[i]);
         REQUIRE(engine->scopeInput[0][i] == mono[i]);
         REQUIRE(engine->scopeInput[1][i] == mono[i]);
+    }
+}
+
+TEST_CASE("Scope audio snapshot copies the engine scope tap", "[audio]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+
+    float left[baconpaul::sidequest_ns::blockSize]{};
+    float right[baconpaul::sidequest_ns::blockSize]{};
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        left[i] = 0.25f + static_cast<float>(i) * 0.01f;
+        right[i] = -0.5f + static_cast<float>(i) * 0.02f;
+    }
+
+    const float *input[] = {left, right};
+    engine->process(nullptr, input, 2, baconpaul::sidequest_ns::blockSize);
+
+    baconpaul::sidequest_ns::ScopeAudioSnapshot snapshot;
+    snapshot.copyFromPlanarStereo(engine->scopeInput);
+
+    REQUIRE(snapshot.hasSignal);
+    REQUIRE(snapshot.frameCount == baconpaul::sidequest_ns::blockSize);
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        REQUIRE(snapshot.samples[0][i] == left[i]);
+        REQUIRE(snapshot.samples[1][i] == right[i]);
     }
 }

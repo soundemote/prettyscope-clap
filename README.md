@@ -5,6 +5,9 @@ Prettyscope CLAP is the plugin-shell repository for Prettyscope, built from
 
 The standalone/core visual renderer lives in the separate `prettyscope`
 repository. This repository hosts the CLAP-first JUCE plugin integration.
+Treat `prettyscope` as the golden standalone visual instrument and
+`prettyscope-clap` as the DAW-facing host shell that adapts audio, parameters,
+state, and editor lifecycle into that core.
 
 Early integration goals:
 
@@ -17,3 +20,5 @@ Early integration goals:
 This repo is not yet the finished Prettyscope plugin. The first milestone is a
 minimal hosted visualizer path: stereo host audio in, editor-safe signal snapshot,
 OpenGL scope render out.
+
+See `docs/PLUGIN_BRIDGE_PLAN.md` for the current bridge sequence and boundaries.
