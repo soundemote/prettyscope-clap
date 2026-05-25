@@ -18,7 +18,8 @@ void SimpleXyScopeRenderer::initialise(juce::OpenGLContext &) {}
 void SimpleXyScopeRenderer::shutdown() {}
 
 void SimpleXyScopeRenderer::render(const ScopeRenderContext &context,
-                                   const ScopeAudioSnapshot &snapshot)
+                                   const ScopeAudioSnapshot &snapshot,
+                                   const ScopeVisualState &visualState)
 {
     using namespace juce::gl;
 
@@ -47,12 +48,16 @@ void SimpleXyScopeRenderer::render(const ScopeRenderContext &context,
     if (snapshot.hasSignal && snapshot.frameCount > 1)
     {
         glLineWidth(2.0f * context.scale);
-        glColor4f(0.62f, 0.88f, 1.0f, 0.90f);
+        const auto beamAlpha =
+            std::clamp(0.90f * visualState.beamIntensity / 1.6f, 0.0f, 1.0f);
+        glColor4f(0.62f, 0.88f, 1.0f, beamAlpha);
         glBegin(GL_LINE_STRIP);
         for (uint32_t i = 0; i < snapshot.frameCount; ++i)
         {
-            const auto x = std::clamp(snapshot.samples[0][i], -1.0f, 1.0f);
-            const auto y = std::clamp(snapshot.samples[1][i], -1.0f, 1.0f);
+            const auto x =
+                std::clamp(snapshot.samples[0][i] * visualState.inputGain, -1.0f, 1.0f);
+            const auto y =
+                std::clamp(snapshot.samples[1][i] * visualState.inputGain, -1.0f, 1.0f);
             glVertex2f(x, y);
         }
         glEnd();

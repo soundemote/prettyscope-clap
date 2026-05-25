@@ -31,10 +31,14 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - A renderer adapter boundary now separates the JUCE/OpenGL view lifecycle from
   renderer implementation. `ScopeOpenGLView` owns the context and snapshot handoff;
   `SimpleXyScopeRenderer` owns the current XY proof drawing.
+- `ScopeVisualState` gives renderers a plain descriptor-derived visual settings
+  snapshot. The plugin/editor side still owns Sidequest/JUCE parameter plumbing;
+  renderers consume values without knowing about host parameter objects.
 
 ## Near-Term Bridge
 
-1. Stabilize the renderer adapter boundary.
+1. Keep the renderer adapter boundary stable while feeding it audio and visual
+   state snapshots.
 2. Port the standalone phosphor renderer into the renderer slot without blindly
    copying standalone application architecture.
 

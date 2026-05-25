@@ -33,6 +33,12 @@ void ScopeOpenGLView::setSnapshot(const ScopeAudioSnapshot &snapshot)
     latestSnapshot = snapshot;
 }
 
+void ScopeOpenGLView::setVisualState(const ScopeVisualState &visualState)
+{
+    const juce::ScopedLock lock(snapshotLock);
+    latestVisualState = visualState;
+}
+
 void ScopeOpenGLView::resized()
 {
     const juce::ScopedLock lock(snapshotLock);
@@ -52,15 +58,17 @@ void ScopeOpenGLView::openGLContextClosing()
 void ScopeOpenGLView::renderOpenGL()
 {
     ScopeAudioSnapshot snapshot;
+    ScopeVisualState visualState;
     juce::Rectangle<int> bounds;
     {
         const juce::ScopedLock lock(snapshotLock);
         snapshot = latestSnapshot;
+        visualState = latestVisualState;
         bounds = renderBounds;
     }
 
     renderer->render({openGLContext, bounds,
                       static_cast<float>(openGLContext.getRenderingScale())},
-                     snapshot);
+                     snapshot, visualState);
 }
 } // namespace baconpaul::sidequest_ns::ui

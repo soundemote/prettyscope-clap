@@ -17,7 +17,8 @@ namespace baconpaul::sidequest_ns::ui
 struct SimpleXyScopeRenderer : IScopeRenderer
 {
     void initialise(juce::OpenGLContext &context) override;
-    void render(const ScopeRenderContext &context, const ScopeAudioSnapshot &snapshot) override;
+    void render(const ScopeRenderContext &context, const ScopeAudioSnapshot &snapshot,
+                const ScopeVisualState &visualState) override;
     void shutdown() override;
 };
 } // namespace baconpaul::sidequest_ns::ui

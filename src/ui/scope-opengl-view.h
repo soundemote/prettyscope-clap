@@ -24,6 +24,7 @@ struct ScopeOpenGLView : juce::Component, private juce::OpenGLRenderer
     ~ScopeOpenGLView() override;
 
     void setSnapshot(const ScopeAudioSnapshot &snapshot);
+    void setVisualState(const ScopeVisualState &visualState);
     void resized() override;
 
   private:
@@ -35,6 +36,7 @@ struct ScopeOpenGLView : juce::Component, private juce::OpenGLRenderer
     std::unique_ptr<IScopeRenderer> renderer;
     juce::CriticalSection snapshotLock;
     ScopeAudioSnapshot latestSnapshot;
+    ScopeVisualState latestVisualState;
     juce::Rectangle<int> renderBounds;
 };
 } // namespace baconpaul::sidequest_ns::ui

@@ -14,6 +14,7 @@
 #include <juce_opengl/juce_opengl.h>
 
 #include "scope/scope-audio-snapshot.h"
+#include "scope/scope-visual-state.h"
 
 namespace baconpaul::sidequest_ns::ui
 {
@@ -29,7 +30,8 @@ struct IScopeRenderer
     virtual ~IScopeRenderer() = default;
 
     virtual void initialise(juce::OpenGLContext &context) = 0;
-    virtual void render(const ScopeRenderContext &context, const ScopeAudioSnapshot &snapshot) = 0;
+    virtual void render(const ScopeRenderContext &context, const ScopeAudioSnapshot &snapshot,
+                        const ScopeVisualState &visualState) = 0;
     virtual void shutdown() = 0;
 };
 } // namespace baconpaul::sidequest_ns::ui

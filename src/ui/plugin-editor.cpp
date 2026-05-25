@@ -66,6 +66,7 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
     addAndMakeVisible(*mainPanel);
 
     scopeOpenGLView = std::make_unique<ScopeOpenGLView>();
+    scopeOpenGLView->setVisualState(currentScopeVisualState());
     addAndMakeVisible(*scopeOpenGLView);
 
     scopeInspector = std::make_unique<ScopeSnapshotInspector>();
@@ -700,6 +701,11 @@ void PluginEditor::setAndSendParamValue(uint32_t paramId, float value, bool noti
             mainToAudio.push({Engine::MainToAudioMsg::Action::END_EDIT, paramId});
         requestParamsFlush();
     }
+
+    if (scopeOpenGLView && patchCopy.paramMap[paramId]->visualParameterId.size() > 0)
+    {
+        scopeOpenGLView->setVisualState(currentScopeVisualState());
+    }
 }
 
 void PluginEditor::setPatchNameDisplay()
@@ -826,7 +832,21 @@ void PluginEditor::sneakyStartupGrabFrom(Patch &other)
         patchCopy.paramMap.at(p->meta.id)->value = p->value;
     }
     strncpy(patchCopy.name, other.name, 255);
+    if (scopeOpenGLView)
+    {
+        scopeOpenGLView->setVisualState(currentScopeVisualState());
+    }
     postPatchChange(other.name);
+}
+
+ScopeVisualState PluginEditor::currentScopeVisualState() const
+{
+    ScopeVisualState visualState;
+    visualState.phosphorDecay = patchCopy.visualParams.phosphorDecay.value;
+    visualState.beamIntensity = patchCopy.visualParams.beamIntensity.value;
+    visualState.inputGain = patchCopy.visualParams.inputGain.value;
+    visualState.timeScale = patchCopy.visualParams.timeScale.value;
+    return visualState;
 }
 
 bool PluginEditor::toggleDebug()

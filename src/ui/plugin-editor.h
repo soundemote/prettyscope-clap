@@ -36,6 +36,7 @@
 #include "engine/patch.h"
 #include "presets/preset-manager.h"
 #include "scope/scope-audio-snapshot.h"
+#include "scope/scope-visual-state.h"
 #include "preset-data-binding.h"
 #include "ui-defaults.h"
 
@@ -137,6 +138,8 @@ struct PluginEditor : jcmp::WindowPanel
 
     // the name tells you about the intent. It just makes startup faster
     void sneakyStartupGrabFrom(Patch &other);
+
+    ScopeVisualState currentScopeVisualState() const;
 };
 
 struct HasEditor
