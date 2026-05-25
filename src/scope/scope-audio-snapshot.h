@@ -96,6 +96,14 @@ class ScopeAudioSnapshotQueue
         snapshots.push(snapshot);
     }
 
+    void publishEmpty()
+    {
+        if (snapshots.subscribed())
+        {
+            snapshots.push(ScopeAudioSnapshot{});
+        }
+    }
+
     std::optional<ScopeAudioSnapshot> readLatest()
     {
         auto latest = snapshots.pop();

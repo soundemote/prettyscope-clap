@@ -198,6 +198,28 @@ TEST_CASE("Engine publishes subscribed scope snapshots", "[audio]")
     }
 }
 
+TEST_CASE("Engine publishes empty scope snapshot when input disappears", "[audio]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+    engine->scopeSnapshots.subscribe();
+
+    float left[baconpaul::sidequest_ns::blockSize]{};
+    float right[baconpaul::sidequest_ns::blockSize]{};
+    left[0] = 0.5f;
+    right[0] = -0.5f;
+
+    const float *input[] = {left, right};
+    engine->process(nullptr, input, 2, baconpaul::sidequest_ns::blockSize);
+    REQUIRE(engine->scopeSnapshots.readLatest()->hasSignal);
+
+    engine->process(nullptr, nullptr, 0, 0);
+    const auto snapshot = engine->scopeSnapshots.readLatest();
+
+    REQUIRE(snapshot.has_value());
+    REQUIRE_FALSE(snapshot->hasSignal);
+    REQUIRE(snapshot->frameCount == 0);
+}
+
 TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;

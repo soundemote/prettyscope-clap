@@ -73,6 +73,7 @@ void Engine::process(const clap_output_events_t *outq, const float *const *input
         memset(output, 0, sizeof(output));
         memset(scopeInput, 0, sizeof(scopeInput));
         hasScopeInput = false;
+        scopeSnapshots.publishEmpty();
         return;
     }
 
@@ -116,6 +117,7 @@ void Engine::process(const clap_output_events_t *outq, const float *const *input
     else
     {
         memset(scopeInput, 0, sizeof(scopeInput));
+        scopeSnapshots.publishEmpty();
     }
 
     if (hasScopeInput)
