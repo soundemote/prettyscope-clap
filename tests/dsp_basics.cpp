@@ -220,6 +220,25 @@ TEST_CASE("Engine publishes empty scope snapshot when input disappears", "[audio
     REQUIRE(snapshot->frameCount == 0);
 }
 
+TEST_CASE("Engine applies notified parameter updates without CLAP output queue", "[params]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+    const auto *descriptor = baconpaul::sidequest_ns::visualFloatParameterById("input_gain");
+    REQUIRE(descriptor != nullptr);
+
+    engine->mainToAudio.push({baconpaul::sidequest_ns::Engine::MainToAudioMsg::BEGIN_EDIT,
+                              descriptor->stableId.value});
+    engine->mainToAudio.push({baconpaul::sidequest_ns::Engine::MainToAudioMsg::SET_PARAM,
+                              descriptor->stableId.value, descriptor->midValue});
+    engine->mainToAudio.push({baconpaul::sidequest_ns::Engine::MainToAudioMsg::END_EDIT,
+                              descriptor->stableId.value});
+
+    engine->process(nullptr, nullptr, 0, 0);
+
+    REQUIRE(engine->patch.dirty);
+    REQUIRE(engine->beginEndParamGestureCount == 0);
+}
+
 TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;

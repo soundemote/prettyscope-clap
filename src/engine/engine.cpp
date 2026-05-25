@@ -294,23 +294,26 @@ void Engine::processUIQueue(const clap_output_events_t *outq)
                 else
                     dest->value = uiM->value;
 
-                clap_event_param_value_t p;
-                p.header.size = sizeof(clap_event_param_value_t);
-                p.header.time = 0;
-                p.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
-                p.header.type = CLAP_EVENT_PARAM_VALUE;
-                p.header.flags = 0;
-                p.param_id = uiM->paramId;
-                p.cookie = dest;
+                if (outq)
+                {
+                    clap_event_param_value_t p;
+                    p.header.size = sizeof(clap_event_param_value_t);
+                    p.header.time = 0;
+                    p.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
+                    p.header.type = CLAP_EVENT_PARAM_VALUE;
+                    p.header.flags = 0;
+                    p.param_id = uiM->paramId;
+                    p.cookie = dest;
 
-                p.note_id = -1;
-                p.port_index = -1;
-                p.channel = -1;
-                p.key = -1;
+                    p.note_id = -1;
+                    p.port_index = -1;
+                    p.channel = -1;
+                    p.key = -1;
 
-                p.value = uiM->value;
+                    p.value = uiM->value;
 
-                outq->try_push(outq, &p.header);
+                    outq->try_push(outq, &p.header);
+                }
             }
             else
             {
@@ -338,17 +341,20 @@ void Engine::processUIQueue(const clap_output_events_t *outq)
             {
                 beginEndParamGestureCount--;
             }
-            clap_event_param_gesture_t p;
-            p.header.size = sizeof(clap_event_param_gesture_t);
-            p.header.time = 0;
-            p.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
-            p.header.type = uiM->action == MainToAudioMsg::BEGIN_EDIT
-                                ? CLAP_EVENT_PARAM_GESTURE_BEGIN
-                                : CLAP_EVENT_PARAM_GESTURE_END;
-            p.header.flags = 0;
-            p.param_id = uiM->paramId;
+            if (outq)
+            {
+                clap_event_param_gesture_t p;
+                p.header.size = sizeof(clap_event_param_gesture_t);
+                p.header.time = 0;
+                p.header.space_id = CLAP_CORE_EVENT_SPACE_ID;
+                p.header.type = uiM->action == MainToAudioMsg::BEGIN_EDIT
+                                    ? CLAP_EVENT_PARAM_GESTURE_BEGIN
+                                    : CLAP_EVENT_PARAM_GESTURE_END;
+                p.header.flags = 0;
+                p.param_id = uiM->paramId;
 
-            outq->try_push(outq, &p.header);
+                outq->try_push(outq, &p.header);
+            }
         }
         break;
         case MainToAudioMsg::STOP_AUDIO:
