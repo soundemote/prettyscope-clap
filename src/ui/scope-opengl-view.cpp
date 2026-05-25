@@ -9,14 +9,14 @@
 
 #include "scope-opengl-view.h"
 
-#include "simple-xy-scope-renderer.h"
+#include "phosphor-scope-renderer.h"
 
 #include <utility>
 
 namespace baconpaul::sidequest_ns::ui
 {
 ScopeOpenGLView::ScopeOpenGLView()
-    : ScopeOpenGLView(std::make_unique<SimpleXyScopeRenderer>())
+    : ScopeOpenGLView(std::make_unique<PhosphorScopeRenderer>())
 {
 }
 

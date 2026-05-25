@@ -48,13 +48,19 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
   while making the future phosphor renderer slot less fragile.
 - The snapshot inspector displays the same sanitized frame count that renderers
   consume through `ScopeAudioSnapshot::validFrameCount()`.
+- The default OpenGL renderer is now `PhosphorScopeRenderer`, a focused port of
+  the standalone golden beam/persistence core. It adapts the standalone
+  Woscope-style Gaussian beam shader and phosphor decay pass into the JUCE
+  renderer slot while consuming `ScopeAudioSnapshot` and `ScopeVisualState`.
 
 ## Near-Term Bridge
 
 1. Keep the renderer adapter boundary stable while feeding it audio and visual
    state snapshots.
-2. Port the standalone phosphor renderer into the renderer slot without blindly
-   copying standalone application architecture.
+2. Verify the phosphor renderer in a DAW/standalone with real audio input and
+   tune only adapter-level scale issues before expanding renderer features.
+3. Continue porting standalone visual controls only when they map cleanly to the
+   descriptor-owned parameter layer.
 
 ## Boundaries
 
