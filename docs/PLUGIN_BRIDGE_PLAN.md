@@ -22,12 +22,14 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - The editor's small `Visual Parameters` panel is descriptor-driven and exposes
   the first four adapted visual parameters through the existing Sidequest knob
   binding path.
+- A tiny JUCE `ScopeSnapshotInspector` reads the latest subscribed audio
+  snapshot and displays simple left/right input levels. This is only a bridge
+  proof, not the OpenGL scope renderer.
 
 ## Near-Term Bridge
 
-1. Add a minimal JUCE editor component that can inspect the latest snapshot.
-2. Embed a first OpenGL component without changing the standalone golden look.
-3. Port the standalone phosphor renderer into a reusable module boundary.
+1. Embed a first OpenGL component without changing the standalone golden look.
+2. Port the standalone phosphor renderer into a reusable module boundary.
 
 ## Boundaries
 

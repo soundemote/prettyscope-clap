@@ -25,6 +25,7 @@
 #include "preset-data-binding.h"
 #include "patch-data-bindings.h"
 #include "main-panel.h"
+#include "scope-snapshot-inspector.h"
 
 namespace baconpaul::sidequest_ns::ui
 {
@@ -62,6 +63,9 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
     mainPanel = std::make_unique<MainPanel>(*this);
     mainPanel->hasHamburger = false;
     addAndMakeVisible(*mainPanel);
+
+    scopeInspector = std::make_unique<ScopeSnapshotInspector>();
+    addAndMakeVisible(*scopeInspector);
 
     auto startMsg = Engine::MainToAudioMsg{Engine::MainToAudioMsg::REQUEST_REFRESH};
     mainToAudio.push(startMsg);
@@ -134,6 +138,7 @@ void PluginEditor::idle()
     {
         latestScopeSnapshot = *snapshot;
         scopeSnapshotReadCount++;
+        scopeInspector->setSnapshot(latestScopeSnapshot);
     }
 
     auto aum = audioToUI.pop();
@@ -247,11 +252,13 @@ void PluginEditor::paint(juce::Graphics &g)
 
 void PluginEditor::resized()
 {
-    int presetHeight{33}, footerHeight{15};
+    int presetHeight{33}, inspectorHeight{58}, footerHeight{15};
 
     auto lb = getLocalBounds();
     auto presetArea = lb.withHeight(presetHeight);
-    auto panelArea = lb.withTrimmedTop(presetHeight).withTrimmedBottom(footerHeight);
+    auto contentArea = lb.withTrimmedTop(presetHeight).withTrimmedBottom(footerHeight);
+    auto inspectorArea = contentArea.removeFromBottom(inspectorHeight);
+    auto panelArea = contentArea;
 
     auto panelMargin{3};
     auto uicMargin{4};
@@ -262,6 +269,7 @@ void PluginEditor::resized()
 
     vuMeter->setBounds(but);
 
+    scopeInspector->setBounds(inspectorArea.reduced(panelMargin, 5));
     mainPanel->setBounds(panelArea.reduced(panelMargin));
 }
 
