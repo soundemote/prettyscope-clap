@@ -42,6 +42,7 @@ add_library(${PROJECT_NAME}-impl STATIC
 
         src/ui/plugin-editor.cpp
         src/ui/main-panel.cpp
+        src/ui/simple-xy-scope-renderer.cpp
         src/ui/scope-opengl-view.cpp
         src/ui/scope-snapshot-inspector.cpp
 

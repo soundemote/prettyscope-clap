@@ -14,6 +14,7 @@
 #include <juce_opengl/juce_opengl.h>
 
 #include "scope/scope-audio-snapshot.h"
+#include "scope-renderer.h"
 
 namespace baconpaul::sidequest_ns::ui
 {
@@ -31,6 +32,7 @@ struct ScopeOpenGLView : juce::Component, private juce::OpenGLRenderer
     void openGLContextClosing() override;
 
     juce::OpenGLContext openGLContext;
+    std::unique_ptr<IScopeRenderer> renderer;
     juce::CriticalSection snapshotLock;
     ScopeAudioSnapshot latestSnapshot;
     juce::Rectangle<int> renderBounds;
