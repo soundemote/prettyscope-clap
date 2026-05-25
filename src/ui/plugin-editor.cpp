@@ -25,6 +25,7 @@
 #include "preset-data-binding.h"
 #include "patch-data-bindings.h"
 #include "main-panel.h"
+#include "scope-opengl-view.h"
 #include "scope-snapshot-inspector.h"
 
 namespace baconpaul::sidequest_ns::ui
@@ -63,6 +64,9 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
     mainPanel = std::make_unique<MainPanel>(*this);
     mainPanel->hasHamburger = false;
     addAndMakeVisible(*mainPanel);
+
+    scopeOpenGLView = std::make_unique<ScopeOpenGLView>();
+    addAndMakeVisible(*scopeOpenGLView);
 
     scopeInspector = std::make_unique<ScopeSnapshotInspector>();
     addAndMakeVisible(*scopeInspector);
@@ -138,6 +142,7 @@ void PluginEditor::idle()
     {
         latestScopeSnapshot = *snapshot;
         scopeSnapshotReadCount++;
+        scopeOpenGLView->setSnapshot(latestScopeSnapshot);
         scopeInspector->setSnapshot(latestScopeSnapshot);
     }
 
@@ -252,12 +257,13 @@ void PluginEditor::paint(juce::Graphics &g)
 
 void PluginEditor::resized()
 {
-    int presetHeight{33}, inspectorHeight{58}, footerHeight{15};
+    int presetHeight{33}, scopeHeight{150}, inspectorHeight{58}, footerHeight{15};
 
     auto lb = getLocalBounds();
     auto presetArea = lb.withHeight(presetHeight);
     auto contentArea = lb.withTrimmedTop(presetHeight).withTrimmedBottom(footerHeight);
     auto inspectorArea = contentArea.removeFromBottom(inspectorHeight);
+    auto scopeArea = contentArea.removeFromBottom(scopeHeight);
     auto panelArea = contentArea;
 
     auto panelMargin{3};
@@ -269,6 +275,7 @@ void PluginEditor::resized()
 
     vuMeter->setBounds(but);
 
+    scopeOpenGLView->setBounds(scopeArea.reduced(panelMargin, 5));
     scopeInspector->setBounds(inspectorArea.reduced(panelMargin, 5));
     mainPanel->setBounds(panelArea.reduced(panelMargin));
 }

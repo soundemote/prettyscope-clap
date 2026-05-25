@@ -25,11 +25,13 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - A tiny JUCE `ScopeSnapshotInspector` reads the latest subscribed audio
   snapshot and displays simple left/right input levels. This is only a bridge
   proof, not the OpenGL scope renderer.
+- A first JUCE/OpenGL scope view exists in the editor and renders the latest
+  snapshot as a simple XY line strip. This proves OpenGL lifecycle and
+  audio-snapshot feeding before the golden phosphor renderer is ported.
 
 ## Near-Term Bridge
 
-1. Embed a first OpenGL component without changing the standalone golden look.
-2. Port the standalone phosphor renderer into a reusable module boundary.
+1. Port the standalone phosphor renderer into a reusable module boundary.
 
 ## Boundaries
 

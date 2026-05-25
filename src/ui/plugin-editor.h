@@ -46,6 +46,7 @@ namespace baconpaul::sidequest_ns::ui
 {
 
 struct MainPanel;
+struct ScopeOpenGLView;
 struct ScopeSnapshotInspector;
 
 struct PluginEditor : jcmp::WindowPanel
@@ -73,6 +74,7 @@ struct PluginEditor : jcmp::WindowPanel
     uint64_t scopeSnapshotReadCount{0};
 
     std::unique_ptr<MainPanel> mainPanel;
+    std::unique_ptr<ScopeOpenGLView> scopeOpenGLView;
     std::unique_ptr<ScopeSnapshotInspector> scopeInspector;
     void doSinglePanelHamburger();
     void activateHamburger(bool b);
