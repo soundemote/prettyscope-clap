@@ -10,7 +10,6 @@
 #include "scope-snapshot-inspector.h"
 
 #include <algorithm>
-#include <cmath>
 
 namespace baconpaul::sidequest_ns::ui
 {
@@ -18,14 +17,8 @@ void ScopeSnapshotInspector::setSnapshot(const ScopeAudioSnapshot &snapshot)
 {
     hasSignal = snapshot.hasSignal;
     frameCount = snapshot.frameCount;
-    leftPeak = 0.0f;
-    rightPeak = 0.0f;
-
-    for (uint32_t i = 0; i < snapshot.frameCount; ++i)
-    {
-        leftPeak = std::max(leftPeak, std::abs(snapshot.samples[0][i]));
-        rightPeak = std::max(rightPeak, std::abs(snapshot.samples[1][i]));
-    }
+    leftPeak = snapshot.peak(0);
+    rightPeak = snapshot.peak(1);
 
     repaint();
 }

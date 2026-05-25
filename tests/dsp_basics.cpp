@@ -101,6 +101,22 @@ TEST_CASE("Scope audio snapshot copies the engine scope tap", "[audio]")
     }
 }
 
+TEST_CASE("Scope audio snapshot reports per-channel peaks", "[audio]")
+{
+    float block[2][baconpaul::sidequest_ns::blockSize]{};
+    block[0][0] = -0.25f;
+    block[0][1] = 0.75f;
+    block[1][0] = -0.5f;
+    block[1][1] = 0.125f;
+
+    baconpaul::sidequest_ns::ScopeAudioSnapshot snapshot;
+    snapshot.copyFromPlanarStereo(block, 2);
+
+    REQUIRE(snapshot.peak(0) == Approx(0.75f));
+    REQUIRE(snapshot.peak(1) == Approx(0.5f));
+    REQUIRE(snapshot.peak(2) == Approx(0.0f));
+}
+
 TEST_CASE("Scope audio snapshot queue returns the latest published block", "[audio]")
 {
     baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;

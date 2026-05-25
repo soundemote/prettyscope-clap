@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstring>
+#include <cmath>
 #include <optional>
 
 #include "configuration.h"
@@ -45,6 +46,22 @@ struct ScopeAudioSnapshot
 
         frameCount = framesToCopy;
         hasSignal = frameCount > 0;
+    }
+
+    float peak(uint32_t channel) const
+    {
+        if (channel >= 2)
+        {
+            return 0.0f;
+        }
+
+        float result{0.0f};
+        for (uint32_t i = 0; i < frameCount; ++i)
+        {
+            result = std::max(result, std::abs(samples[channel][i]));
+        }
+
+        return result;
     }
 };
 
