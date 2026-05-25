@@ -37,10 +37,12 @@ inline float clampVisualFloat(std::string_view id, float value)
 
 inline ScopeVisualState sanitizedScopeVisualState(ScopeVisualState state)
 {
-    state.phosphorDecay = clampVisualFloat("phosphor_decay", state.phosphorDecay);
-    state.beamIntensity = clampVisualFloat("beam_intensity", state.beamIntensity);
-    state.inputGain = clampVisualFloat("input_gain", state.inputGain);
-    state.timeScale = clampVisualFloat("time_scale", state.timeScale);
+    state.phosphorDecay =
+        clampVisualFloat(kPhosphorDecayVisualParameterId, state.phosphorDecay);
+    state.beamIntensity =
+        clampVisualFloat(kBeamIntensityVisualParameterId, state.beamIntensity);
+    state.inputGain = clampVisualFloat(kInputGainVisualParameterId, state.inputGain);
+    state.timeScale = clampVisualFloat(kTimeScaleVisualParameterId, state.timeScale);
     return state;
 }
 } // namespace baconpaul::sidequest_ns

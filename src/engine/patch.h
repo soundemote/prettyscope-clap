@@ -126,9 +126,10 @@ struct Patch : pats::PatchBase<Patch, Param>
     struct VisualNode
     {
         VisualNode()
-            : phosphorDecay(makeParam("phosphor_decay")),
-              beamIntensity(makeParam("beam_intensity")), inputGain(makeParam("input_gain")),
-              timeScale(makeParam("time_scale"))
+            : phosphorDecay(makeParam(kPhosphorDecayVisualParameterId)),
+              beamIntensity(makeParam(kBeamIntensityVisualParameterId)),
+              inputGain(makeParam(kInputGainVisualParameterId)),
+              timeScale(makeParam(kTimeScaleVisualParameterId))
         {
         }
 
