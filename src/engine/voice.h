@@ -27,7 +27,7 @@ struct Patch;
 
 struct Voice
 {
-    Voice(const Patch &p) : pitch(p.sqParams.pitch), harmlev(p.sqParams.harmlev) {}
+    Voice(const Patch &) {}
     ~Voice() = default;
 
     void attack()
@@ -42,7 +42,7 @@ struct Voice
     }
     void renderBlock()
     {
-        auto udp = dPhase * pow(2.f, pitch / 12);
+        auto udp = dPhase;
 
         auto amp = 1.0;
         auto damp = 0.f;
@@ -64,7 +64,7 @@ struct Voice
         for (int i = 0; i < blockSize; ++i)
         {
             auto sv = 0.3 * amp * std::sin(phase * 2.0 * M_PI);
-            auto sv2 = 0.3 * harmlev * amp * std::sin(phase * 4.0 * M_PI);
+            auto sv2 = 0.0;
             amp += damp;
             phase += udp;
             output[0][i] = sv + sv2;
@@ -110,8 +110,6 @@ struct Voice
 
     float output alignas(16)[2][blockSize];
     Voice *prior{nullptr}, *next{nullptr};
-
-    const float &pitch, &harmlev;
 };
 } // namespace baconpaul::sidequest_ns
 #endif // VOICE_H

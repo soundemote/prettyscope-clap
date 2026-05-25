@@ -28,6 +28,7 @@
 #include "sst/basic-blocks/dsp/Lag.h"
 #include "sst/basic-blocks/modulators/DAHDSREnvelope.h"
 #include "sst/plugininfra/patch-support/patch_base.h"
+#include "scope/visual-parameters.h"
 
 namespace baconpaul::sidequest_ns
 {
@@ -37,6 +38,7 @@ using md_t = sst::basic_blocks::params::ParamMetaData;
 struct Param : pats::ParamBase, sst::cpputils::active_set_overlay<Param>::participant
 {
     Param(const md_t &m) : pats::ParamBase(m) {}
+    Param(const md_t &m, std::string visualId) : pats::ParamBase(m), visualParameterId(visualId) {}
 
     Param &operator=(const float &val)
     {
@@ -60,6 +62,7 @@ struct Param : pats::ParamBase, sst::cpputils::active_set_overlay<Param>::partic
     Param *tempoSyncPartner{nullptr};
 
     sst::basic_blocks::dsp::LinearLag<float, false> lag;
+    std::string visualParameterId;
 };
 
 struct Patch : pats::PatchBase<Patch, Param>
@@ -83,7 +86,7 @@ struct Patch : pats::PatchBase<Patch, Param>
     {
         auto pushParams = [this](auto &from) { this->pushMultipleParams(from.params()); };
 
-        pushParams(sqParams);
+        pushParams(visualParams);
 
         std::sort(params.begin(), params.end(),
                   [](const Param *a, const Param *b)
@@ -119,34 +122,59 @@ struct Patch : pats::PatchBase<Patch, Param>
                   });
     }
 
-    struct SidequestNode
+    struct VisualNode
     {
-        static constexpr uint32_t idBase{500};
-
-        SidequestNode()
-            : pitch(floatMd()
-                        .asSemitoneRange(-24, 24)
-                        .withDefault(0)
-                        .withName("Pitch Offset")
-                        .withID(id(0))),
-              harmlev(floatMd().asPercent().withDefault(0.f).withName("Harmonic 2").withID(id(1)))
-
+        VisualNode()
+            : phosphorDecay(makeParam("phosphor_decay")),
+              beamIntensity(makeParam("beam_intensity")), inputGain(makeParam("input_gain")),
+              timeScale(makeParam("time_scale"))
         {
         }
 
         std::string name() const { return "Prettyscope"; }
-        uint32_t id(int f) const { return idBase + f; }
 
-        Param pitch, harmlev;
+        static md_t metadataFrom(const VisualFloatParameterDescriptor &descriptor)
+        {
+            uint32_t flags = 0;
+            if (descriptor.automatable)
+            {
+                flags |= CLAP_PARAM_IS_AUTOMATABLE;
+            }
+            if (!descriptor.visible)
+            {
+                flags |= CLAP_PARAM_IS_HIDDEN;
+            }
+
+            return md_t()
+                .asFloat()
+                .withFlags(flags)
+                .withID(descriptor.stableId.value)
+                .withName(std::string(descriptor.displayName))
+                .withGroupName(std::string(descriptor.category))
+                .withRange(descriptor.minValue, descriptor.maxValue)
+                .withDefault(descriptor.defaultValue);
+        }
+
+        static Param makeParam(std::string_view visualId)
+        {
+            const auto *descriptor = visualFloatParameterById(visualId);
+            assert(descriptor);
+            return Param(metadataFrom(*descriptor), std::string(descriptor->id));
+        }
+
+        Param phosphorDecay;
+        Param beamIntensity;
+        Param inputGain;
+        Param timeScale;
 
         std::vector<Param *> params()
         {
-            std::vector<Param *> res{&pitch, &harmlev};
+            std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale};
             return res;
         }
     };
 
-    SidequestNode sqParams;
+    VisualNode visualParams;
 
     char name[256]{"Init"};
 

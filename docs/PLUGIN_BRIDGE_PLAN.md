@@ -16,10 +16,13 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
   and lets the editor side drain to the newest available block.
 - The editor subscribes to the snapshot queue while it exists and stores the
   latest block during its idle tick.
+- Prettyscope visual float descriptors now adapt into the Sidequest `Patch` and
+  `Param` system. Descriptor string IDs remain the visual source of truth, while
+  descriptor stable numeric IDs become the host-facing CLAP/patch IDs.
 
 ## Near-Term Bridge
 
-1. Replace inherited synth parameters with Prettyscope visual descriptors.
+1. Expand descriptor coverage beyond the first four visual proof parameters.
 2. Add a minimal JUCE editor component that can inspect the latest snapshot.
 3. Embed a first OpenGL component without changing the standalone golden look.
 4. Port the standalone phosphor renderer into a reusable module boundary.

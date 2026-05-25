@@ -17,9 +17,12 @@
 
 #include "engine/engine.h"
 #include "scope/scope-audio-snapshot.h"
+#include "scope/visual-parameters.h"
+#include "sst/plugininfra/patch-support/patch_base_clap_adapter.h"
 
 #include <algorithm>
 #include <memory>
+#include <string>
 
 TEST_CASE("Some DSP Test", "[dsp]") { REQUIRE(1 + 1 == 2); }
 
@@ -158,5 +161,69 @@ TEST_CASE("Engine publishes subscribed scope snapshots", "[audio]")
     {
         REQUIRE(snapshot->samples[0][i] == left[i]);
         REQUIRE(snapshot->samples[1][i] == right[i]);
+    }
+}
+
+TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    const auto descriptors = baconpaul::sidequest_ns::visualFloatParameters();
+
+    REQUIRE(patch.params.size() == descriptors.size());
+
+    for (const auto &descriptor : descriptors)
+    {
+        auto found = patch.paramMap.find(descriptor.stableId.value);
+        REQUIRE(found != patch.paramMap.end());
+
+        const auto *param = found->second;
+        REQUIRE(param->visualParameterId == descriptor.id);
+        REQUIRE(param->meta.id == descriptor.stableId.value);
+        REQUIRE(param->meta.name == descriptor.displayName);
+        REQUIRE(param->meta.groupName == descriptor.category);
+        REQUIRE(param->meta.minVal == descriptor.minValue);
+        REQUIRE(param->meta.maxVal == descriptor.maxValue);
+        REQUIRE(param->meta.defaultVal == descriptor.defaultValue);
+        REQUIRE((param->meta.flags & CLAP_PARAM_IS_AUTOMATABLE) != 0);
+    }
+}
+
+TEST_CASE("Prettyscope visual params roundtrip through Sidequest values", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    const auto *descriptor = baconpaul::sidequest_ns::visualFloatParameterById("input_gain");
+
+    REQUIRE(descriptor != nullptr);
+
+    auto *param = patch.paramMap.at(descriptor->stableId.value);
+    const auto normalized = param->meta.naturalToNormalized01(descriptor->midValue);
+    const auto raw = param->meta.normalized01ToNatural(normalized);
+
+    param->value = raw;
+
+    REQUIRE(param->visualParameterId == "input_gain");
+    REQUIRE(raw == Approx(descriptor->midValue));
+    REQUIRE(param->value == Approx(descriptor->midValue));
+    REQUIRE(param->meta.naturalToNormalized01(param->value) == normalized);
+}
+
+TEST_CASE("Prettyscope visual params appear through CLAP patch adapter", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    for (uint32_t index = 0; index < patch.params.size(); ++index)
+    {
+        clap_param_info info{};
+
+        REQUIRE(sst::plugininfra::patch_support::patchParamsInfo(index, &info, patch));
+        const auto *descriptor = baconpaul::sidequest_ns::visualFloatParameterByStableId(info.id);
+
+        REQUIRE(descriptor != nullptr);
+        REQUIRE(std::string(info.name) == descriptor->displayName);
+        REQUIRE(std::string(info.module) == descriptor->category);
+        REQUIRE((info.flags & CLAP_PARAM_IS_AUTOMATABLE) != 0);
+
+        double value = -1.0;
+        REQUIRE(sst::plugininfra::patch_support::patchParamsValue(info.id, &value, patch));
+        REQUIRE(value == Approx(descriptor->defaultValue));
     }
 }
