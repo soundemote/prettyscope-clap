@@ -16,6 +16,7 @@
 #include "catch2/catch2.hpp"
 
 #include "engine/engine.h"
+#include "presets/preset-manager.h"
 #include "scope/scope-audio-snapshot.h"
 #include "scope/visual-parameters.h"
 #include "sst/plugininfra/patch-support/patch_base_clap_adapter.h"
@@ -237,6 +238,35 @@ TEST_CASE("Engine applies notified parameter updates without CLAP output queue",
 
     REQUIRE(engine->patch.dirty);
     REQUIRE(engine->beginEndParamGestureCount == 0);
+}
+
+TEST_CASE("Preset patch send queues audio updates without CLAP host", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    auto mainToAudio = std::make_unique<baconpaul::sidequest_ns::Engine::mainToAudioQueue_T>();
+
+    baconpaul::sidequest_ns::presets::PresetManager::sendEntirePatchToAudio(
+        patch, *mainToAudio, "Standalone", nullptr);
+
+    auto message = mainToAudio->pop();
+    REQUIRE(message.has_value());
+    REQUIRE(message->action == baconpaul::sidequest_ns::Engine::MainToAudioMsg::SEND_PATCH_NAME);
+
+    message = mainToAudio->pop();
+    REQUIRE(message.has_value());
+    REQUIRE(message->action == baconpaul::sidequest_ns::Engine::MainToAudioMsg::STOP_AUDIO);
+
+    for (uint32_t i = 0; i < patch.params.size(); ++i)
+    {
+        message = mainToAudio->pop();
+        REQUIRE(message.has_value());
+        REQUIRE(message->action ==
+                baconpaul::sidequest_ns::Engine::MainToAudioMsg::SET_PARAM_WITHOUT_NOTIFYING);
+    }
+
+    message = mainToAudio->pop();
+    REQUIRE(message.has_value());
+    REQUIRE(message->action == baconpaul::sidequest_ns::Engine::MainToAudioMsg::START_AUDIO);
 }
 
 TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[params]")

@@ -240,7 +240,7 @@ void PresetManager::loadInit(Patch &patch, Engine::mainToAudioQueue_T &mainToAud
 void PresetManager::sendEntirePatchToAudio(Patch &patch, Engine::mainToAudioQueue_T &mainToAudio,
                                            const std::string &s)
 {
-    if (!clapHostParams)
+    if (clapHost && !clapHostParams)
     {
         clapHostParams = static_cast<const clap_host_params_t *>(
             clapHost->get_extension(clapHost, CLAP_EXT_PARAMS));
@@ -252,10 +252,7 @@ void PresetManager::sendEntirePatchToAudio(Patch &patch, Engine::mainToAudioQueu
                                            const std::string &name, const clap_host_t *h,
                                            const clap_host_params_t *hostPar)
 {
-    if (!h)
-        return;
-
-    if (hostPar == nullptr)
+    if (h && hostPar == nullptr)
     {
         hostPar = static_cast<const clap_host_params_t *>(h->get_extension(h, CLAP_EXT_PARAMS));
     }
@@ -279,7 +276,7 @@ void PresetManager::sendEntirePatchToAudio(Patch &patch, Engine::mainToAudioQueu
     mainToAudio.push({Engine::MainToAudioMsg::SEND_POST_LOAD, true});
     mainToAudio.push({Engine::MainToAudioMsg::SEND_REQUEST_RESCAN, true});
 
-    if (hostPar)
+    if (h && hostPar)
     {
         hostPar->request_flush(h);
     }

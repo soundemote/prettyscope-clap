@@ -18,7 +18,6 @@
 
 #include <clap/clap.h>
 #include "filesystem/import.h"
-#include "sst/jucegui/data/Discrete.h"
 #include "engine/patch.h"
 #include "engine/engine.h"
 #include <map>
