@@ -56,13 +56,17 @@ struct ScopeAudioSnapshot
         }
 
         float result{0.0f};
-        for (uint32_t i = 0; i < frameCount; ++i)
+        for (uint32_t i = 0; i < validFrameCount(); ++i)
         {
             result = std::max(result, std::abs(samples[channel][i]));
         }
 
         return result;
     }
+
+    uint32_t validFrameCount() const { return std::min<uint32_t>(frameCount, blockSize); }
+
+    bool hasRenderableTrace() const { return hasSignal && validFrameCount() > 1; }
 };
 
 class ScopeAudioSnapshotQueue

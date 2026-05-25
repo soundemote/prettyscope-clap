@@ -117,6 +117,24 @@ TEST_CASE("Scope audio snapshot reports per-channel peaks", "[audio]")
     REQUIRE(snapshot.peak(2) == Approx(0.0f));
 }
 
+TEST_CASE("Scope audio snapshot exposes renderable frame state", "[audio]")
+{
+    float block[2][baconpaul::sidequest_ns::blockSize]{};
+
+    baconpaul::sidequest_ns::ScopeAudioSnapshot snapshot;
+    snapshot.copyFromPlanarStereo(block, 1);
+
+    REQUIRE(snapshot.validFrameCount() == 1);
+    REQUIRE_FALSE(snapshot.hasRenderableTrace());
+
+    snapshot.copyFromPlanarStereo(block, 2);
+    REQUIRE(snapshot.validFrameCount() == 2);
+    REQUIRE(snapshot.hasRenderableTrace());
+
+    snapshot.frameCount = baconpaul::sidequest_ns::blockSize + 100;
+    REQUIRE(snapshot.validFrameCount() == baconpaul::sidequest_ns::blockSize);
+}
+
 TEST_CASE("Scope audio snapshot queue returns the latest published block", "[audio]")
 {
     baconpaul::sidequest_ns::ScopeAudioSnapshotQueue queue;
