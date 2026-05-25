@@ -176,10 +176,10 @@ void PluginEditor::idle()
         }
         else if (aum->action == Engine::AudioToUIMsg::DO_PARAM_RESCAN)
         {
-            if (!clapParamsExtension)
+            if (clapHost && !clapParamsExtension)
                 clapParamsExtension = static_cast<const clap_host_params_t *>(
                     clapHost->get_extension(clapHost, CLAP_EXT_PARAMS));
-            if (clapParamsExtension)
+            if (clapHost && clapParamsExtension)
             {
                 clapParamsExtension->rescan(clapHost,
                                             CLAP_PARAM_RESCAN_VALUES | CLAP_PARAM_RESCAN_TEXT);
@@ -436,7 +436,7 @@ void PluginEditor::popupMenuForContinuous(jcmp::ContinuousParamEditor *e)
 
     // I could also stick the param id onto the component properties I guess
     auto pid = sst::jucegui::component_adapters::getClapParamId(e);
-    if (pid.has_value())
+    if (clapHost && pid.has_value())
     {
         sst::clap_juce_shim::populateMenuForClapParam(p, *pid, clapHost);
     }
@@ -817,6 +817,11 @@ void PluginEditor::activateHamburger(bool b)
 
 void PluginEditor::requestParamsFlush()
 {
+    if (!clapHost)
+    {
+        return;
+    }
+
     if (!clapParamsExtension)
         clapParamsExtension = static_cast<const clap_host_params_t *>(
             clapHost->get_extension(clapHost, CLAP_EXT_PARAMS));

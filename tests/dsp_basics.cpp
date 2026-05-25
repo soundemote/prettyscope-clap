@@ -269,6 +269,21 @@ TEST_CASE("Preset patch send queues audio updates without CLAP host", "[params]"
     REQUIRE(message->action == baconpaul::sidequest_ns::Engine::MainToAudioMsg::START_AUDIO);
 }
 
+TEST_CASE("Engine handles parameter rescan requests without CLAP host", "[params]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+
+    engine->mainToAudio.push(
+        {baconpaul::sidequest_ns::Engine::MainToAudioMsg::SEND_REQUEST_RESCAN});
+
+    engine->process(nullptr, nullptr, 0, 0);
+    engine->onMainThread();
+
+    auto message = engine->audioToUi.pop();
+    REQUIRE(message.has_value());
+    REQUIRE(message->action == baconpaul::sidequest_ns::Engine::AudioToUIMsg::DO_PARAM_RESCAN);
+}
+
 TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[params]")
 {
     baconpaul::sidequest_ns::Patch patch;

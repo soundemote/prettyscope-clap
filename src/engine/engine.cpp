@@ -397,7 +397,10 @@ void Engine::processUIQueue(const clap_output_events_t *outq)
         {
             onMainRescanParams = true;
             audioToUi.push({AudioToUIMsg::DO_PARAM_RESCAN});
-            clapHost->request_callback(clapHost);
+            if (clapHost)
+            {
+                clapHost->request_callback(clapHost);
+            }
         }
         break;
         case MainToAudioMsg::EDITOR_ATTACH_DETATCH:
@@ -444,6 +447,11 @@ void Engine::pushFullUIRefresh()
 
 void Engine::onMainThread()
 {
+    if (!clapHost)
+    {
+        return;
+    }
+
     bool ex{true}, re{false};
     if (onMainRescanParams.compare_exchange_strong(ex, re))
     {
