@@ -123,7 +123,7 @@ struct PluginEditor : jcmp::WindowPanel
     std::function<void(float)> onZoomChanged{nullptr};
     bool toggleDebug();
 
-    static constexpr uint32_t edWidth{600}, edHeight{400};
+    static constexpr uint32_t edWidth{760}, edHeight{560};
 
     std::unique_ptr<jcmp::VUMeter> vuMeter;
 

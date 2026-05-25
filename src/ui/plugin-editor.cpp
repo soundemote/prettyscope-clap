@@ -258,7 +258,7 @@ void PluginEditor::paint(juce::Graphics &g)
 
 void PluginEditor::resized()
 {
-    int presetHeight{33}, scopeHeight{150}, inspectorHeight{58}, footerHeight{15};
+    int presetHeight{33}, scopeHeight{320}, inspectorHeight{44}, footerHeight{15};
 
     auto lb = getLocalBounds();
     auto presetArea = lb.withHeight(presetHeight);
