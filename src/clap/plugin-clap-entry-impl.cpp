@@ -91,7 +91,7 @@ static bool clap_get_auv2_info(const clap_plugin_factory_as_auv2 *factory, uint3
 
     if (index == 0)
     {
-        strncpy(info->au_type, "aumu", 5); // use the features to determine the type
+        strncpy(info->au_type, "aufx", 5);
         strncpy(info->au_subt, "sqTP", 5);
     }
 
