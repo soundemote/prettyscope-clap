@@ -38,15 +38,14 @@ struct PatchContinuous : jdat::Continuous
 
     PatchContinuous(PluginEditor &e, uint32_t id) : editor(e), pid(id)
     {
-        if (e.patchCopy.paramMap.find(id) == e.patchCopy.paramMap.end())
+        p = e.patchCopy.paramById(id);
+        if (!p)
         {
             SQLOG("You were unable to find param " << id
                                                    << " - its probably not in patch::params()");
             assert(false);
             std::terminate();
         }
-
-        p = e.patchCopy.paramMap.at(id);
     }
     ~PatchContinuous() override = default;
 
@@ -136,14 +135,14 @@ struct PatchDiscrete : jdat::Discrete
 
     PatchDiscrete(PluginEditor &e, uint32_t id) : editor(e), pid(id)
     {
-        if (e.patchCopy.paramMap.find(id) == e.patchCopy.paramMap.end())
+        p = e.patchCopy.paramById(id);
+        if (!p)
         {
             SQLOG("You were unable to find param " << id
                                                    << " - its probably not in patch::params()");
             assert(false);
             std::terminate();
         }
-        p = e.patchCopy.paramMap.at(id);
     }
     ~PatchDiscrete() override = default;
 
