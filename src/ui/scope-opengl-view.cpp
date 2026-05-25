@@ -10,7 +10,9 @@
 #include "scope-opengl-view.h"
 
 #include "phosphor-scope-renderer.h"
+#include "simple-xy-scope-renderer.h"
 
+#include <exception>
 #include <utility>
 
 namespace baconpaul::sidequest_ns::ui
@@ -55,7 +57,18 @@ void ScopeOpenGLView::newOpenGLContextCreated()
 {
     if (renderer)
     {
-        renderer->initialise(openGLContext);
+        try
+        {
+            renderer->initialise(openGLContext);
+        }
+        catch (const std::exception &e)
+        {
+            installFallbackRenderer(e.what());
+        }
+        catch (...)
+        {
+            installFallbackRenderer("unknown OpenGL renderer initialization failure");
+        }
     }
 }
 
@@ -63,7 +76,15 @@ void ScopeOpenGLView::openGLContextClosing()
 {
     if (renderer)
     {
-        renderer->shutdown();
+        try
+        {
+            renderer->shutdown();
+        }
+        catch (...)
+        {
+            juce::Logger::writeToLog(
+                "Prettyscope renderer shutdown failed; continuing editor teardown");
+        }
     }
 }
 
@@ -81,12 +102,52 @@ void ScopeOpenGLView::renderOpenGL()
 
     if (renderer)
     {
-        renderer->render({openGLContext, bounds,
-                          static_cast<float>(openGLContext.getRenderingScale())},
-                         snapshot, visualState);
+        try
+        {
+            renderer->render({openGLContext, bounds,
+                              static_cast<float>(openGLContext.getRenderingScale())},
+                             snapshot, visualState);
+        }
+        catch (const std::exception &e)
+        {
+            installFallbackRenderer(e.what());
+        }
+        catch (...)
+        {
+            installFallbackRenderer("unknown OpenGL renderer failure");
+        }
         return;
     }
 
     juce::OpenGLHelpers::clear(juce::Colour(0xff05070a));
+}
+
+void ScopeOpenGLView::installFallbackRenderer(std::string_view reason)
+{
+    juce::Logger::writeToLog("Prettyscope phosphor renderer failed: " +
+                             juce::String(reason.data(), reason.size()) +
+                             ". Falling back to simple XY renderer.");
+
+    if (renderer)
+    {
+        try
+        {
+            renderer->shutdown();
+        }
+        catch (...)
+        {
+        }
+    }
+
+    renderer = std::make_unique<SimpleXyScopeRenderer>();
+    try
+    {
+        renderer->initialise(openGLContext);
+    }
+    catch (...)
+    {
+        juce::Logger::writeToLog("Prettyscope fallback renderer failed to initialize.");
+        renderer.reset();
+    }
 }
 } // namespace baconpaul::sidequest_ns::ui

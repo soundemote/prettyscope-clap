@@ -32,6 +32,7 @@ struct ScopeOpenGLView : juce::Component, private juce::OpenGLRenderer
     void newOpenGLContextCreated() override;
     void renderOpenGL() override;
     void openGLContextClosing() override;
+    void installFallbackRenderer(std::string_view reason);
 
     juce::OpenGLContext openGLContext;
     std::unique_ptr<IScopeRenderer> renderer;
