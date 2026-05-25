@@ -52,6 +52,10 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
   the standalone golden beam/persistence core. It adapts the standalone
   Woscope-style Gaussian beam shader and phosphor decay pass into the JUCE
   renderer slot while consuming `ScopeAudioSnapshot` and `ScopeVisualState`.
+- The hosted phosphor renderer keeps a rolling visual signal history from
+  stamped audio snapshots. This gives the OpenGL scope enough samples to draw a
+  continuous hosted trace even though the inherited plugin process block size is
+  very small.
 
 ## Near-Term Bridge
 
