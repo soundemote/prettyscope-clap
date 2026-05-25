@@ -11,12 +11,18 @@
 
 #include "simple-xy-scope-renderer.h"
 
+#include <utility>
+
 namespace baconpaul::sidequest_ns::ui
 {
 ScopeOpenGLView::ScopeOpenGLView()
+    : ScopeOpenGLView(std::make_unique<SimpleXyScopeRenderer>())
 {
-    renderer = std::make_unique<SimpleXyScopeRenderer>();
+}
 
+ScopeOpenGLView::ScopeOpenGLView(std::unique_ptr<IScopeRenderer> renderer)
+    : renderer(std::move(renderer))
+{
     openGLContext.setRenderer(this);
     openGLContext.setContinuousRepainting(true);
     openGLContext.attachTo(*this);
@@ -47,12 +53,18 @@ void ScopeOpenGLView::resized()
 
 void ScopeOpenGLView::newOpenGLContextCreated()
 {
-    renderer->initialise(openGLContext);
+    if (renderer)
+    {
+        renderer->initialise(openGLContext);
+    }
 }
 
 void ScopeOpenGLView::openGLContextClosing()
 {
-    renderer->shutdown();
+    if (renderer)
+    {
+        renderer->shutdown();
+    }
 }
 
 void ScopeOpenGLView::renderOpenGL()
@@ -67,8 +79,11 @@ void ScopeOpenGLView::renderOpenGL()
         bounds = renderBounds;
     }
 
-    renderer->render({openGLContext, bounds,
-                      static_cast<float>(openGLContext.getRenderingScale())},
-                     snapshot, visualState);
+    if (renderer)
+    {
+        renderer->render({openGLContext, bounds,
+                          static_cast<float>(openGLContext.getRenderingScale())},
+                         snapshot, visualState);
+    }
 }
 } // namespace baconpaul::sidequest_ns::ui

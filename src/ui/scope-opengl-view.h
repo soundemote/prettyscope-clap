@@ -21,6 +21,7 @@ namespace baconpaul::sidequest_ns::ui
 struct ScopeOpenGLView : juce::Component, private juce::OpenGLRenderer
 {
     ScopeOpenGLView();
+    explicit ScopeOpenGLView(std::unique_ptr<IScopeRenderer> renderer);
     ~ScopeOpenGLView() override;
 
     void setSnapshot(const ScopeAudioSnapshot &snapshot);
