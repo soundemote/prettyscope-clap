@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <set>
 #include <string>
 
 TEST_CASE("Some DSP Test", "[dsp]") { REQUIRE(1 + 1 == 2); }
@@ -376,6 +377,28 @@ TEST_CASE("Prettyscope visual descriptors adapt into Sidequest patch params", "[
         REQUIRE(param->meta.defaultVal == descriptor.defaultValue);
         REQUIRE((param->meta.flags & CLAP_PARAM_IS_AUTOMATABLE) != 0);
     }
+}
+
+TEST_CASE("Prettyscope visual descriptor ids are unique and stable", "[params]")
+{
+    std::set<std::string> stringIds;
+    std::set<uint32_t> stableIds;
+
+    for (const auto &descriptor : baconpaul::sidequest_ns::visualFloatParameters())
+    {
+        REQUIRE_FALSE(descriptor.id.empty());
+        REQUIRE(descriptor.stableId.value != 0);
+        REQUIRE(stringIds.insert(std::string(descriptor.id)).second);
+        REQUIRE(stableIds.insert(descriptor.stableId.value).second);
+
+        REQUIRE(baconpaul::sidequest_ns::visualFloatParameterById(descriptor.id) ==
+                &descriptor);
+        REQUIRE(baconpaul::sidequest_ns::visualFloatParameterByStableId(
+                    descriptor.stableId.value) == &descriptor);
+    }
+
+    REQUIRE(stringIds.size() == baconpaul::sidequest_ns::visualFloatParameters().size());
+    REQUIRE(stableIds.size() == baconpaul::sidequest_ns::visualFloatParameters().size());
 }
 
 TEST_CASE("Prettyscope visual params roundtrip through Sidequest values", "[params]")
