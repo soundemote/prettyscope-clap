@@ -95,7 +95,8 @@ void Engine::process(const clap_output_events_t *outq, const float *const *input
 
     lagHandler.process();
 
-    hasScopeInput = inputChannels != nullptr && inputChannelCount > 0 && inputFrameCount > 0;
+    hasScopeInput = inputChannels != nullptr && inputChannelCount > 0 &&
+                    inputChannels[0] != nullptr && inputFrameCount > 0;
     if (hasScopeInput)
     {
         for (uint32_t i = 0; i < blockSize; ++i)

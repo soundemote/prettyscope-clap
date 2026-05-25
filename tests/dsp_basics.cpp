@@ -221,6 +221,27 @@ TEST_CASE("Engine publishes empty scope snapshot when input disappears", "[audio
     REQUIRE(snapshot->frameCount == 0);
 }
 
+TEST_CASE("Engine ignores advertised input with no readable source channel", "[audio]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+    engine->scopeSnapshots.subscribe();
+
+    const float *input[] = {nullptr};
+    engine->process(nullptr, input, 1, baconpaul::sidequest_ns::blockSize);
+
+    REQUIRE_FALSE(engine->hasScopeInput);
+    for (size_t i = 0; i < baconpaul::sidequest_ns::blockSize; ++i)
+    {
+        REQUIRE(engine->output[0][i] == 0.0f);
+        REQUIRE(engine->output[1][i] == 0.0f);
+    }
+
+    const auto snapshot = engine->scopeSnapshots.readLatest();
+    REQUIRE(snapshot.has_value());
+    REQUIRE_FALSE(snapshot->hasSignal);
+    REQUIRE(snapshot->frameCount == 0);
+}
+
 TEST_CASE("Engine applies notified parameter updates without CLAP output queue", "[params]")
 {
     auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
