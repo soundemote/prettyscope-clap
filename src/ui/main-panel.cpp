@@ -25,14 +25,24 @@ MainPanel::MainPanel(PluginEditor &e)
     : sst::jucegui::components::NamedPanel("Visual Parameters"), editor(e)
 {
     const auto descriptors = visualFloatParameters();
-    knobs.resize(descriptors.size());
-    knobAs.resize(descriptors.size());
+    knobs.reserve(descriptors.size());
+    knobAs.reserve(descriptors.size());
 
-    for (size_t i = 0; i < descriptors.size(); ++i)
+    for (const auto &descriptor : descriptors)
     {
-        auto *param = e.patchCopy.paramMap.at(descriptors[i].stableId.value);
-        createComponent(editor, *this, *param, knobs[i], knobAs[i]);
-        addAndMakeVisible(*knobs[i]);
+        auto *param = e.patchCopy.paramById(descriptor.stableId.value);
+        if (!param)
+        {
+            SQLOG("Skipping visual control for missing parameter " << descriptor.id);
+            continue;
+        }
+
+        auto knob = std::make_unique<sst::jucegui::components::Knob>();
+        auto knobData = std::unique_ptr<PatchContinuous>();
+        createComponent(editor, *this, *param, knob, knobData);
+        addAndMakeVisible(*knob);
+        knobs.push_back(std::move(knob));
+        knobAs.push_back(std::move(knobData));
     }
 }
 
@@ -47,6 +57,11 @@ void MainPanel::resized()
 
     for (size_t i = 0; i < knobs.size(); ++i)
     {
+        if (!knobs[i])
+        {
+            continue;
+        }
+
         knobs[i]->setBounds(x, y, spw - 5, sph - 5);
         x += spw;
         if (x + spw > w)
