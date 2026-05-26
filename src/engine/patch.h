@@ -129,7 +129,9 @@ struct Patch : pats::PatchBase<Patch, Param>
             : phosphorDecay(makeParam(kPhosphorDecayVisualParameterId)),
               beamIntensity(makeParam(kBeamIntensityVisualParameterId)),
               inputGain(makeParam(kInputGainVisualParameterId)),
-              timeScale(makeParam(kTimeScaleVisualParameterId))
+              timeScale(makeParam(kTimeScaleVisualParameterId)),
+              phosphorFastDecay(makeParam(kPhosphorFastDecayVisualParameterId)),
+              phosphorAfterglow(makeParam(kPhosphorAfterglowVisualParameterId))
         {
         }
 
@@ -168,10 +170,13 @@ struct Patch : pats::PatchBase<Patch, Param>
         Param beamIntensity;
         Param inputGain;
         Param timeScale;
+        Param phosphorFastDecay;
+        Param phosphorAfterglow;
 
         std::vector<Param *> params()
         {
-            std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale};
+            std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale,
+                                     &phosphorFastDecay, &phosphorAfterglow};
             return res;
         }
 
@@ -182,6 +187,8 @@ struct Patch : pats::PatchBase<Patch, Param>
             state.beamIntensity = beamIntensity.value;
             state.inputGain = inputGain.value;
             state.timeScale = timeScale.value;
+            state.phosphorFastDecay = phosphorFastDecay.value;
+            state.phosphorAfterglow = phosphorAfterglow.value;
             return sanitizedScopeVisualState(state);
         }
     };

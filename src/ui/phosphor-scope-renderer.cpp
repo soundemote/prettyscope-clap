@@ -730,8 +730,8 @@ struct PhosphorScopeRenderer::Impl
         params.persistence = std::clamp(visualState.phosphorDecay, 0.0f, 0.9995f);
         params.traceGain = std::clamp(0.10f * visualState.inputGain, 0.002f, 1.2f);
         params.glowStrength = std::clamp(0.35f * visualState.beamIntensity / 1.6f, 0.02f, 4.0f);
-        params.fastDecay = 0.25f;
-        params.afterglow = 0.95f;
+        params.fastDecay = visualState.phosphorFastDecay;
+        params.afterglow = visualState.phosphorAfterglow;
 
         signal.append(snapshot, visualState.timeScale, snapshot.serial);
         const auto vertexCount = beam.uploadSegments(signal, params, width, height);

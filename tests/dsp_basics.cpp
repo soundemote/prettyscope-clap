@@ -504,6 +504,14 @@ TEST_CASE("Prettyscope visual state defaults match descriptors", "[params]")
             Approx(baconpaul::sidequest_ns::visualFloatParameterById(
                        baconpaul::sidequest_ns::kTimeScaleVisualParameterId)
                        ->defaultValue));
+    REQUIRE(state.phosphorFastDecay ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kPhosphorFastDecayVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.phosphorAfterglow ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kPhosphorAfterglowVisualParameterId)
+                       ->defaultValue));
 }
 
 TEST_CASE("Prettyscope visual params appear through CLAP patch adapter", "[params]")
@@ -534,6 +542,8 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     patch.visualParams.beamIntensity.value = 2.25f;
     patch.visualParams.inputGain.value = 3.5f;
     patch.visualParams.timeScale.value = 1.75f;
+    patch.visualParams.phosphorFastDecay.value = 0.65f;
+    patch.visualParams.phosphorAfterglow.value = 0.85f;
 
     const auto state = patch.visualParams.visualState();
 
@@ -541,6 +551,8 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     REQUIRE(state.beamIntensity == Approx(2.25f));
     REQUIRE(state.inputGain == Approx(3.5f));
     REQUIRE(state.timeScale == Approx(1.75f));
+    REQUIRE(state.phosphorFastDecay == Approx(0.65f));
+    REQUIRE(state.phosphorAfterglow == Approx(0.85f));
 }
 
 TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "[params]")
@@ -550,6 +562,8 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     patch.visualParams.beamIntensity.value = -1.0f;
     patch.visualParams.inputGain.value = 99.0f;
     patch.visualParams.timeScale.value = 0.01f;
+    patch.visualParams.phosphorFastDecay.value = 2.0f;
+    patch.visualParams.phosphorAfterglow.value = -2.0f;
 
     const auto state = patch.visualParams.visualState();
 
@@ -557,4 +571,6 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     REQUIRE(state.beamIntensity == Approx(0.0f));
     REQUIRE(state.inputGain == Approx(8.0f));
     REQUIRE(state.timeScale == Approx(0.25f));
+    REQUIRE(state.phosphorFastDecay == Approx(1.0f));
+    REQUIRE(state.phosphorAfterglow == Approx(0.0f));
 }
