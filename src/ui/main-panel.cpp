@@ -52,8 +52,8 @@ void MainPanel::resized()
     auto w = b.getWidth();
     auto x = b.getX();
     auto y = b.getY();
-    auto spw = 50;
-    auto sph = 70;
+    auto spw = 82;
+    auto sph = 82;
 
     for (size_t i = 0; i < knobs.size(); ++i)
     {
