@@ -17,6 +17,7 @@ void ScopeSnapshotInspector::setSnapshot(const ScopeAudioSnapshot &snapshot)
 {
     hasSignal = snapshot.hasSignal;
     frameCount = snapshot.validFrameCount();
+    serial = snapshot.serial;
     leftPeak = snapshot.peak(0);
     rightPeak = snapshot.peak(1);
 
@@ -57,7 +58,10 @@ void ScopeSnapshotInspector::paint(juce::Graphics &g)
 
     g.setFont(juce::FontOptions(10.0f));
     g.setColour(juce::Colours::white.withAlpha(0.45f));
-    g.drawText(juce::String(frameCount) + " frames", getLocalBounds().reduced(8, 4),
+    const auto status = hasSignal ? "active" : "idle";
+    g.drawText(juce::String(status) + " | " + juce::String(frameCount) + " frames | #" +
+                   juce::String(serial),
+               getLocalBounds().reduced(8, 4),
                juce::Justification::bottomRight);
 }
 } // namespace baconpaul::sidequest_ns::ui

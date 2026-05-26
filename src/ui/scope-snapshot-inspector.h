@@ -25,6 +25,7 @@ struct ScopeSnapshotInspector : juce::Component
     float leftPeak{0.0f};
     float rightPeak{0.0f};
     uint32_t frameCount{0};
+    uint64_t serial{0};
     bool hasSignal{false};
 };
 } // namespace baconpaul::sidequest_ns::ui
