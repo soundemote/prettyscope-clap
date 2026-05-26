@@ -131,7 +131,10 @@ struct Patch : pats::PatchBase<Patch, Param>
               inputGain(makeParam(kInputGainVisualParameterId)),
               timeScale(makeParam(kTimeScaleVisualParameterId)),
               phosphorFastDecay(makeParam(kPhosphorFastDecayVisualParameterId)),
-              phosphorAfterglow(makeParam(kPhosphorAfterglowVisualParameterId))
+              phosphorAfterglow(makeParam(kPhosphorAfterglowVisualParameterId)),
+              beamGlowStrength(makeParam(kBeamGlowStrengthVisualParameterId)),
+              beamTraceWidth(makeParam(kBeamTraceWidthVisualParameterId)),
+              beamGlowWidth(makeParam(kBeamGlowWidthVisualParameterId))
         {
         }
 
@@ -172,11 +175,15 @@ struct Patch : pats::PatchBase<Patch, Param>
         Param timeScale;
         Param phosphorFastDecay;
         Param phosphorAfterglow;
+        Param beamGlowStrength;
+        Param beamTraceWidth;
+        Param beamGlowWidth;
 
         std::vector<Param *> params()
         {
             std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale,
-                                     &phosphorFastDecay, &phosphorAfterglow};
+                                     &phosphorFastDecay, &phosphorAfterglow, &beamGlowStrength,
+                                     &beamTraceWidth, &beamGlowWidth};
             return res;
         }
 
@@ -189,6 +196,9 @@ struct Patch : pats::PatchBase<Patch, Param>
             state.timeScale = timeScale.value;
             state.phosphorFastDecay = phosphorFastDecay.value;
             state.phosphorAfterglow = phosphorAfterglow.value;
+            state.beamGlowStrength = beamGlowStrength.value;
+            state.beamTraceWidth = beamTraceWidth.value;
+            state.beamGlowWidth = beamGlowWidth.value;
             return sanitizedScopeVisualState(state);
         }
     };

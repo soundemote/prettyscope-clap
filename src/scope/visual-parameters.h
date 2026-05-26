@@ -45,8 +45,11 @@ inline constexpr std::string_view kInputGainVisualParameterId{"input_gain"};
 inline constexpr std::string_view kTimeScaleVisualParameterId{"time_scale"};
 inline constexpr std::string_view kPhosphorFastDecayVisualParameterId{"phosphor_fast_decay"};
 inline constexpr std::string_view kPhosphorAfterglowVisualParameterId{"phosphor_afterglow"};
+inline constexpr std::string_view kBeamGlowStrengthVisualParameterId{"beam_glow_strength"};
+inline constexpr std::string_view kBeamTraceWidthVisualParameterId{"beam_trace_width"};
+inline constexpr std::string_view kBeamGlowWidthVisualParameterId{"beam_glow_width"};
 
-inline constexpr std::array<VisualFloatParameterDescriptor, 6> kVisualFloatParameters{{
+inline constexpr std::array<VisualFloatParameterDescriptor, 9> kVisualFloatParameters{{
     {kPhosphorDecayVisualParameterId, {1000}, "Phosphor Decay", "Phosphor", 0.98f, 0.80f,
      0.95f, 0.999f, true, true},
     {kBeamIntensityVisualParameterId, {1001}, "Beam Intensity", "Beam", 1.6f, 0.0f, 1.0f,
@@ -59,6 +62,12 @@ inline constexpr std::array<VisualFloatParameterDescriptor, 6> kVisualFloatParam
      0.25f, 1.0f, true, true},
     {kPhosphorAfterglowVisualParameterId, {1005}, "Afterglow", "Phosphor", 0.95f, 0.0f,
      0.80f, 1.0f, true, true},
+    {kBeamGlowStrengthVisualParameterId, {1006}, "Glow Strength", "Beam", 0.35f, 0.0f,
+     0.35f, 2.0f, true, true},
+    {kBeamTraceWidthVisualParameterId, {1007}, "Trace Width", "Beam", 2.0f, 0.5f,
+     2.0f, 8.0f, true, true},
+    {kBeamGlowWidthVisualParameterId, {1008}, "Glow Width", "Beam", 7.0f, 1.0f,
+     7.0f, 24.0f, true, true},
 }};
 
 inline std::span<const VisualFloatParameterDescriptor> visualFloatParameters()

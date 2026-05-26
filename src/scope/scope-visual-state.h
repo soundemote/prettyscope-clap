@@ -35,6 +35,9 @@ struct ScopeVisualState
     float timeScale{defaultVisualFloat(kTimeScaleVisualParameterId, 1.0f)};
     float phosphorFastDecay{defaultVisualFloat(kPhosphorFastDecayVisualParameterId, 0.25f)};
     float phosphorAfterglow{defaultVisualFloat(kPhosphorAfterglowVisualParameterId, 0.95f)};
+    float beamGlowStrength{defaultVisualFloat(kBeamGlowStrengthVisualParameterId, 0.35f)};
+    float beamTraceWidth{defaultVisualFloat(kBeamTraceWidthVisualParameterId, 2.0f)};
+    float beamGlowWidth{defaultVisualFloat(kBeamGlowWidthVisualParameterId, 7.0f)};
 };
 
 inline float clampVisualFloat(std::string_view id, float value)
@@ -60,6 +63,11 @@ inline ScopeVisualState sanitizedScopeVisualState(ScopeVisualState state)
         clampVisualFloat(kPhosphorFastDecayVisualParameterId, state.phosphorFastDecay);
     state.phosphorAfterglow =
         clampVisualFloat(kPhosphorAfterglowVisualParameterId, state.phosphorAfterglow);
+    state.beamGlowStrength =
+        clampVisualFloat(kBeamGlowStrengthVisualParameterId, state.beamGlowStrength);
+    state.beamTraceWidth =
+        clampVisualFloat(kBeamTraceWidthVisualParameterId, state.beamTraceWidth);
+    state.beamGlowWidth = clampVisualFloat(kBeamGlowWidthVisualParameterId, state.beamGlowWidth);
     return state;
 }
 } // namespace baconpaul::sidequest_ns
