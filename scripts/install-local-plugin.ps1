@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $assetRoot = Join-Path $repoRoot "build-ninja\prettyscope-clap_assets"
 
-function Copy-PluginFile {
+function Copy-PluginArtifact {
     param(
         [string] $Source,
         [string] $DestinationDirectory
@@ -19,18 +19,24 @@ function Copy-PluginFile {
     }
 
     New-Item -ItemType Directory -Force -Path $DestinationDirectory | Out-Null
-    Copy-Item -Force -Path $Source -Destination $DestinationDirectory
+
+    $destination = Join-Path $DestinationDirectory (Split-Path $Source -Leaf)
+    if (Test-Path $destination) {
+        Remove-Item -Recurse -Force -Path $destination
+    }
+
+    Copy-Item -Recurse -Force -Path $Source -Destination $DestinationDirectory
     Write-Host "Installed $(Split-Path $Source -Leaf) -> $DestinationDirectory"
 }
 
 if ($Format -eq "All" -or $Format -eq "CLAP") {
-    Copy-PluginFile `
+    Copy-PluginArtifact `
         -Source (Join-Path $assetRoot "CLAP\Prettyscope.clap") `
         -DestinationDirectory (Join-Path $env:LOCALAPPDATA "Programs\Common\CLAP")
 }
 
 if ($Format -eq "All" -or $Format -eq "VST3") {
-    Copy-PluginFile `
+    Copy-PluginArtifact `
         -Source (Join-Path $assetRoot "VST3\Prettyscope.vst3") `
         -DestinationDirectory (Join-Path $env:LOCALAPPDATA "Programs\Common\VST3")
 }
