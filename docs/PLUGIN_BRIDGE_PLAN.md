@@ -25,7 +25,7 @@ This repository is the CLAP/JUCE plugin shell for Prettyscope. The standalone
 - The editor's small `Visual Parameters` panel is descriptor-driven and exposes
   adapted visual parameters through the existing Sidequest knob binding path.
   Current controls cover input scale, beam intensity, time scale, phosphor
-  decay, fast decay, and afterglow.
+  decay, fast decay, afterglow, glow strength, trace width, and glow width.
 - A tiny JUCE `ScopeSnapshotInspector` reads the latest subscribed audio
   snapshot and displays simple left/right input levels. This is only a bridge
   proof, not the OpenGL scope renderer.

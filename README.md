@@ -24,7 +24,8 @@ visualizer bridge is now in place:
 - audio blocks are published through an editor-safe `ScopeAudioSnapshotQueue`
 - visual parameter descriptors adapt into the Sidequest `Patch`/CLAP parameter path
 - the editor exposes descriptor-driven visual controls for input scale, beam
-  intensity, time scale, phosphor decay, fast decay, and afterglow
+  intensity, glow strength, trace width, glow width, time scale, phosphor decay,
+  fast decay, and afterglow
 - the editor hosts a JUCE/OpenGL `ScopeOpenGLView`
 - `ScopeOpenGLView` accepts an injected `IScopeRenderer`
 - `PhosphorScopeRenderer` is the default renderer and ports the standalone
