@@ -209,10 +209,8 @@ void PluginEditor::paint(juce::Graphics &g)
     g.setColour(juce::Colours::white.withAlpha(0.9f));
     auto q = ft.withHeight(30);
     g.setFont(q);
-    auto xp = 3;
-    auto ht = 30;
-
     int np{110};
+    int ht{30};
 
     if (isLight)
         g.setColour(juce::Colours::navy);
@@ -245,15 +243,6 @@ void PluginEditor::paint(juce::Graphics &g)
     g.setFont(juce::FontOptions(25));
     auto dr = juce::Rectangle<int>(0, 0, np, ht);
     g.drawText(PRODUCT_NAME, dr.reduced(2), juce::Justification::centredLeft);
-
-#if !defined(NDEBUG) || !NDEBUG
-    g.setFont(juce::FontOptions(30));
-
-    g.setColour(juce::Colours::white.withAlpha(0.6f));
-    g.drawText("DEBUG", dr.translated(1, 1), juce::Justification::centred);
-    g.setColour(juce::Colours::red.withAlpha(0.6f));
-    g.drawText("DEBUG", dr, juce::Justification::centred);
-#endif
 }
 
 void PluginEditor::resized()
