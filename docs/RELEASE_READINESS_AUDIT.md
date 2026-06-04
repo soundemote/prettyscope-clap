@@ -56,6 +56,8 @@ The handoff script runs the strict freshness check after install.
 
 Use `docs\DAW_TEST_CHECKLIST.md` to verify:
 
+- Host-specific results are captured with `docs\DAW_TEST_REPORT_TEMPLATE.md`.
+
 - The plugin scans and opens in the target DAW.
 - Audio passes through in the host while the editor scope follows the signal.
 - Dot 1, Dot 2, Overall, and Screen Burn controls feel usable with real audio.

@@ -1,6 +1,7 @@
 # Prettyscope CLAP DAW Test Checklist
 
 Use this checklist when testing the current oscilloscope-plugin release surface in a DAW.
+Record host-specific results with `docs\DAW_TEST_REPORT_TEMPLATE.md`.
 
 ## Build Gate
 
