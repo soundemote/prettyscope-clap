@@ -25,15 +25,17 @@ visualizer bridge is now in place:
 - visual parameter descriptors adapt into the Sidequest `Patch`/CLAP parameter path
 - the editor exposes descriptor-driven visual controls for input scale, beam
   intensity, glow strength, trace width, glow width, time scale, phosphor decay,
-  fast decay, and afterglow
+  fast decay, afterglow, Dot 1, Dot 2, overall dot multipliers, and screen burn
 - the editor hosts a JUCE/OpenGL `ScopeOpenGLView`
 - `ScopeOpenGLView` accepts an injected `IScopeRenderer`
 - `PhosphorScopeRenderer` is the default renderer and ports the standalone
   golden beam/persistence core into the plugin editor
+- Dot 1 and Dot 2 support generated PNG save, loaded image override, clear, and
+  patch/session state persistence
 
 The next renderer milestone is DAW/standalone verification with real audio input,
-then adapter-level scale tuning if the hosted signal feels different from the
-standalone golden reference.
+then adapter-level scale and image-dot polish if the hosted signal feels
+different from the standalone golden reference.
 
 Useful local build artifacts after a Windows build:
 
@@ -67,3 +69,4 @@ cmd.exe /d /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC
 ```
 
 See `docs/PLUGIN_BRIDGE_PLAN.md` for the current bridge sequence and boundaries.
+See `docs/DAW_TEST_CHECKLIST.md` for the current hands-on test checklist.
