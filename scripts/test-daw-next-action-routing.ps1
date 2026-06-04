@@ -74,6 +74,9 @@ function Add-GroupedBundleMarker {
     Set-Content -Path (Join-Path $Directory "prettyscope-daw-test-bundle-manifest.md") `
         -Value "# Smoke Bundle Manifest" `
         -Encoding UTF8
+    Set-Content -Path (Join-Path $Directory "prettyscope-daw-test-answer-sheet.json") `
+        -Value '{ "smoke": true }' `
+        -Encoding UTF8
 }
 
 $classification = & (Join-Path $PSScriptRoot "test-daw-report-classification.ps1") `
@@ -111,6 +114,10 @@ Assert-Contains $incompleteOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Incomplete report guidance should include an open-report command."
 Assert-Contains $incompleteOutput "open-daw-test-handoff.ps1" `
     "Incomplete report guidance should include one-command handoff opening."
+Assert-Contains $incompleteOutput "Answer sheet:" `
+    "Incomplete report guidance should print the grouped answer sheet path."
+Assert-Contains $incompleteOutput "show-latest-daw-test-artifacts.ps1 -OpenAnswerSheet" `
+    "Incomplete report guidance should include an answer-sheet open command."
 Assert-Contains $incompleteOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
     "Incomplete report guidance should include a bundle-folder open command."
 
@@ -153,6 +160,10 @@ Assert-Contains $unsubmittedOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Unsubmitted complete report guidance should include an open-report command."
 Assert-Contains $unsubmittedOutput "open-daw-test-handoff.ps1" `
     "Unsubmitted complete report guidance should include one-command handoff opening."
+Assert-Contains $unsubmittedOutput "Answer sheet:" `
+    "Unsubmitted complete report guidance should print the grouped answer sheet path."
+Assert-Contains $unsubmittedOutput "show-latest-daw-test-artifacts.ps1 -OpenAnswerSheet" `
+    "Unsubmitted complete report guidance should include an answer-sheet open command."
 Assert-Contains $unsubmittedOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
     "Unsubmitted complete report guidance should include a bundle-folder open command."
 

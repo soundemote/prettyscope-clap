@@ -237,8 +237,8 @@ Verify the latest handoff matches the current repo commit:
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
 ```
 
-Optional switches: `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, and
-`-OpenBundleZipFolder`.
+Optional switches: `-OpenReport`, `-OpenAnswerSheet`, `-OpenSummary`,
+`-OpenBundleFolder`, and `-OpenBundleZipFolder`.
 
 ## Plugin Load
 

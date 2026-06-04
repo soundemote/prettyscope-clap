@@ -150,6 +150,7 @@ try {
         Write-Host ""
         Write-Host "Latest grouped artifacts:"
         Write-Host "  Report:        $(Format-PathOrMissing $latestArtifacts.ReportPath)"
+        Write-Host "  Answer sheet:  $(Format-PathOrMissing $latestArtifacts.AnswerSheetPath)"
         Write-Host "  Summary:       $(Format-PathOrMissing $latestArtifacts.SummaryPath)"
         Write-Host "  Manifest:      $(Format-PathOrMissing $latestArtifacts.ManifestPath)"
         Write-Host "  Bundle folder: $(Format-PathOrMissing $latestArtifacts.BundleDirectory)"
@@ -179,6 +180,9 @@ try {
         Write-Host "Open commands:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
+        if ($latestArtifacts.AnswerSheetPath) {
+            Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenAnswerSheet"
+        }
         if ($latestArtifacts.SummaryPath) {
             Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
         }
@@ -204,6 +208,7 @@ try {
         Write-Host ""
         Write-Host "Latest grouped artifacts:"
         Write-Host "  Report:        $(Format-PathOrMissing $latestArtifacts.ReportPath)"
+        Write-Host "  Answer sheet:  $(Format-PathOrMissing $latestArtifacts.AnswerSheetPath)"
         Write-Host "  Summary:       $(Format-PathOrMissing $latestArtifacts.SummaryPath)"
         Write-Host "  Manifest:      $(Format-PathOrMissing $latestArtifacts.ManifestPath)"
         Write-Host "  Bundle folder: $(Format-PathOrMissing $latestArtifacts.BundleDirectory)"
@@ -222,6 +227,9 @@ try {
         Write-Host "Open commands:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
+        if ($latestArtifacts.AnswerSheetPath) {
+            Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenAnswerSheet"
+        }
         if ($latestArtifacts.SummaryPath) {
             Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
         }
