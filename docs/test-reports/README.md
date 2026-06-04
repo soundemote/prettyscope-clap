@@ -15,4 +15,5 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 ```
 
 Keep reports that capture useful host behavior, regressions, or release
-decisions. Scratch reports can be written elsewhere with `-OutputPath`.
+decisions. Scratch reports can be written elsewhere with `-OutputPath`; parent
+folders are created automatically.

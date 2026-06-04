@@ -47,6 +47,12 @@ try {
         New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
         $OutputPath = Join-Path $reportsDir "$timestamp-prettyscope-$($Format.ToLower())-daw-test.md"
     }
+    else {
+        $outputParent = Split-Path -Parent $OutputPath
+        if ($outputParent) {
+            New-Item -ItemType Directory -Force -Path $outputParent | Out-Null
+        }
+    }
 
     $report = @"
 # Prettyscope CLAP DAW Test Report
