@@ -114,6 +114,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 `prepare-daw-test.ps1 -SkipBuildInstall` is available for report-only prep after
 strict freshness has already been verified.
 
+For a full local DAW-readiness smoke:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Format CLAP -Daw "Your DAW" -Tester "Your Name"
+```
+
+This checks strict installed-artifact freshness, visual manifest drift, release
+audit drift, host matrix validity, report generation, bundle creation, bundle
+verification, and blank-report review. Blank report warnings are expected until
+hands-on DAW test results are filled in.
+
 For the current DAW-test dashboard:
 
 ```powershell
