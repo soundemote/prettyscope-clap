@@ -19,6 +19,7 @@
 #include "presets/preset-manager.h"
 #include "scope/scope-audio-snapshot.h"
 #include "scope/visual-parameters.h"
+#include "ui/dot-image-codec.h"
 #include "sst/plugininfra/patch-support/patch_base_clap_adapter.h"
 
 #include <algorithm>
@@ -816,4 +817,19 @@ TEST_CASE("Prettyscope dot image assets reset when absent from patch state", "[p
     REQUIRE(restored.fromState(state));
     REQUIRE(restored.visualAssets.dotImages[0].label == "Generated");
     REQUIRE(restored.visualAssets.dotImages[0].pngBase64.empty());
+}
+
+TEST_CASE("Prettyscope dot image codec bounds oversized image state", "[params]")
+{
+    auto large = juce::Image(juce::Image::ARGB, 2048, 1024, true);
+    auto graphics = juce::Graphics(large);
+    graphics.fillAll(juce::Colours::white);
+
+    const auto base64 = baconpaul::sidequest_ns::ui::imageToPngBase64(large);
+    REQUIRE(!base64.empty());
+
+    const auto restored = baconpaul::sidequest_ns::ui::imageFromPngBase64(base64);
+    REQUIRE(restored.isValid());
+    REQUIRE(restored.getWidth() == baconpaul::sidequest_ns::ui::kMaxDotImageDimension);
+    REQUIRE(restored.getHeight() == baconpaul::sidequest_ns::ui::kMaxDotImageDimension / 2);
 }

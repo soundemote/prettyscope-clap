@@ -43,6 +43,7 @@ add_library(${PROJECT_NAME}-impl STATIC
         src/clap/plugin-clap-entry-impl.cpp
 
         src/ui/plugin-editor.cpp
+        src/ui/dot-image-codec.cpp
         src/ui/main-panel.cpp
         src/ui/phosphor-scope-renderer.cpp
         src/ui/simple-xy-scope-renderer.cpp

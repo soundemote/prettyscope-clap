@@ -24,6 +24,7 @@
 #include "presets/preset-manager.h"
 #include "preset-data-binding.h"
 #include "patch-data-bindings.h"
+#include "dot-image-codec.h"
 #include "main-panel.h"
 #include "scope-opengl-view.h"
 #include "scope-snapshot-inspector.h"
@@ -46,8 +47,6 @@ static constexpr sheet_t::Class PatchMenu("prettyscope.patch-menu");
 
 namespace
 {
-constexpr int kMaxDotImageDimension = 512;
-
 juce::Image createGeneratedDotImage(const ScopeVisualState &state, size_t dotIndex)
 {
     constexpr int imageSize = 256;
@@ -101,71 +100,6 @@ juce::Image createGeneratedDotImage(const ScopeVisualState &state, size_t dotInd
 juce::String dotName(size_t dotIndex)
 {
     return dotIndex == 1 ? "Dot 2" : "Dot 1";
-}
-
-juce::Image normalizeDotImageForState(const juce::Image &image)
-{
-    if (!image.isValid())
-    {
-        return {};
-    }
-
-    const auto width = image.getWidth();
-    const auto height = image.getHeight();
-    if (width <= 0 || height <= 0)
-    {
-        return {};
-    }
-
-    if (width <= kMaxDotImageDimension && height <= kMaxDotImageDimension)
-    {
-        return image.convertedToFormat(juce::Image::ARGB);
-    }
-
-    const auto scale =
-        static_cast<float>(kMaxDotImageDimension) / static_cast<float>(std::max(width, height));
-    const auto targetWidth = std::max(1, static_cast<int>(std::round(width * scale)));
-    const auto targetHeight = std::max(1, static_cast<int>(std::round(height * scale)));
-
-    auto resized = juce::Image(juce::Image::ARGB, targetWidth, targetHeight, true);
-    auto graphics = juce::Graphics(resized);
-    graphics.setImageResamplingQuality(juce::Graphics::highResamplingQuality);
-    graphics.drawImage(image, 0, 0, targetWidth, targetHeight, 0, 0, width, height);
-    return resized;
-}
-
-std::string imageToPngBase64(const juce::Image &image)
-{
-    auto normalized = normalizeDotImageForState(image);
-    if (!normalized.isValid())
-    {
-        return {};
-    }
-
-    auto png = juce::PNGImageFormat();
-    auto output = juce::MemoryOutputStream();
-    if (!png.writeImageToStream(normalized, output))
-    {
-        return {};
-    }
-    return output.getMemoryBlock().toBase64Encoding().toStdString();
-}
-
-juce::Image imageFromPngBase64(const std::string &base64)
-{
-    if (base64.empty())
-    {
-        return {};
-    }
-
-    auto block = juce::MemoryBlock();
-    if (!block.fromBase64Encoding(juce::String(base64)))
-    {
-        return {};
-    }
-
-    return normalizeDotImageForState(
-        juce::ImageFileFormat::loadFrom(block.getData(), block.getSize()));
 }
 } // namespace
 
