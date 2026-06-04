@@ -68,6 +68,9 @@ verification plus a prefilled report:
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+If the current installed artifacts are already fresh, add `-SkipBuildInstall` to
+generate another report without rebuilding.
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 

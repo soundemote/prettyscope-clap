@@ -14,6 +14,9 @@ Or run the full build/test/install/report handoff from the repository root:
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+Add `-SkipBuildInstall` to the prep command when the installed artifacts are
+already fresh and you only need another report.
+
 Keep reports that capture useful host behavior, regressions, or release
 decisions. Scratch reports can be written elsewhere with `-OutputPath`; parent
 folders are created automatically.

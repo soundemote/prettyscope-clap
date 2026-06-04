@@ -6,7 +6,8 @@ param(
     [string] $DawVersion = "",
     [string] $Tester = "",
     [string] $AudioSource = "",
-    [string] $OutputPath = ""
+    [string] $OutputPath = "",
+    [switch] $SkipFreshnessCheck
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,7 +27,9 @@ function Get-InstalledPluginPath {
 
 Push-Location $repoRoot
 try {
-    & (Join-Path $PSScriptRoot "show-local-plugin-status.ps1") -BuildDir $BuildDir -RequireFresh
+    if (!$SkipFreshnessCheck) {
+        & (Join-Path $PSScriptRoot "show-local-plugin-status.ps1") -BuildDir $BuildDir -RequireFresh
+    }
 
     $commit = (& git rev-parse --short HEAD 2>$null)
     if (!$commit) {

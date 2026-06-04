@@ -61,6 +61,9 @@ For a complete DAW-test prep handoff:
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+`prepare-daw-test.ps1 -SkipBuildInstall` is available for report-only prep after
+strict freshness has already been verified.
+
 ## DAW Testing Still Required
 
 Use `docs\DAW_TEST_CHECKLIST.md` to verify:

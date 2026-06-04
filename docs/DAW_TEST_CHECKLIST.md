@@ -15,6 +15,9 @@ One-command DAW test prep:
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+Use `-SkipBuildInstall` only when strict freshness already passes and you only
+need another report.
+
 Build/test only:
 
 ```powershell
