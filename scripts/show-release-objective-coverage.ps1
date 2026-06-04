@@ -33,7 +33,7 @@ function Invoke-CoverageCheck {
     )
 
     try {
-        & $Check | Out-Null
+        $null = & $Check *>&1
         return New-CoverageRow $Requirement $true $NeedsDawEvidence $Evidence
     }
     catch {
@@ -91,13 +91,20 @@ try {
                 $false `
                 "artifact updater, field updater, and classification smokes")) | Out-Null
 
+    $releaseGateOutput = & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") -Quiet -PassThru *>&1
+    $releaseGates = @($releaseGateOutput | Where-Object {
+            $_ -isnot [string] -and $_.PSObject.Properties.Name -contains "Ready"
+        } | Select-Object -Last 1)[0]
+    if ($null -eq $releaseGates) {
+        throw "Release gate summary did not return structured output."
+    }
+
     $coverage.Add((Invoke-CoverageCheck `
                 "Current DAW handoff package matches the repo commit" `
                 { & (Join-Path $PSScriptRoot "test-daw-handoff-current.ps1") -BuildDir $BuildDir -RequireCurrent } `
                 $true `
                 "scripts\test-daw-handoff-current.ps1 -RequireCurrent")) | Out-Null
 
-    $releaseGates = & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") -Quiet -PassThru
     $coverage.Add((New-CoverageRow `
                 "First-pass DAW release gates have linked pass-ready reports" `
                 $releaseGates.Ready `
