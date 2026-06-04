@@ -23,6 +23,12 @@ function New-SmokeReport {
     $ready = if ($Fail) { "no" } else { "yes" }
     $needsFix = if ($Fail) { "yes" } else { "no" }
     $failureNote = if ($Fail) { "Smoke report failure." } else { "Smoke report." }
+    $issueRow = if ($Fail) {
+        "| P1 | Scope follows input signal | Smoke report failure. | Load plugin, feed sine, observe no trace motion. |"
+    }
+    else {
+        "| none | none | none | none |"
+    }
 
     $content = @"
 # Prettyscope CLAP DAW Test Report
@@ -102,7 +108,7 @@ function New-SmokeReport {
 
 | Severity | Area | Description | Repro Steps |
 | --- | --- | --- | --- |
-| none | none | Smoke report. | Smoke report. |
+$issueRow
 
 ## Release Decision
 
@@ -147,10 +153,17 @@ function Read-MatrixStatus {
 
 $passReport = Join-Path $OutputDir "passing-daw-test-report.md"
 $failReport = Join-Path $OutputDir "failing-daw-test-report.md"
+$failWithoutIssueReport = Join-Path $OutputDir "failing-without-issue-daw-test-report.md"
 $matrixPath = Join-Path $OutputDir "DAW_HOST_MATRIX.md"
 
 New-SmokeReport -Path $passReport -Format "CLAP"
 New-SmokeReport -Path $failReport -Format "VST3" -Fail
+Copy-Item $failReport $failWithoutIssueReport -Force
+$failWithoutIssueContent = Get-Content -Raw -Path $failWithoutIssueReport
+$failWithoutIssueContent = $failWithoutIssueContent -replace
+    '\| P1 \| Scope follows input signal \| Smoke report failure\. \| Load plugin, feed sine, observe no trace motion\. \|',
+    '| none | none | none | none |'
+Set-Content -Path $failWithoutIssueReport -Value $failWithoutIssueContent -Encoding UTF8
 Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $matrixPath -Force
 
 $passReview = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
@@ -161,12 +174,19 @@ $failReview = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
     -ReportPath $failReport `
     -Quiet `
     -PassThru
+$failWithoutIssueReview = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
+    -ReportPath $failWithoutIssueReport `
+    -Quiet `
+    -PassThru
 
 Assert-True $passReview.Complete "Passing smoke report should be complete."
 Assert-True $passReview.Passed "Passing smoke report should be pass-ready."
 Assert-True $failReview.Complete "Failing smoke report should still be complete."
 Assert-True (!$failReview.Passed) "Failing smoke report should not be pass-ready."
 Assert-True ($failReview.ResultFailureCount -eq 1) "Failing smoke report should record one failed result."
+Assert-True (!$failWithoutIssueReview.Complete) "Failing smoke report without a real issue row should be incomplete."
+Assert-True (($failWithoutIssueReview.Issues -join "`n") -match "Non-passing reports must include at least one complete Issues Found row") `
+    "Failing smoke report without a real issue row should explain the missing issue evidence."
 
 & (Join-Path $PSScriptRoot "submit-daw-test-report.ps1") `
     -ReportPath $passReport `

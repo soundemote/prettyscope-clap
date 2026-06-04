@@ -36,6 +36,12 @@ function Is-PlaceholderValue {
         $trimmed -eq "Asset paths/dimensions used:"
 }
 
+function Is-IssuePlaceholderValue {
+    param([string] $Value)
+
+    return (Is-PlaceholderValue $Value) -or $Value.Trim().ToLowerInvariant() -eq "none"
+}
+
 function Get-SectionLines {
     param([string] $SectionName)
 
@@ -221,6 +227,45 @@ foreach ($line in $visualNotes) {
     }
 }
 
+$issueSectionLines = Get-SectionLines "Issues Found"
+$issueRows = $issueSectionLines | Where-Object {
+    $_ -match "^\| [^|]* \| [^|]* \| [^|]* \| [^|]* \|$" -and
+    $_ -notmatch "^\| ---" -and
+    $_ -notmatch "^\| Severity"
+}
+$completeIssueRows = New-Object System.Collections.Generic.List[object]
+foreach ($row in $issueRows) {
+    $cells = $row.Trim("|").Split("|") | ForEach-Object { $_.Trim() }
+    if ($cells.Count -lt 4) {
+        continue
+    }
+
+    $severity = $cells[0]
+    $area = $cells[1]
+    $description = $cells[2]
+    $reproSteps = $cells[3]
+    $placeholderCells = @($severity, $area, $description, $reproSteps) |
+        Where-Object { Is-IssuePlaceholderValue $_ }
+    if ($placeholderCells.Count -eq 4) {
+        continue
+    }
+
+    if ((Is-IssuePlaceholderValue $severity) -or
+        (Is-IssuePlaceholderValue $area) -or
+        (Is-IssuePlaceholderValue $description) -or
+        (Is-IssuePlaceholderValue $reproSteps)) {
+        Add-Issue "Issue row is incomplete: $row"
+        continue
+    }
+
+    $completeIssueRows.Add([PSCustomObject]@{
+            Severity = $severity
+            Area = $area
+            Description = $description
+            ReproSteps = $reproSteps
+        }) | Out-Null
+}
+
 $releaseDecision = Get-SectionLines "Release Decision"
 foreach ($line in $releaseDecision) {
     if ($line -match "^- (.+):\s*(.*)$" -and (Is-PlaceholderValue $matches[2])) {
@@ -241,6 +286,10 @@ foreach ($line in $releaseDecision) {
             }
         }
     }
+}
+
+if (($resultFailures.Count -gt 0 -or $needsCodeFix) -and $completeIssueRows.Count -eq 0) {
+    Add-Issue "Non-passing reports must include at least one complete Issues Found row with repro steps."
 }
 
 $complete = ($issues.Count -eq 0)

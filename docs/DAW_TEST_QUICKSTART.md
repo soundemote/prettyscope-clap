@@ -141,6 +141,8 @@ Complete reports are not automatically passing reports. If any required result
 row is `fail`, if `Ready for next visual polish pass` is `no`, or if
 `Needs code fix before more testing` is `yes`, submission records the matrix row
 as `fix needed` instead of `pass`.
+Any non-passing report must include at least one complete `Issues Found` row
+with repro steps.
 
 After the report passes review, preview the host matrix row:
 

@@ -107,6 +107,8 @@ The reviewer also classifies completed reports as pass-ready only when every
 required result row is `pass`, `Ready for next visual polish pass` is `yes`, and
 `Needs code fix before more testing` is `no`. The submit helper records completed
 non-passing reports as `fix needed`.
+If a report has any failed result or says a code fix is needed, it must include
+at least one complete `Issues Found` row with repro steps.
 
 Optional handoff manifest:
 

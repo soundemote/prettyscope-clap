@@ -53,6 +53,8 @@ the DAW behavior that still needs hands-on testing.
 - Completed reports are only matrix `pass` candidates when all required result
   rows pass and the release decision is pass-ready; completed non-passing
   reports are submitted as `fix needed`.
+- Non-passing DAW reports require at least one complete issue row with repro
+  steps before they are complete.
 - Release gates re-read linked reports and require pass-ready evidence, so a
   manually edited matrix `pass` row cannot satisfy gates with a non-passing
   report.
