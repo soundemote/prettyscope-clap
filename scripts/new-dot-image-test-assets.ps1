@@ -1,6 +1,7 @@
 param(
     [string] $OutputDir = "",
-    [int] $Size = 256
+    [int] $Size = 256,
+    [switch] $PassThru
 )
 
 $ErrorActionPreference = "Stop"
@@ -116,6 +117,16 @@ $streakPath = Join-Path $OutputDir "prettyscope-dot-asymmetric-streak.png"
 Save-SoftCoreDot -Path $softCorePath -ImageSize $Size
 Save-AsymmetricStreakDot -Path $streakPath -ImageSize $Size
 
+$createdAssets = @(
+    (Resolve-Path $softCorePath).Path,
+    (Resolve-Path $streakPath).Path
+)
+
 Write-Host "Created dot image test assets:"
-Write-Host "  $softCorePath"
-Write-Host "  $streakPath"
+foreach ($assetPath in $createdAssets) {
+    Write-Host "  $assetPath"
+}
+
+if ($PassThru) {
+    Write-Output $createdAssets
+}

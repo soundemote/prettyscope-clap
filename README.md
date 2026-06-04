@@ -62,7 +62,7 @@ This also verifies that the installed CLAP/VST3 copies match the build
 artifacts.
 
 To prepare a DAW test in one command, including build/test/install/freshness
-verification plus a prefilled report:
+verification, dot image smoke-test PNGs, and a prefilled report:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
@@ -70,6 +70,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 
 If the current installed artifacts are already fresh, add `-SkipBuildInstall` to
 generate another report without rebuilding.
+
+Add `-SkipDotImageAssets` for report-only reruns that do not need fresh Dot 1 /
+Dot 2 image test files.
 
 Add `-PassThru` when automation needs the generated report path as pipeline
 output.
@@ -104,6 +107,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\new-dot-image-test-assets.ps1
 ```
 
 The default output folder is `build-tracer\daw-test-dot-images`.
+`prepare-daw-test.ps1` creates these assets automatically unless
+`-SkipDotImageAssets` is used.
 
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads

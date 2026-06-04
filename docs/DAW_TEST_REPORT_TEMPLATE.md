@@ -21,6 +21,10 @@ DAW/build combination.
 - Build artifacts matched installed artifacts: yes / no
 - Notes:
 
+## Dot Image Test Assets
+
+- Asset paths used:
+
 ## Results
 
 | Area | Pass/Fail | Notes |

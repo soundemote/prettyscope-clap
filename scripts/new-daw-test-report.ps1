@@ -6,6 +6,7 @@ param(
     [string] $DawVersion = "",
     [string] $Tester = "",
     [string] $AudioSource = "",
+    [string[]] $DotImageAssetPaths = @(),
     [string] $OutputPath = "",
     [switch] $SkipFreshnessCheck,
     [switch] $PassThru
@@ -46,6 +47,11 @@ try {
     $date = Get-Date -Format "yyyy-MM-dd"
     $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $os = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription.Trim()
+    $dotImageAssetLines = "- None generated for this report."
+
+    if ($DotImageAssetPaths.Count -gt 0) {
+        $dotImageAssetLines = ($DotImageAssetPaths | ForEach-Object { "- ``$_``" }) -join "`r`n"
+    }
 
     if (!$OutputPath) {
         New-Item -ItemType Directory -Force -Path $reportsDir | Out-Null
@@ -81,6 +87,10 @@ DAW/build combination.
 - ``scripts\show-local-plugin-status.ps1 -RequireFresh`` passed: yes
 - Build artifacts matched installed artifacts: yes
 - Notes:
+
+## Dot Image Test Assets
+
+$dotImageAssetLines
 
 ## Results
 

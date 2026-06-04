@@ -42,6 +42,8 @@ the DAW behavior that still needs hands-on testing.
   generated report path.
 - A smoke-test asset script generates known-good PNGs for Dot 1 / Dot 2 image
   override testing.
+- The one-command DAW prep script creates those dot image smoke-test assets by
+  default and records their paths in the generated report.
 
 ## Local Verification Command
 

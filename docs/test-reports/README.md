@@ -8,7 +8,8 @@ Create a prefilled report with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\new-daw-test-report.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
-Or run the full build/test/install/report handoff from the repository root:
+Or run the full build/test/install/asset/report handoff from the repository
+root:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
@@ -16,6 +17,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 
 Add `-SkipBuildInstall` to the prep command when the installed artifacts are
 already fresh and you only need another report.
+
+The prep command creates Dot 1 / Dot 2 smoke-test PNGs by default and records
+their paths in the report. Add `-SkipDotImageAssets` only for reruns that do not
+need fresh image assets.
 
 Add `-PassThru` to either command when automation needs the generated report
 path as pipeline output.

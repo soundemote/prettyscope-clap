@@ -6,8 +6,10 @@ param(
     [string] $DawVersion = "",
     [string] $Tester = "",
     [string] $AudioSource = "",
+    [string] $DotImageAssetDir = "",
     [string] $OutputPath = "",
     [switch] $SkipBuildInstall,
+    [switch] $SkipDotImageAssets,
     [switch] $PassThru
 )
 
@@ -24,6 +26,15 @@ else {
     & (Join-Path $PSScriptRoot "show-local-plugin-status.ps1") -BuildDir $BuildDir -RequireFresh
 }
 
+$dotImageAssetPaths = @()
+if (!$SkipDotImageAssets) {
+    $assetArgs = @{}
+    if ($DotImageAssetDir) {
+        $assetArgs.OutputDir = $DotImageAssetDir
+    }
+    $dotImageAssetPaths = @(& (Join-Path $PSScriptRoot "new-dot-image-test-assets.ps1") @assetArgs -PassThru)
+}
+
 $reportArgs = @{
     Format = $Format
     BuildDir = $BuildDir
@@ -31,6 +42,7 @@ $reportArgs = @{
     DawVersion = $DawVersion
     Tester = $Tester
     AudioSource = $AudioSource
+    DotImageAssetPaths = $dotImageAssetPaths
     SkipFreshnessCheck = $true
 }
 
