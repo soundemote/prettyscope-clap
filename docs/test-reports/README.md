@@ -8,6 +8,12 @@ Create a prefilled report with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\new-daw-test-report.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+Ask for the next test/report action from the repository root with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
+```
+
 Or run the full build/test/install/asset/report handoff from the repository
 root:
 
@@ -49,6 +55,7 @@ powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-daw-test-report-inde
 Add `-IncludeBuildScratch` to also scan scratch reports under `build-tracer`.
 Add `-IncompleteOnly` or `-CompleteOnly` to filter by review status. Add
 `-OpenLatest` to open the newest report after filtering.
+Use `-Quiet -PassThru` when another script needs structured report-index data.
 
 The reviewer expects real Dot Image Test Assets, all visual control groups, all
 required result rows, visual notes, and release decision fields before a report

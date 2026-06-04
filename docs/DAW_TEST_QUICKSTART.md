@@ -7,6 +7,12 @@ is `docs\DAW_TEST_CHECKLIST.md`; this is the shorter path.
 
 From `C:\Users\argit\Documents\_PROGRAMMING\prettyscope-clap`:
 
+To ask the tooling what to do next:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
+```
+
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Format CLAP -Daw "Your DAW" -Tester "Your Name"
 ```

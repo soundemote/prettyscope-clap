@@ -5,6 +5,7 @@ param(
     [switch] $CompleteOnly,
     [switch] $IncompleteOnly,
     [switch] $OpenLatest,
+    [switch] $Quiet,
     [switch] $PassThru
 )
 
@@ -86,14 +87,16 @@ $filteredReports = @($reports | Where-Object {
     })
 $sortedReports = @($filteredReports | Sort-Object Modified -Descending | Select-Object -First $Limit)
 
-Write-Host "Prettyscope DAW test reports"
-if ($sortedReports.Count -eq 0) {
-    Write-Host "  (none found)"
-}
-else {
-    $sortedReports |
-        Format-Table -AutoSize Modified, Complete, Issues, Format, Daw, DawVersion, Tester, Commit, Path |
-        Out-Host
+if (!$Quiet) {
+    Write-Host "Prettyscope DAW test reports"
+    if ($sortedReports.Count -eq 0) {
+        Write-Host "  (none found)"
+    }
+    else {
+        $sortedReports |
+            Format-Table -AutoSize Modified, Complete, Issues, Format, Daw, DawVersion, Tester, Commit, Path |
+            Out-Host
+    }
 }
 
 if ($OpenLatest) {

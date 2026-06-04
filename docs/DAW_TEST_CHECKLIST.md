@@ -10,6 +10,12 @@ For a shorter first pass, use `docs\DAW_TEST_QUICKSTART.md`.
 
 From `C:\Users\argit\Documents\_PROGRAMMING\prettyscope-clap`:
 
+Next-action helper:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell
