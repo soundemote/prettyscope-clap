@@ -20,6 +20,7 @@
 #include <array>
 #include <unordered_map>
 #include <algorithm>
+#include <string>
 #include <clap/clap.h>
 #include "configuration.h"
 #include "sst/cpputils/constructors.h"
@@ -82,12 +83,39 @@ struct Patch : pats::PatchBase<Patch, Param>
     static md_t boolMd() { return md_t().asBool().withFlags(boolFlags); }
     static md_t intMd() { return md_t().asInt().withFlags(boolFlags); }
 
+    struct VisualAssetState
+    {
+        struct DotImage
+        {
+            std::string label{"Generated"};
+            std::string pngBase64;
+
+            bool hasImage() const { return !pngBase64.empty(); }
+        };
+
+        std::array<DotImage, 2> dotImages;
+
+        void reset()
+        {
+            for (auto &dot : dotImages)
+            {
+                dot = {};
+            }
+        }
+    };
+
     Patch() : pats::PatchBase<Patch, Param>()
 
     {
         auto pushParams = [this](auto &from) { this->pushMultipleParams(from.params()); };
 
         pushParams(visualParams);
+        onResetToInit = [](Patch &patch) { patch.visualAssets.reset(); };
+        additionalToState = [this](TiXmlElement &root) { visualAssetsToState(root); };
+        additionalFromState = [this](TiXmlElement *root, uint32_t)
+        {
+            visualAssetsFromState(root);
+        };
 
         std::sort(params.begin(), params.end(),
                   [](const Param *a, const Param *b)
@@ -270,6 +298,7 @@ struct Patch : pats::PatchBase<Patch, Param>
     };
 
     VisualNode visualParams;
+    VisualAssetState visualAssets;
 
     char name[256]{"Init"};
 
@@ -297,6 +326,70 @@ struct Patch : pats::PatchBase<Patch, Param>
 
     float migrateParamValueFromVersion(Param *p, float value, uint32_t version);
     void migratePatchFromVersion(uint32_t version);
+
+  private:
+    void visualAssetsToState(TiXmlElement &root) const
+    {
+        TiXmlElement assets("visualAssets");
+        assets.SetAttribute("version", 1);
+
+        for (size_t i = 0; i < visualAssets.dotImages.size(); ++i)
+        {
+            const auto &source = visualAssets.dotImages[i];
+            if (!source.hasImage())
+            {
+                continue;
+            }
+
+            TiXmlElement dot("dotImage");
+            dot.SetAttribute("index", static_cast<int>(i));
+            dot.SetAttribute("label", source.label.c_str());
+            dot.SetAttribute("encoding", "png-base64");
+            dot.InsertEndChild(TiXmlText(source.pngBase64.c_str()));
+            assets.InsertEndChild(dot);
+        }
+
+        root.InsertEndChild(assets);
+    }
+
+    void visualAssetsFromState(TiXmlElement *root)
+    {
+        visualAssets.reset();
+        if (!root)
+        {
+            return;
+        }
+
+        auto *assets = root->FirstChildElement("visualAssets");
+        if (!assets)
+        {
+            return;
+        }
+
+        auto *dot = assets->FirstChildElement("dotImage");
+        while (dot)
+        {
+            int index = -1;
+            if (dot->QueryIntAttribute("index", &index) == TIXML_SUCCESS && index >= 0 &&
+                index < static_cast<int>(visualAssets.dotImages.size()))
+            {
+                auto &target = visualAssets.dotImages[static_cast<size_t>(index)];
+                if (const auto *label = dot->Attribute("label"))
+                {
+                    target.label = label;
+                }
+                if (auto *text = dot->FirstChild())
+                {
+                    target.pngBase64 = text->Value() ? text->Value() : "";
+                }
+                if (target.label.empty())
+                {
+                    target.label = "Image";
+                }
+            }
+            dot = dot->NextSiblingElement("dotImage");
+        }
+    }
 };
 } // namespace baconpaul::sidequest_ns
 #endif // PATCH_H

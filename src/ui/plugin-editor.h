@@ -145,6 +145,8 @@ struct PluginEditor : jcmp::WindowPanel
     ScopeDotImages currentScopeDotImages() const;
     void refreshScopeVisualState();
     void refreshScopeDotImages();
+    void syncPatchDotImagesFromEditor();
+    void applyPatchDotImagesToEditor();
 
     struct DotImageOverride
     {

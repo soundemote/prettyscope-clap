@@ -100,6 +100,38 @@ juce::String dotName(size_t dotIndex)
 {
     return dotIndex == 1 ? "Dot 2" : "Dot 1";
 }
+
+std::string imageToPngBase64(const juce::Image &image)
+{
+    if (!image.isValid())
+    {
+        return {};
+    }
+
+    auto png = juce::PNGImageFormat();
+    auto output = juce::MemoryOutputStream();
+    if (!png.writeImageToStream(image, output))
+    {
+        return {};
+    }
+    return output.getMemoryBlock().toBase64Encoding().toStdString();
+}
+
+juce::Image imageFromPngBase64(const std::string &base64)
+{
+    if (base64.empty())
+    {
+        return {};
+    }
+
+    auto block = juce::MemoryBlock();
+    if (!block.fromBase64Encoding(juce::String(base64)))
+    {
+        return {};
+    }
+
+    return juce::ImageFileFormat::loadFrom(block.getData(), block.getSize());
+}
 } // namespace
 
 PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQueue_T &utoa,
@@ -147,6 +179,7 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
     presetManager = std::make_unique<presets::PresetManager>(clapHost);
     presetManager->onPresetLoaded = [this](auto s)
     {
+        this->applyPatchDotImagesToEditor();
         this->postPatchChange(s);
         repaint();
     };
@@ -684,6 +717,7 @@ void PluginEditor::doSavePatch()
                                  }
                                  auto pn = fs::path{result[0].getFullPathName().toStdString()};
                                  w->setPatchNameTo(pn.filename().replace_extension("").u8string());
+                                 w->syncPatchDotImagesFromEditor();
 
 #if USE_WCHAR_PRESET
                                  w->presetManager->saveUserPresetDirect(
@@ -936,6 +970,36 @@ void PluginEditor::refreshScopeDotImages()
     }
 }
 
+void PluginEditor::syncPatchDotImagesFromEditor()
+{
+    for (size_t i = 0; i < dotImageOverrides.size(); ++i)
+    {
+        auto &target = patchCopy.visualAssets.dotImages[i];
+        const auto &source = dotImageOverrides[i];
+        target.label = source.label.toStdString();
+        target.pngBase64 = imageToPngBase64(source.image);
+    }
+}
+
+void PluginEditor::applyPatchDotImagesToEditor()
+{
+    for (size_t i = 0; i < dotImageOverrides.size(); ++i)
+    {
+        const auto &source = patchCopy.visualAssets.dotImages[i];
+        auto &target = dotImageOverrides[i];
+        target.image = imageFromPngBase64(source.pngBase64);
+        target.label = target.image.isValid() ? juce::String(source.label) : "Generated";
+        target.revision++;
+    }
+
+    refreshScopeDotImages();
+    if (mainPanel)
+    {
+        mainPanel->refreshDotImageStatus();
+    }
+    repaint();
+}
+
 juce::String PluginEditor::dotImageStatusText(size_t dotIndex) const
 {
     if (dotIndex >= dotImageOverrides.size())
@@ -989,6 +1053,7 @@ void PluginEditor::loadDotImageOverride(size_t dotIndex)
             dot.image = image;
             dot.label = file.getFileName();
             dot.revision++;
+            syncPatchDotImagesFromEditor();
             refreshScopeDotImages();
 
             if (mainPanel)
@@ -1060,6 +1125,7 @@ void PluginEditor::clearDotImageOverride(size_t dotIndex)
     dot.image = {};
     dot.label = "Generated";
     dot.revision++;
+    syncPatchDotImagesFromEditor();
     refreshScopeDotImages();
 
     if (mainPanel)

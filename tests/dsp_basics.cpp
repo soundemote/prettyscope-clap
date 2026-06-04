@@ -758,3 +758,36 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     REQUIRE(state.screenBurnAfterglow == Approx(1.0f));
     REQUIRE(state.screenBurnFloorFade == Approx(0.01f));
 }
+
+TEST_CASE("Prettyscope dot image assets roundtrip through patch state", "[params]")
+{
+    baconpaul::sidequest_ns::Patch patch;
+    patch.visualAssets.dotImages[0].label = "core-dot.png";
+    patch.visualAssets.dotImages[0].pngBase64 = "ZmFrZS1jb3JlLXBORw==";
+    patch.visualAssets.dotImages[1].label = "halo-dot.png";
+    patch.visualAssets.dotImages[1].pngBase64 = "ZmFrZS1oYWxvLXBORw==";
+
+    const auto state = patch.toState();
+
+    baconpaul::sidequest_ns::Patch restored;
+    REQUIRE(restored.fromState(state));
+
+    REQUIRE(restored.visualAssets.dotImages[0].label == "core-dot.png");
+    REQUIRE(restored.visualAssets.dotImages[0].pngBase64 == "ZmFrZS1jb3JlLXBORw==");
+    REQUIRE(restored.visualAssets.dotImages[1].label == "halo-dot.png");
+    REQUIRE(restored.visualAssets.dotImages[1].pngBase64 == "ZmFrZS1oYWxvLXBORw==");
+}
+
+TEST_CASE("Prettyscope dot image assets reset when absent from patch state", "[params]")
+{
+    baconpaul::sidequest_ns::Patch source;
+    const auto state = source.toState();
+
+    baconpaul::sidequest_ns::Patch restored;
+    restored.visualAssets.dotImages[0].label = "old.png";
+    restored.visualAssets.dotImages[0].pngBase64 = "b2xk";
+
+    REQUIRE(restored.fromState(state));
+    REQUIRE(restored.visualAssets.dotImages[0].label == "Generated");
+    REQUIRE(restored.visualAssets.dotImages[0].pngBase64.empty());
+}
