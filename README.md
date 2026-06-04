@@ -120,6 +120,12 @@ To review a filled DAW report for missing essentials:
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```
 
+Or review the newest incomplete generated report automatically:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
+```
+
 Add `-RequireComplete` when automation should fail on missing fields.
 
 The first DAW-test visual control surface is recorded in

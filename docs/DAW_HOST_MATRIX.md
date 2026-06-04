@@ -48,7 +48,9 @@ Before calling this first DAW-test surface ready for broader attention:
 
 1. Generate or locate a report with `scripts\show-daw-test-dashboard.ps1`.
 2. Fill the report while testing the host.
-3. Run `scripts\review-daw-test-report.ps1 -RequireComplete`.
+3. Run `scripts\review-latest-daw-test-report.ps1 -RequireComplete`, or run
+   `scripts\review-daw-test-report.ps1 -ReportPath ... -RequireComplete` when
+   reviewing a specific file.
 4. Preview and submit this matrix row with:
 
    ```powershell

@@ -173,7 +173,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
     powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-report-index.ps1
-    powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-host-matrix.ps1
