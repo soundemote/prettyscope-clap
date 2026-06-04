@@ -9,10 +9,12 @@ param(
     [string] $DotImageAssetDir = "",
     [string] $OutputPath = "",
     [string] $BundleManifestPath = "",
+    [string] $AnswerSheetPath = "",
     [switch] $SkipBuildInstall,
     [switch] $SkipFreshnessCheck,
     [switch] $SkipDotImageAssets,
     [switch] $SkipBundleManifest,
+    [switch] $SkipAnswerSheet,
     [switch] $PassThru
 )
 
@@ -55,12 +57,23 @@ if ($OutputPath) {
     $reportArgs.OutputPath = $OutputPath
 }
 
-$reportPath = $null
-if ($PassThru) {
-    $reportPath = & (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs -PassThru
-}
-else {
-    & (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs
+$reportPath = & (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs -PassThru
+
+$answerSheet = $null
+if (!$SkipAnswerSheet -and $reportPath) {
+    $answerArgs = @{
+        ReportPath = $reportPath
+    }
+    if ($AnswerSheetPath) {
+        $answerArgs.OutputPath = $AnswerSheetPath
+    }
+
+    if ($PassThru) {
+        $answerSheet = & (Join-Path $PSScriptRoot "new-daw-test-answer-sheet.ps1") @answerArgs -PassThru
+    }
+    else {
+        & (Join-Path $PSScriptRoot "new-daw-test-answer-sheet.ps1") @answerArgs
+    }
 }
 
 $bundleManifest = $null
@@ -83,6 +96,7 @@ if (!$SkipBundleManifest) {
 if ($PassThru) {
     [PSCustomObject]@{
         ReportPath = $reportPath
+        AnswerSheetPath = if ($answerSheet) { $answerSheet.AnswerPath } else { $null }
         BundleManifestPath = $bundleManifest
     }
 }

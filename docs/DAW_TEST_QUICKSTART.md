@@ -42,6 +42,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Forma
 The script prints paths for:
 
 - a prefilled DAW test report
+- a JSON answer sheet for filling the report
 - a bundle manifest
 - a verified bundle folder
 - a verified bundle zip
@@ -51,7 +52,7 @@ The blank report warnings are expected before DAW testing. Leave the generated
 report open or keep its path handy.
 
 To print the most recent report, summary, manifest, bundle folder, and bundle
-zip paths again later:
+zip paths again later, including the answer sheet:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
@@ -69,9 +70,9 @@ To verify the handoff matches the current repo commit:
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
 ```
 
-Add `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, or
-`-OpenBundleZipFolder` when you want Windows to open the latest report, summary,
-or bundle location directly.
+Add `-OpenReport`, `-OpenAnswerSheet`, `-OpenSummary`, `-OpenBundleFolder`, or
+`-OpenBundleZipFolder` when you want Windows to open the latest report, answer
+sheet, summary, or bundle location directly.
 
 ## 2. Load Prettyscope In The DAW
 
@@ -163,6 +164,12 @@ Markdown:
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -ResultArea "Scope follows input signal" -PassFail pass -ResultNotes "Trace follows the test signal."
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -VisualNoteField "Trace appearance" -VisualNote "No reset line or dotted endpoints observed."
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -ReadyForNextVisualPolish yes -NeedsCodeFixBeforeMoreTesting no -HighestPriorityFollowUp "Continue visual polish."
+```
+
+Or edit the generated answer sheet JSON and apply it once:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\apply-daw-test-answer-sheet.ps1 -AnswerPath "ANSWER_SHEET_PATH_FROM_READINESS_OUTPUT" -RequireComplete
 ```
 
 Then run:

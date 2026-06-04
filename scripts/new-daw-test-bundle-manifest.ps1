@@ -115,6 +115,8 @@ try {
         "docs\test-reports\README.md",
         "scripts\prepare-daw-test.ps1",
         "scripts\new-daw-test-report.ps1",
+        "scripts\new-daw-test-answer-sheet.ps1",
+        "scripts\apply-daw-test-answer-sheet.ps1",
         "scripts\new-daw-test-bundle.ps1",
         "scripts\test-daw-test-bundle.ps1",
         "scripts\review-daw-test-report.ps1",
@@ -150,6 +152,7 @@ try {
         "scripts\submit-latest-daw-test-report.ps1",
         "scripts\test-daw-report-artifact-update.ps1",
         "scripts\test-daw-report-field-update.ps1",
+        "scripts\test-daw-answer-sheet.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     $handoffLines = ($handoffFiles | ForEach-Object { Format-FileLine $_ }) -join "`r`n"
@@ -187,6 +190,8 @@ $handoffLines
 ## Suggested Next Commands
 
     powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
+    powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-answer-sheet.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\apply-daw-test-answer-sheet.ps1 -AnswerPath .\prettyscope-daw-test-answer-sheet.json -RequireComplete
     powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
@@ -209,6 +214,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-artifact-update.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-field-update.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-answer-sheet.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-classification.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-next-action-routing.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-image-renderer-source.ps1

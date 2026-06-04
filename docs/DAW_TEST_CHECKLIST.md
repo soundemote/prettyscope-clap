@@ -88,6 +88,13 @@ One-command DAW test prep:
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+Create/apply a JSON answer sheet for the current report:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-answer-sheet.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\apply-daw-test-answer-sheet.ps1 -AnswerPath "path\to\prettyscope-daw-test-answer-sheet.json" -RequireComplete
+```
+
 Full local readiness smoke:
 
 ```powershell
@@ -97,17 +104,18 @@ powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1
 Use `-SkipBuildInstall` only when strict freshness already passes and you only
 need another report.
 
-The prep command also creates known-good Dot 1 / Dot 2 image test PNGs and a
-bundle manifest. The readiness command also writes a release candidate summary
-next to the generated report and bundle. It records image paths in the generated
-report. Use `-SkipDotImageAssets` or `-SkipBundleManifest` only for reruns that
-do not need fresh handoff assets.
+The prep command also creates known-good Dot 1 / Dot 2 image test PNGs, an
+answer sheet, and a bundle manifest. The readiness command also writes a release
+candidate summary next to the generated report and bundle. It records image
+paths in the generated report. Use `-SkipDotImageAssets`, `-SkipAnswerSheet`, or
+`-SkipBundleManifest` only for reruns that do not need fresh handoff assets.
 
 The release candidate summary includes machine checks, release gates, next
 action, latest artifacts, and the DAW report index with pass-readiness labels.
 
 Add `-PassThru` when automation needs the generated report and bundle manifest
-paths as pipeline output.
+paths as pipeline output. The returned object also includes the generated answer
+sheet path when answer-sheet creation is enabled.
 
 After filling the report, review it for missing essentials:
 
@@ -123,6 +131,12 @@ notes, release decisions, and issue rows:
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -ResultArea "Scope follows input signal" -PassFail pass -ResultNotes "Trace follows the test signal."
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -VisualNoteField "Trace appearance" -VisualNote "No reset line or dotted endpoints observed."
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -ReadyForNextVisualPolish yes -NeedsCodeFixBeforeMoreTesting no -HighestPriorityFollowUp "Continue visual polish."
+```
+
+Alternatively, fill `prettyscope-daw-test-answer-sheet.json` and apply it once:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\apply-daw-test-answer-sheet.ps1 -AnswerPath .\docs\test-reports\prettyscope-daw-test-answer-sheet.json -RequireComplete
 ```
 
 Then review the report:

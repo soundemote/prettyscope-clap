@@ -36,14 +36,15 @@ Add `-SkipBuildInstall` to the prep command when the installed artifacts are
 already fresh and you only need another report.
 
 The prep command creates Dot 1 / Dot 2 smoke-test PNGs and a bundle manifest by
-default. It records image paths in the report. Add `-SkipDotImageAssets` or
+default. It also creates an answer sheet JSON beside the report. It records
+image paths in the report. Add `-SkipDotImageAssets`, `-SkipAnswerSheet`, or
 `-SkipBundleManifest` only for reruns that do not need fresh handoff assets.
 
 Add `-PassThru` to either command when automation needs generated paths as
 pipeline output.
 
-Print the latest generated report, release summary, manifest, bundle folder, and
-bundle zip paths with:
+Print the latest generated report, answer sheet, release summary, manifest,
+bundle folder, and bundle zip paths with:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-latest-daw-test-artifacts.ps1
@@ -83,6 +84,13 @@ current report with:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-gaps.ps1
+```
+
+Create or apply a JSON answer sheet from the repository root with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-answer-sheet.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\apply-daw-test-answer-sheet.ps1 -AnswerPath .\docs\test-reports\prettyscope-daw-test-answer-sheet.json -RequireComplete
 ```
 
 After exporting the Dot 1 / Dot 2 generated and loaded PNGs, and after saving

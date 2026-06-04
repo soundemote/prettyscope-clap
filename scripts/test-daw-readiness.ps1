@@ -43,6 +43,7 @@ try {
     & (Join-Path $PSScriptRoot "test-daw-host-matrix.ps1")
     & (Join-Path $PSScriptRoot "test-daw-report-artifact-update.ps1")
     & (Join-Path $PSScriptRoot "test-daw-report-field-update.ps1")
+    & (Join-Path $PSScriptRoot "test-daw-answer-sheet.ps1")
     & (Join-Path $PSScriptRoot "test-daw-report-classification.ps1")
     & (Join-Path $PSScriptRoot "test-daw-next-action-routing.ps1")
     $objectiveCoverage = & (Join-Path $PSScriptRoot "show-release-objective-coverage.ps1") `
@@ -54,6 +55,7 @@ try {
     }
 
     $reportPath = Join-Path $OutputDir "prettyscope-daw-test-report.md"
+    $answerSheetPath = Join-Path $OutputDir "prettyscope-daw-test-answer-sheet.json"
     $manifestPath = Join-Path $OutputDir "prettyscope-daw-test-bundle-manifest.md"
     $prep = & (Join-Path $PSScriptRoot "prepare-daw-test.ps1") `
         -Format $Format `
@@ -63,6 +65,7 @@ try {
         -Tester $Tester `
         -AudioSource $AudioSource `
         -OutputPath $reportPath `
+        -AnswerSheetPath $answerSheetPath `
         -BundleManifestPath $manifestPath `
         -SkipBuildInstall `
         -SkipFreshnessCheck `
@@ -109,6 +112,7 @@ try {
     Write-Host ""
     Write-Host "DAW readiness artifacts:"
     Write-Host "  Report: $($prep.ReportPath)"
+    Write-Host "  Answer sheet: $($prep.AnswerSheetPath)"
     Write-Host "  Prep manifest: $($prep.BundleManifestPath)"
     Write-Host "  Bundle folder: $($bundle.BundleDirectory)"
     Write-Host "  Bundle zip: $($bundle.ZipPath)"
@@ -117,6 +121,7 @@ try {
     if ($PassThru) {
         [PSCustomObject]@{
             ReportPath = $prep.ReportPath
+            AnswerSheetPath = $prep.AnswerSheetPath
             PrepManifestPath = $prep.BundleManifestPath
             BundleDirectory = $bundle.BundleDirectory
             BundleZipPath = $bundle.ZipPath

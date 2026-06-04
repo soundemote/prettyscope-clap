@@ -52,8 +52,13 @@ the DAW behavior that still needs hands-on testing.
   concrete exported PNG, preset, and DAW session paths.
 - A report field update helper fills result rows, visual notes, release
   decisions, and issue rows without hand-editing Markdown tables.
+- A DAW answer sheet helper creates and applies a JSON answer file for the
+  report artifact fields, result rows, visual notes, release decisions, and
+  issue rows.
 - A report field update smoke test verifies both pass-ready and fix-needed
   completed report paths.
+- A DAW answer sheet smoke test verifies the JSON workflow can produce a
+  complete pass-ready report.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
 - The report index labels reports as `incomplete`, `pass-ready`, or
@@ -98,11 +103,11 @@ the DAW behavior that still needs hands-on testing.
   checklist travels with release snapshots.
 - The release candidate summary includes objective coverage separating local
   implementation evidence from DAW evidence gates.
-- A DAW test handoff opener opens the latest report, release summary, and
-  matching bundle folder together for hands-on testing.
+- A DAW test handoff opener opens the latest report, answer sheet, release
+  summary, and matching bundle folder together for hands-on testing.
 - A DAW handoff currency verifier checks that the latest report, release
-  summary, bundle folder, and bundle zip exist and match the current repo
-  commit.
+  answer sheet, summary, bundle folder, and bundle zip exist and match the
+  current repo commit.
 - The release candidate summary includes the DAW report index with
   `incomplete`, `pass-ready`, and `fix-needed` report labels.
 - A bundle manifest script records built artifacts, installed artifacts, and

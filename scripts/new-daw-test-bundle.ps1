@@ -69,6 +69,8 @@ try {
     $scripts = @(
         "scripts\prepare-daw-test.ps1",
         "scripts\new-daw-test-report.ps1",
+        "scripts\new-daw-test-answer-sheet.ps1",
+        "scripts\apply-daw-test-answer-sheet.ps1",
         "scripts\review-daw-test-report.ps1",
         "scripts\test-daw-report-classification.ps1",
         "scripts\test-daw-next-action-routing.ps1",
@@ -105,6 +107,7 @@ try {
         "scripts\submit-latest-daw-test-report.ps1",
         "scripts\test-daw-report-artifact-update.ps1",
         "scripts\test-daw-report-field-update.ps1",
+        "scripts\test-daw-answer-sheet.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     foreach ($script in $scripts) {

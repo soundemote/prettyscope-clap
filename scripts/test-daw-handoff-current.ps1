@@ -59,6 +59,9 @@ try {
     if (!$artifacts.SummaryPath -or !(Test-Path $artifacts.SummaryPath)) {
         Add-Issue "Latest release summary is missing."
     }
+    if (!$artifacts.AnswerSheetPath -or !(Test-Path $artifacts.AnswerSheetPath)) {
+        Add-Issue "Latest DAW answer sheet is missing."
+    }
     if (!$artifacts.BundleDirectory -or !(Test-Path $artifacts.BundleDirectory)) {
         Add-Issue "Latest DAW bundle folder is missing."
     }
@@ -76,6 +79,7 @@ try {
             CurrentCommit = $currentCommit
             ReportCommit = $reportCommit
             ReportPath = $artifacts.ReportPath
+            AnswerSheetPath = $artifacts.AnswerSheetPath
             SummaryPath = $artifacts.SummaryPath
             BundleDirectory = $artifacts.BundleDirectory
             BundleZipPath = $artifacts.BundleZipPath
@@ -87,6 +91,7 @@ try {
         Write-Host "  Current commit: $currentCommit"
         Write-Host "  Report commit:  $reportCommit"
         Write-Host "  Report:         $($artifacts.ReportPath)"
+        Write-Host "  Answer sheet:   $($artifacts.AnswerSheetPath)"
         Write-Host "  Summary:        $($artifacts.SummaryPath)"
         Write-Host "  Bundle folder:  $($artifacts.BundleDirectory)"
         Write-Host "  Bundle zip:     $($artifacts.BundleZipPath)"

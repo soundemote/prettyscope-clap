@@ -1,6 +1,7 @@
 param(
     [string] $BuildDir = "build-tracer",
     [switch] $SkipReport,
+    [switch] $SkipAnswerSheet,
     [switch] $SkipSummary,
     [switch] $SkipBundleFolder,
     [switch] $ListOnly,
@@ -41,11 +42,15 @@ function Open-PathIfPresent {
 
 Write-Host "Prettyscope DAW test handoff"
 Write-Host "  Report:        $($artifacts.ReportPath)"
+Write-Host "  Answer sheet:  $($artifacts.AnswerSheetPath)"
 Write-Host "  Summary:       $($artifacts.SummaryPath)"
 Write-Host "  Bundle folder: $($artifacts.BundleDirectory)"
 
 if (!$SkipReport) {
     Open-PathIfPresent -Path $artifacts.ReportPath -Label "report"
+}
+if (!$SkipAnswerSheet) {
+    Open-PathIfPresent -Path $artifacts.AnswerSheetPath -Label "answer sheet"
 }
 if (!$SkipSummary) {
     Open-PathIfPresent -Path $artifacts.SummaryPath -Label "release summary"
@@ -57,6 +62,7 @@ if (!$SkipBundleFolder) {
 if ($PassThru) {
     [PSCustomObject]@{
         ReportPath = $artifacts.ReportPath
+        AnswerSheetPath = $artifacts.AnswerSheetPath
         SummaryPath = $artifacts.SummaryPath
         BundleDirectory = $artifacts.BundleDirectory
     }

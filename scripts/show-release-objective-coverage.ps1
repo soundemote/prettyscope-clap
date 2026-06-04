@@ -86,6 +86,7 @@ try {
                 {
                     & (Join-Path $PSScriptRoot "test-daw-report-artifact-update.ps1")
                     & (Join-Path $PSScriptRoot "test-daw-report-field-update.ps1")
+                    & (Join-Path $PSScriptRoot "test-daw-answer-sheet.ps1")
                     & (Join-Path $PSScriptRoot "test-daw-report-classification.ps1")
                 } `
                 $false `

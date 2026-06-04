@@ -1,6 +1,7 @@
 param(
     [string] $BuildDir = "build-tracer",
     [switch] $OpenReport,
+    [switch] $OpenAnswerSheet,
     [switch] $OpenSummary,
     [switch] $OpenBundleFolder,
     [switch] $OpenBundleZipFolder,
@@ -36,21 +37,6 @@ function Get-LatestItem {
     }
 
     return $items | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-}
-
-function Get-LatestFileByName {
-    param(
-        [string] $Path,
-        [string] $Name
-    )
-
-    if (!(Test-Path $Path)) {
-        return $null
-    }
-
-    return Get-ChildItem -Path $Path -File -Filter $Name -Recurse -ErrorAction SilentlyContinue |
-        Sort-Object LastWriteTime -Descending |
-        Select-Object -First 1
 }
 
 function Get-LatestGroupedReadinessReport {
@@ -90,6 +76,7 @@ if (!$latestReadinessReport) {
 }
 
 $latestManifest = $null
+$latestAnswerSheet = $null
 $latestBundleZip = $null
 $latestBundleFolder = $null
 $latestReleaseSummary = $null
@@ -97,12 +84,16 @@ $latestReleaseSummary = $null
 if ($latestReadinessReport) {
     $reportDirectory = Split-Path -Parent $latestReadinessReport.FullName
     $siblingManifest = Join-Path $reportDirectory "prettyscope-daw-test-bundle-manifest.md"
+    $siblingAnswerSheet = Join-Path $reportDirectory "prettyscope-daw-test-answer-sheet.json"
     $siblingBundleZip = Join-Path $reportDirectory "prettyscope-daw-test-bundle.zip"
     $siblingBundleFolder = Join-Path $reportDirectory "bundle"
     $siblingReleaseSummary = Join-Path $reportDirectory "prettyscope-release-candidate-summary.md"
 
     if (Test-Path $siblingManifest) {
         $latestManifest = Get-Item $siblingManifest
+    }
+    if (Test-Path $siblingAnswerSheet) {
+        $latestAnswerSheet = Get-Item $siblingAnswerSheet
     }
     if (Test-Path $siblingBundleZip) {
         $latestBundleZip = Get-Item $siblingBundleZip
@@ -175,6 +166,7 @@ function Open-ParentIfPresent {
 if (!$Quiet) {
     Write-Host "Latest Prettyscope DAW test artifacts"
     Write-Host "  Report:        $(Format-PathOrMissing $latestReadinessReport)"
+    Write-Host "  Answer sheet:  $(Format-PathOrMissing $latestAnswerSheet)"
     Write-Host "  Summary:       $(Format-PathOrMissing $latestReleaseSummary)"
     Write-Host "  Manifest:      $(Format-PathOrMissing $latestManifest)"
     Write-Host "  Bundle folder: $(Format-PathOrMissing $latestBundleFolder)"
@@ -183,6 +175,9 @@ if (!$Quiet) {
 
 if ($OpenReport) {
     Open-ItemIfPresent -Item $latestReadinessReport -Label "report"
+}
+if ($OpenAnswerSheet) {
+    Open-ItemIfPresent -Item $latestAnswerSheet -Label "answer sheet"
 }
 if ($OpenSummary) {
     Open-ItemIfPresent -Item $latestReleaseSummary -Label "release summary"
@@ -197,6 +192,7 @@ if ($OpenBundleZipFolder) {
 if ($PassThru) {
     [PSCustomObject]@{
         ReportPath = if ($latestReadinessReport) { $latestReadinessReport.FullName } else { $null }
+        AnswerSheetPath = if ($latestAnswerSheet) { $latestAnswerSheet.FullName } else { $null }
         SummaryPath = if ($latestReleaseSummary) { $latestReleaseSummary.FullName } else { $null }
         ManifestPath = if ($latestManifest) { $latestManifest.FullName } else { $null }
         BundleDirectory = if ($latestBundleFolder) { $latestBundleFolder.FullName } else { $null }
