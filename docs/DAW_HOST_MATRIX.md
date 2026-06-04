@@ -44,5 +44,11 @@ Before calling this first DAW-test surface ready for broader attention:
 1. Generate or locate a report with `scripts\show-daw-test-dashboard.ps1`.
 2. Fill the report while testing the host.
 3. Run `scripts\review-daw-test-report.ps1 -RequireComplete`.
-4. Update this matrix row with status, report path, and key notes.
-5. Keep detailed reproduction steps in the report, not in this matrix.
+4. Update this matrix row with:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+   ```
+
+5. Run `scripts\test-daw-host-matrix.ps1`.
+6. Keep detailed reproduction steps in the report, not in this matrix.

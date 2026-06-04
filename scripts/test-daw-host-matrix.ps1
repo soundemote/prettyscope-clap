@@ -1,11 +1,15 @@
 param(
+    [string] $MatrixPath = "",
     [switch] $PassThru
 )
 
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-$matrixPath = Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md"
+if (!$MatrixPath) {
+    $MatrixPath = Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md"
+}
+$matrixPath = $MatrixPath
 $allowedStatuses = @(
     "untested",
     "testing",
