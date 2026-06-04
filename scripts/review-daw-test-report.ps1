@@ -100,7 +100,7 @@ foreach ($line in $preflightLines) {
 $dotImageAssetLines = Get-SectionLines "Dot Image Test Assets"
 $dotAssetContent = ($dotImageAssetLines | Where-Object {
         $trimmed = $_.Trim()
-        $trimmed.Length -gt 0 -and $trimmed -notmatch "^-\s*None generated"
+        $trimmed -match '^-\s*`[^`]+`\s+\(\d+x\d+,\s+\d+\s+bytes\)'
     })
 if ($dotAssetContent.Count -eq 0) {
     Add-Issue "Dot Image Test Assets section has no generated or recorded asset paths."

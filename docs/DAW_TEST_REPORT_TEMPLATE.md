@@ -25,6 +25,8 @@ DAW/build combination.
 ## Dot Image Test Assets
 
 - Asset paths/dimensions used:
+- Load the soft-core dot and asymmetric streak assets into both Dot 1 and Dot 2.
+- Use the asymmetric streak to check rotation, aspect, image mix, and clear behavior.
 
 ## Visual Controls Under Test
 
@@ -57,10 +59,15 @@ DAW/build combination.
 ## Visual Notes
 
 - Trace appearance:
+  - Watch for dotted endpoints, reset-line artifacts, jitter, excessive smear, or black OpenGL frames.
 - Screen burn feel:
+  - Note whether burn fades slowly but surely, stays forever, or disappears too quickly.
 - Dot image appearance:
+  - Compare generated dots against loaded images; note size, halo, rotation, aspect, and mix behavior.
 - Control layout pain points:
+  - Note controls that are hard to find, too sensitive, too cramped, or unclear in the DAW editor.
 - Performance/frame-rate notes:
+  - Note visible stalls, host UI lag, or heavy CPU/GPU behavior while the editor is open.
 
 ## Issues Found
 
