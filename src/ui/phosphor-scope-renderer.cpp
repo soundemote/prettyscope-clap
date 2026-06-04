@@ -63,6 +63,27 @@ struct SignalBuffer
     uint64_t lastSnapshotSerial{std::numeric_limits<uint64_t>::max()};
     float lastTimeScale{};
 
+    void appendIdleTrace(uint64_t snapshotSerial)
+    {
+        constexpr size_t idleFrames = 256;
+        constexpr float idleAmplitude = 0.42f;
+        const auto phase = static_cast<float>(snapshotSerial % idleFrames) /
+                           static_cast<float>(idleFrames) * 2.0f * pi;
+
+        left.clear();
+        right.clear();
+        left.reserve(idleFrames);
+        right.reserve(idleFrames);
+
+        for (size_t i = 0; i < idleFrames; ++i)
+        {
+            const auto t = static_cast<float>(i) / static_cast<float>(idleFrames - 1) *
+                           2.0f * pi;
+            left.push_back(std::sin(t + phase) * idleAmplitude);
+            right.push_back(std::sin(t * 2.0f + phase * 0.73f) * idleAmplitude);
+        }
+    }
+
     void append(const ScopeAudioSnapshot &snapshot, float timeScale, uint64_t snapshotSerial)
     {
         const auto clampedScale = std::clamp(timeScale, 0.25f, 4.0f);
@@ -82,8 +103,7 @@ struct SignalBuffer
         const auto sourceFrames = snapshot.validFrameCount();
         if (!snapshot.hasRenderableTrace() || sourceFrames < 2)
         {
-            left.clear();
-            right.clear();
+            appendIdleTrace(snapshotSerial);
             return;
         }
 
