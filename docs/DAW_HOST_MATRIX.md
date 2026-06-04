@@ -6,6 +6,8 @@ evidence source for each row.
 Run `scripts\test-daw-host-matrix.ps1` after matrix updates.
 Run `scripts\show-daw-host-matrix.ps1` for a quick summary.
 Run `scripts\show-daw-release-gates.ps1` to see which first-pass gates remain.
+Release gates re-read linked reports and only count matrix `pass` rows when the
+report itself is pass-ready.
 
 Status values:
 

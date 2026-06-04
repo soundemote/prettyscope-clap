@@ -1,5 +1,6 @@
 param(
     [string] $MatrixPath = "",
+    [switch] $Quiet,
     [switch] $PassThru
 )
 
@@ -102,28 +103,29 @@ $passedReports = @($passedRows | ForEach-Object {
                 Row = $_
                 ReportPath = $reportPath
                 Complete = $review.Complete
+                Passed = $review.Passed
                 IssueCount = $review.IssueCount
             }
         }
     })
-$completePassedReports = @($passedReports | Where-Object { $_.Complete })
+$passReadyReports = @($passedReports | Where-Object { $_.Complete -and $_.Passed })
 
-$clapRows = @($completePassedReports | Where-Object { $_.Row.Format -eq "CLAP" })
-$vst3Rows = @($completePassedReports | Where-Object { $_.Row.Format -eq "VST3" })
+$clapRows = @($passReadyReports | Where-Object { $_.Row.Format -eq "CLAP" })
+$vst3Rows = @($passReadyReports | Where-Object { $_.Row.Format -eq "VST3" })
 $fixNeededRows = @($rows | Where-Object { $_.Status -eq "fix needed" })
 
-$presetRows = @($completePassedReports | Where-Object {
+$presetRows = @($passReadyReports | Where-Object {
         (Get-ReportResult -ReportPath $_.ReportPath -Area "Preset save/reload restores images") -match '^pass$'
     })
-$sessionRows = @($completePassedReports | Where-Object {
+$sessionRows = @($passReadyReports | Where-Object {
         (Get-ReportResult -ReportPath $_.ReportPath -Area "DAW session save/reopen restores images") -match '^pass$'
     })
 
 $gates = New-Object System.Collections.Generic.List[object]
 $gates.Add((New-Gate "At least one CLAP host passed" ($clapRows.Count -gt 0) `
-            ($(if ($clapRows.Count -gt 0) { "$($clapRows[0].Row.Host) $($clapRows[0].Row.Format)" } else { "No complete pass report yet." })))) | Out-Null
+            ($(if ($clapRows.Count -gt 0) { "$($clapRows[0].Row.Host) $($clapRows[0].Row.Format)" } else { "No pass-ready report yet." })))) | Out-Null
 $gates.Add((New-Gate "At least one VST3 host passed" ($vst3Rows.Count -gt 0) `
-            ($(if ($vst3Rows.Count -gt 0) { "$($vst3Rows[0].Row.Host) $($vst3Rows[0].Row.Format)" } else { "No complete pass report yet." })))) | Out-Null
+            ($(if ($vst3Rows.Count -gt 0) { "$($vst3Rows[0].Row.Host) $($vst3Rows[0].Row.Format)" } else { "No pass-ready report yet." })))) | Out-Null
 $gates.Add((New-Gate "Preset image restore passed" ($presetRows.Count -gt 0) `
             ($(if ($presetRows.Count -gt 0) { $presetRows[0].ReportPath } else { "No pass report row yet." })))) | Out-Null
 $gates.Add((New-Gate "Session image restore passed" ($sessionRows.Count -gt 0) `
@@ -133,16 +135,19 @@ $gates.Add((New-Gate "No host row marked fix needed" ($fixNeededRows.Count -eq 0
 
 $ready = (@($gates | Where-Object { $_.Pass -ne "yes" }).Count -eq 0)
 
-Write-Host "Prettyscope DAW first-pass release gates"
-Write-Host "  Matrix: $((Resolve-Path $MatrixPath).Path)"
-Write-Host "  Ready:  $(if ($ready) { "yes" } else { "no" })"
-Write-Host ""
-$gates | Format-Table -AutoSize Gate, Pass, Evidence | Out-Host
+if (!$Quiet) {
+    Write-Host "Prettyscope DAW first-pass release gates"
+    Write-Host "  Matrix: $((Resolve-Path $MatrixPath).Path)"
+    Write-Host "  Ready:  $(if ($ready) { "yes" } else { "no" })"
+    Write-Host ""
+    $gates | Format-Table -AutoSize Gate, Pass, Evidence | Out-Host
+}
 
 if ($PassThru) {
     [PSCustomObject]@{
         MatrixPath = (Resolve-Path $MatrixPath).Path
         Ready = $ready
         Gates = $gates
+        PassReadyReportCount = $passReadyReports.Count
     }
 }

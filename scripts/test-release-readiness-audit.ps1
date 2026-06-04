@@ -36,6 +36,7 @@ Require-Text "DAW testing still required" '## DAW Testing Still Required'
 Require-Text "host matrix" 'Host coverage is tracked in `docs\\DAW_HOST_MATRIX\.md`'
 Require-Text "completed report submit" 'submit-daw-test-report\.ps1'
 Require-Text "completed report pass classification" 'Completed reports are only matrix `pass` candidates when all required result\s+rows pass and the release decision is pass-ready'
+Require-Text "release gates require pass-ready evidence" 'Release gates re-read linked reports and require pass-ready evidence'
 Require-Text "report classification smoke" 'report classification smoke test verifies pass-ready reports'
 
 if ($PassThru) {

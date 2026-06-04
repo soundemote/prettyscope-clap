@@ -51,6 +51,9 @@ the DAW behavior that still needs hands-on testing.
 - Completed reports are only matrix `pass` candidates when all required result
   rows pass and the release decision is pass-ready; completed non-passing
   reports are submitted as `fix needed`.
+- Release gates re-read linked reports and require pass-ready evidence, so a
+  manually edited matrix `pass` row cannot satisfy gates with a non-passing
+  report.
 - A report classification smoke test verifies pass-ready reports, completed
   non-passing reports, matrix status updates, and forced-pass rejection.
 - A next-action script recommends whether to prepare a test package, fill an

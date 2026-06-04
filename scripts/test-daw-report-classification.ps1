@@ -198,6 +198,35 @@ catch {
 }
 Assert-True $forcedPassRejected "Forced pass should be rejected for a non-pass-ready report."
 
+$manualPassMatrixPath = Join-Path $OutputDir "manual-pass-DAW_HOST_MATRIX.md"
+Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $manualPassMatrixPath -Force
+& (Join-Path $PSScriptRoot "update-daw-host-matrix-from-report.ps1") `
+    -ReportPath $failReport `
+    -MatrixPath $manualPassMatrixPath `
+    -Status "fix needed" `
+    -AddMissing `
+    -Quiet
+$manualPassLines = Get-Content -Path $manualPassMatrixPath
+$manualPassLines = $manualPassLines | ForEach-Object {
+    if ($_ -match '^\| SmokeHost \| VST3 \| Windows \| fix needed \|') {
+        $_ -replace '\| fix needed \|', '| pass |'
+    }
+    else {
+        $_
+    }
+}
+Set-Content -Path $manualPassMatrixPath -Value $manualPassLines -Encoding UTF8
+$manualPassGates = & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") `
+    -MatrixPath $manualPassMatrixPath `
+    -Quiet `
+    -PassThru
+$vst3Gate = $manualPassGates.Gates | Where-Object {
+    $_.Gate -eq "At least one VST3 host passed"
+} | Select-Object -First 1
+Assert-True (!$manualPassGates.Ready) "Manual pass matrix with a non-pass-ready report should not be release-ready."
+Assert-True ($vst3Gate.Pass -eq "no") "Manual pass row with a non-pass-ready VST3 report should not satisfy VST3 gate."
+Assert-True ($manualPassGates.PassReadyReportCount -eq 0) "Manual pass matrix should have no pass-ready reports."
+
 Write-Host "DAW report classification smoke passed."
 Write-Host "  Output: $OutputDir"
 
@@ -207,5 +236,6 @@ if ($PassThru) {
         PassingReport = (Resolve-Path $passReport).Path
         FailingReport = (Resolve-Path $failReport).Path
         MatrixPath = (Resolve-Path $matrixPath).Path
+        ManualPassMatrixPath = (Resolve-Path $manualPassMatrixPath).Path
     }
 }
