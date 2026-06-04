@@ -17,6 +17,8 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $reportsDir = Join-Path $repoRoot "docs\test-reports"
 
+Add-Type -AssemblyName System.Drawing
+
 function Get-InstalledPluginPath {
     param([string] $PluginFormat)
 
@@ -25,6 +27,20 @@ function Get-InstalledPluginPath {
     }
 
     return Join-Path $env:LOCALAPPDATA "Programs\Common\VST3\Prettyscope.vst3"
+}
+
+function Format-DotImageAssetLine {
+    param([string] $AssetPath)
+
+    $resolvedPath = (Resolve-Path $AssetPath).Path
+    $file = Get-Item $resolvedPath
+    $image = [System.Drawing.Image]::FromFile($resolvedPath)
+    try {
+        return "- ``$resolvedPath`` ($($image.Width)x$($image.Height), $($file.Length) bytes)"
+    }
+    finally {
+        $image.Dispose()
+    }
 }
 
 Push-Location $repoRoot
@@ -50,7 +66,9 @@ try {
     $dotImageAssetLines = "- None generated for this report."
 
     if ($DotImageAssetPaths.Count -gt 0) {
-        $dotImageAssetLines = ($DotImageAssetPaths | ForEach-Object { "- ``$_``" }) -join "`r`n"
+        $dotImageAssetLines = ($DotImageAssetPaths | ForEach-Object {
+                Format-DotImageAssetLine $_
+            }) -join "`r`n"
     }
 
     if (!$OutputPath) {
@@ -79,6 +97,7 @@ DAW/build combination.
 - OS: $os
 - Plugin format tested: $Format
 - Prettyscope commit: $commit
+- Installed artifact path: $installedPath
 - Installed artifact SHA256: $installedHash
 - Audio source used: $AudioSource
 

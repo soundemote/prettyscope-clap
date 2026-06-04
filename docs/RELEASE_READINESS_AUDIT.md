@@ -35,8 +35,9 @@ the DAW behavior that still needs hands-on testing.
   freshness.
 - The status script supports `-RequireFresh` for machine-checkable local DAW
   test preflight.
-- A report script generates prefilled DAW test reports from the current commit
-  and installed artifact SHA256.
+- A report script generates prefilled DAW test reports from the current commit,
+  installed artifact path, installed artifact SHA256, and dot image asset
+  dimensions.
 - Generated DAW test reports are kept in `docs\test-reports` by default.
 - DAW prep/report scripts support `-PassThru` when automation needs the
   generated report path.

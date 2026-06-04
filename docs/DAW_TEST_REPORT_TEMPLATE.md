@@ -12,6 +12,7 @@ DAW/build combination.
 - OS:
 - Plugin format tested: CLAP / VST3
 - Prettyscope commit:
+- Installed artifact path:
 - Installed artifact SHA256:
 - Audio source used:
 
@@ -23,7 +24,7 @@ DAW/build combination.
 
 ## Dot Image Test Assets
 
-- Asset paths used:
+- Asset paths/dimensions used:
 
 ## Results
 
