@@ -81,7 +81,19 @@ if (!(Test-Path $manifestPath)) {
 $constants = Read-DescriptorConstants -Path $descriptorPath
 $descriptorRows = @(Read-DescriptorRows -Path $descriptorPath -Constants $constants)
 $manifestRows = @(Read-ManifestRows -Path $manifestPath)
+$manifestContent = Get-Content -Raw -Path $manifestPath
 $issues = New-Object System.Collections.Generic.List[string]
+
+function Require-ManifestText {
+    param(
+        [string] $Label,
+        [string] $Pattern
+    )
+
+    if ($manifestContent -notmatch $Pattern) {
+        $issues.Add("Missing manifest coverage: $Label") | Out-Null
+    }
+}
 
 if ($descriptorRows.Count -ne $manifestRows.Count) {
     $issues.Add("Descriptor count $($descriptorRows.Count) does not match manifest count $($manifestRows.Count).") |
@@ -118,6 +130,18 @@ foreach ($manifest in $manifestRows) {
         $issues.Add("Manifest contains unknown ID: $($manifest.Id)") | Out-Null
     }
 }
+
+Require-ManifestText "non-automatable dot image workflow" '## Non-Automatable Dot Image Workflow'
+Require-ManifestText "Dot 1 and Dot 2 image actions" 'For Dot 1 and Dot 2:'
+Require-ManifestText "image load formats" '`Load` accepts a PNG/JPEG/BMP/GIF image'
+Require-ManifestText "loaded image normalization" 'maximum 512 px longest side'
+Require-ManifestText "state-persisted image payloads" 'Loaded image labels and PNG payloads are stored in patch/plugin state'
+Require-ManifestText "generated and loaded save behavior" '`Save` writes the active dot PNG: loaded/normalized override if present,\s+otherwise the current generated dot texture'
+Require-ManifestText "clear returns generated mode" '`Clear` returns the slot to generated mode'
+Require-ManifestText "image mix blend behavior" 'Image Mix fades generated dot drawing while adding the loaded texture'
+Require-ManifestText "dot overall multiplier expectation" 'Dot Overall controls should multiply Dot 1 and Dot 2 behavior together'
+Require-ManifestText "screen burn finite persistence expectation" 'Screen Burn controls should change persistence without making the trace stay\s+forever'
+Require-ManifestText "preset session restore expectation" 'Preset reload and DAW session reopen should restore loaded images and visual\s+parameter values'
 
 if ($PassThru) {
     [PSCustomObject]@{
