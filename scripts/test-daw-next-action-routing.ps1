@@ -67,6 +67,15 @@ function Copy-ReportWithFormat {
     Set-Content -Path $Destination -Value $content -Encoding UTF8
 }
 
+function Add-GroupedBundleMarker {
+    param([string] $Directory)
+
+    New-Item -ItemType Directory -Force -Path (Join-Path $Directory "bundle") | Out-Null
+    Set-Content -Path (Join-Path $Directory "prettyscope-daw-test-bundle-manifest.md") `
+        -Value "# Smoke Bundle Manifest" `
+        -Encoding UTF8
+}
+
 $classification = & (Join-Path $PSScriptRoot "test-daw-report-classification.ps1") `
     -OutputDir (Join-Path $OutputDir "classification") `
     -PassThru
@@ -81,6 +90,7 @@ foreach ($dir in @($incompleteDir, $unsubmittedDir, $submittedNotReadyDir, $read
 
 $incompleteReport = Join-Path $incompleteDir "prettyscope-daw-test-report.md"
 Copy-Item (Join-Path $repoRoot "docs\DAW_TEST_REPORT_TEMPLATE.md") $incompleteReport -Force
+Add-GroupedBundleMarker -Directory $incompleteDir
 $incompleteMatrix = Join-Path $incompleteDir "DAW_HOST_MATRIX.md"
 Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $incompleteMatrix -Force
 $incompleteOutput = Invoke-NextAction `
@@ -92,9 +102,12 @@ Assert-Contains $incompleteOutput "review-latest-daw-test-report.ps1 -RequireCom
     "Incomplete report guidance should include the latest-report review command."
 Assert-Contains $incompleteOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Incomplete report guidance should include an open-report command."
+Assert-Contains $incompleteOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
+    "Incomplete report guidance should include a bundle-folder open command."
 
 $unsubmittedReport = Join-Path $unsubmittedDir "prettyscope-daw-test-report.md"
 Copy-Item $classification.PassingReport $unsubmittedReport -Force
+Add-GroupedBundleMarker -Directory $unsubmittedDir
 $unsubmittedMatrix = Join-Path $unsubmittedDir "DAW_HOST_MATRIX.md"
 Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $unsubmittedMatrix -Force
 $unsubmittedOutput = Invoke-NextAction `
@@ -110,6 +123,8 @@ Assert-Contains $unsubmittedOutput "Result:" `
     "Unsubmitted complete report should print its result classification."
 Assert-Contains $unsubmittedOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Unsubmitted complete report guidance should include an open-report command."
+Assert-Contains $unsubmittedOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
+    "Unsubmitted complete report guidance should include a bundle-folder open command."
 
 $submittedNotReadyMatrix = Join-Path $submittedNotReadyDir "DAW_HOST_MATRIX.md"
 Copy-Item $classification.MatrixPath $submittedNotReadyMatrix -Force

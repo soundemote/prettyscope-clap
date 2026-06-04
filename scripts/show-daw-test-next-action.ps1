@@ -149,6 +149,9 @@ try {
         if ($latestArtifacts.SummaryPath) {
             Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
         }
+        if ($latestArtifacts.BundleDirectory) {
+            Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenBundleFolder"
+        }
         if ($OpenReport) {
             Invoke-Item -LiteralPath $latest.Path
             Write-Host "Opened report: $($latest.Path)"
@@ -187,6 +190,9 @@ try {
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
         if ($latestArtifacts.SummaryPath) {
             Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
+        }
+        if ($latestArtifacts.BundleDirectory) {
+            Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenBundleFolder"
         }
         if ($OpenReport) {
             Invoke-Item -LiteralPath $latest.Path
