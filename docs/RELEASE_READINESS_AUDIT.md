@@ -50,6 +50,7 @@ the DAW behavior that still needs hands-on testing.
   override testing.
 - The one-command DAW prep script creates those dot image smoke-test assets by
   default and records their paths in the generated report.
+- The one-command DAW prep script creates a bundle manifest by default.
 - Host-facing plugin identity is recorded in `docs\PLUGIN_IDENTITY_AUDIT.md`.
 
 ## Local Verification Command

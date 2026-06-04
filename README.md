@@ -62,7 +62,8 @@ This also verifies that the installed CLAP/VST3 copies match the build
 artifacts.
 
 To prepare a DAW test in one command, including build/test/install/freshness
-verification, dot image smoke-test PNGs, and a prefilled report:
+verification, dot image smoke-test PNGs, a prefilled report, and a bundle
+manifest:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
@@ -74,8 +75,11 @@ generate another report without rebuilding.
 Add `-SkipDotImageAssets` for report-only reruns that do not need fresh Dot 1 /
 Dot 2 image test files.
 
-Add `-PassThru` when automation needs the generated report path as pipeline
-output.
+Add `-SkipBundleManifest` when a rerun does not need a fresh artifact/docs
+manifest.
+
+Add `-PassThru` when automation needs the generated report and bundle manifest
+paths as pipeline output.
 
 To check which build artifacts and user-local plugin copies are currently
 present:

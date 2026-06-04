@@ -8,8 +8,10 @@ param(
     [string] $AudioSource = "",
     [string] $DotImageAssetDir = "",
     [string] $OutputPath = "",
+    [string] $BundleManifestPath = "",
     [switch] $SkipBuildInstall,
     [switch] $SkipDotImageAssets,
+    [switch] $SkipBundleManifest,
     [switch] $PassThru
 )
 
@@ -50,8 +52,34 @@ if ($OutputPath) {
     $reportArgs.OutputPath = $OutputPath
 }
 
+$reportPath = $null
 if ($PassThru) {
-    $reportArgs.PassThru = $true
+    $reportPath = & (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs -PassThru
+}
+else {
+    & (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs
 }
 
-& (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs
+$bundleManifest = $null
+if (!$SkipBundleManifest) {
+    $manifestArgs = @{
+        BuildDir = $BuildDir
+    }
+    if ($BundleManifestPath) {
+        $manifestArgs.OutputPath = $BundleManifestPath
+    }
+
+    if ($PassThru) {
+        $bundleManifest = & (Join-Path $PSScriptRoot "new-daw-test-bundle-manifest.ps1") @manifestArgs -PassThru
+    }
+    else {
+        & (Join-Path $PSScriptRoot "new-daw-test-bundle-manifest.ps1") @manifestArgs
+    }
+}
+
+if ($PassThru) {
+    [PSCustomObject]@{
+        ReportPath = $reportPath
+        BundleManifestPath = $bundleManifest
+    }
+}

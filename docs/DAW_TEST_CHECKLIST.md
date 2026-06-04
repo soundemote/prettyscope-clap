@@ -18,12 +18,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 Use `-SkipBuildInstall` only when strict freshness already passes and you only
 need another report.
 
-The prep command also creates known-good Dot 1 / Dot 2 image test PNGs and
-records their paths in the generated report. Use `-SkipDotImageAssets` only for
-reruns that do not need fresh image assets.
+The prep command also creates known-good Dot 1 / Dot 2 image test PNGs and a
+bundle manifest. It records image paths in the generated report. Use
+`-SkipDotImageAssets` or `-SkipBundleManifest` only for reruns that do not need
+fresh handoff assets.
 
-Add `-PassThru` when automation needs the generated report path as pipeline
-output.
+Add `-PassThru` when automation needs the generated report and bundle manifest
+paths as pipeline output.
 
 After filling the report, review it for missing essentials:
 
