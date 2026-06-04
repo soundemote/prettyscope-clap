@@ -27,6 +27,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
 The next-action helper and dashboard include generated readiness reports under
 `build-tracer` by default. Add `-DocsOnlyReports` to either command when you only
 want reports from `docs\test-reports`.
+When the next-action helper points at a report, it prints an open command for
+the active report and, when available, the paired release summary.
 
 Visual control manifest check:
 

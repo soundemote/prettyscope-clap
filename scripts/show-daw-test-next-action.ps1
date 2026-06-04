@@ -63,8 +63,22 @@ function Read-MatrixRows {
         })
 }
 
+function Format-PathOrMissing {
+    param([string] $Path)
+
+    if (!$Path) {
+        return "(none found)"
+    }
+
+    return $Path
+}
+
 Push-Location $repoRoot
 try {
+    $latestArtifacts = & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
+        -BuildDir $BuildDir `
+        -Quiet `
+        -PassThru
     $reports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
             -BuildDir $BuildDir `
             -IncludeBuildScratch:$scanBuildScratch `
@@ -86,11 +100,20 @@ try {
         Write-Host "  Issues: $($latest.Issues)"
         Write-Host ""
         Write-Host "Latest grouped artifacts:"
-        & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
-            -BuildDir $BuildDir
+        Write-Host "  Report:        $(Format-PathOrMissing $latestArtifacts.ReportPath)"
+        Write-Host "  Summary:       $(Format-PathOrMissing $latestArtifacts.SummaryPath)"
+        Write-Host "  Manifest:      $(Format-PathOrMissing $latestArtifacts.ManifestPath)"
+        Write-Host "  Bundle folder: $(Format-PathOrMissing $latestArtifacts.BundleDirectory)"
+        Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestArtifacts.BundleZipPath)"
         Write-Host ""
         Write-Host "Review command:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -RequireComplete"
+        Write-Host ""
+        Write-Host "Open commands:"
+        Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
+        if ($latestArtifacts.SummaryPath) {
+            Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
+        }
         if ($OpenReport) {
             Invoke-Item -LiteralPath $latest.Path
             Write-Host "Opened report: $($latest.Path)"
@@ -106,16 +129,26 @@ try {
         $latest = $unsubmittedCompleteReports | Sort-Object Modified -Descending | Select-Object -First 1
         Write-Host "Next DAW test action: submit the latest completed report."
         Write-Host "  Report: $($latest.Path)"
+        Write-Host "  Result: $($latest.Result)"
         Write-Host ""
         Write-Host "Latest grouped artifacts:"
-        & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
-            -BuildDir $BuildDir
+        Write-Host "  Report:        $(Format-PathOrMissing $latestArtifacts.ReportPath)"
+        Write-Host "  Summary:       $(Format-PathOrMissing $latestArtifacts.SummaryPath)"
+        Write-Host "  Manifest:      $(Format-PathOrMissing $latestArtifacts.ManifestPath)"
+        Write-Host "  Bundle folder: $(Format-PathOrMissing $latestArtifacts.BundleDirectory)"
+        Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestArtifacts.BundleZipPath)"
         Write-Host ""
         Write-Host "Preview command:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -Preview"
         Write-Host ""
         Write-Host "Submit command:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath `"$($latest.Path)`""
+        Write-Host ""
+        Write-Host "Open commands:"
+        Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
+        if ($latestArtifacts.SummaryPath) {
+            Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
+        }
         if ($OpenReport) {
             Invoke-Item -LiteralPath $latest.Path
             Write-Host "Opened report: $($latest.Path)"

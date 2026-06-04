@@ -42,6 +42,7 @@ Require-Text "non-passing issue rows" 'Non-passing DAW reports require at least 
 Require-Text "release gates require pass-ready evidence" 'Release gates re-read linked reports and require pass-ready evidence'
 Require-Text "report classification smoke" 'report classification smoke test verifies pass-ready reports'
 Require-Text "next-action routing smoke" 'next-action routing smoke test verifies incomplete-report'
+Require-Text "next-action open commands" 'next-action script prints an open command for the active report'
 Require-Text "next-action build scratch default" 'next-action script and dashboard include generated readiness reports under\s+`build-tracer` by default'
 Require-Text "release candidate summary" 'release candidate summary script writes a Markdown snapshot'
 Require-Text "summary report index" 'release candidate summary includes the DAW report index'

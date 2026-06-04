@@ -17,6 +17,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
 
 This includes generated readiness reports under `build-tracer` by default. Add
 `-DocsOnlyReports` when you only want reports from `docs\test-reports`.
+When a report is ready to fill or submit, the helper prints an open command for
+the active report and, when available, the paired release summary.
 
 To see status, latest artifacts, next action, and report index together:
 

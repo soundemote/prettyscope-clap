@@ -66,6 +66,9 @@ the DAW behavior that still needs hands-on testing.
   report, submitted-but-not-ready, and ready-gate guidance.
 - A next-action script recommends whether to prepare a test package, fill an
   incomplete report, or review completed reports.
+- The next-action script prints an open command for the active report and, when
+  available, the paired release summary when a report needs fill/review or
+  submission.
 - The next-action script and dashboard include generated readiness reports under
   `build-tracer` by default, with `-DocsOnlyReports` available for docs-only
   report scans.

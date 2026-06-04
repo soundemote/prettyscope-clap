@@ -4,6 +4,7 @@ param(
     [switch] $OpenSummary,
     [switch] $OpenBundleFolder,
     [switch] $OpenBundleZipFolder,
+    [switch] $Quiet,
     [switch] $PassThru
 )
 
@@ -167,12 +168,14 @@ function Open-ParentIfPresent {
     Write-Host "Opened ${Label}: $parent"
 }
 
-Write-Host "Latest Prettyscope DAW test artifacts"
-Write-Host "  Report:        $(Format-PathOrMissing $latestReadinessReport)"
-Write-Host "  Summary:       $(Format-PathOrMissing $latestReleaseSummary)"
-Write-Host "  Manifest:      $(Format-PathOrMissing $latestManifest)"
-Write-Host "  Bundle folder: $(Format-PathOrMissing $latestBundleFolder)"
-Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestBundleZip)"
+if (!$Quiet) {
+    Write-Host "Latest Prettyscope DAW test artifacts"
+    Write-Host "  Report:        $(Format-PathOrMissing $latestReadinessReport)"
+    Write-Host "  Summary:       $(Format-PathOrMissing $latestReleaseSummary)"
+    Write-Host "  Manifest:      $(Format-PathOrMissing $latestManifest)"
+    Write-Host "  Bundle folder: $(Format-PathOrMissing $latestBundleFolder)"
+    Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestBundleZip)"
+}
 
 if ($OpenReport) {
     Open-ItemIfPresent -Item $latestReadinessReport -Label "report"

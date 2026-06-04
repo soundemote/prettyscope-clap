@@ -87,6 +87,8 @@ $incompleteOutput = Invoke-NextAction `
     -MatrixPath $incompleteMatrix
 Assert-Contains $incompleteOutput "Next DAW test action: fill the latest incomplete report." `
     "Incomplete build scratch report should route to fill/review by default."
+Assert-Contains $incompleteOutput "show-daw-test-next-action.ps1 -OpenReport" `
+    "Incomplete report guidance should include an open-report command."
 
 $unsubmittedReport = Join-Path $unsubmittedDir "prettyscope-daw-test-report.md"
 Copy-Item $classification.PassingReport $unsubmittedReport -Force
@@ -99,6 +101,10 @@ Assert-Contains $unsubmittedOutput "Next DAW test action: submit the latest comp
     "Unsubmitted complete report should route to submit."
 Assert-Contains $unsubmittedOutput "submit-daw-test-report.ps1" `
     "Unsubmitted complete report should print submit commands."
+Assert-Contains $unsubmittedOutput "Result:" `
+    "Unsubmitted complete report should print its result classification."
+Assert-Contains $unsubmittedOutput "show-daw-test-next-action.ps1 -OpenReport" `
+    "Unsubmitted complete report guidance should include an open-report command."
 
 $submittedNotReadyMatrix = Join-Path $submittedNotReadyDir "DAW_HOST_MATRIX.md"
 Copy-Item $classification.MatrixPath $submittedNotReadyMatrix -Force
