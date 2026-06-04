@@ -149,6 +149,7 @@ $requiredResultAreas = @(
     "Screen Burn controls decay/persistence",
     "Dot 1 image load/save/clear",
     "Dot 2 image load/save/clear",
+    "Dot image save exports generated and loaded PNGs",
     "Large image resize behavior",
     "Preset save/reload restores images",
     "DAW session save/reopen restores images",
