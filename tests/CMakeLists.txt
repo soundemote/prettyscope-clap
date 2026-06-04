@@ -14,3 +14,5 @@ target_link_libraries(${PROJECT_NAME}-tests
         sst-plugininfra::patchbase
         sst-plugininfra::version_information
         catch2)
+
+add_test(NAME ${PROJECT_NAME}-tests COMMAND ${PROJECT_NAME}-tests)

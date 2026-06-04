@@ -16,6 +16,8 @@ math(EXPR PART1 "${DAY_OF_YEAR} + 1")
 project(prettyscope-clap VERSION 0.${PART0}.${PART1} LANGUAGES C CXX)
 set(PRODUCT_NAME "Prettyscope")
 
+enable_testing()
+
 
 option(USE_SANITIZER "Build and link with ASAN" FALSE)
 option(COPY_AFTER_BUILD "Will copy after build" TRUE)

@@ -48,5 +48,7 @@ if (MSVC)
             $<$<COMPILE_LANGUAGE:CXX>:/Zc:char8_t->
             # make msvc define __cplulsplus properly
             $<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus>
+            # JUCE uses C++ exceptions in several GUI/OpenGL paths.
+            $<$<COMPILE_LANGUAGE:CXX>:/EHsc>
     )
 endif()

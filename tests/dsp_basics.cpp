@@ -524,6 +524,86 @@ TEST_CASE("Prettyscope visual state defaults match descriptors", "[params]")
             Approx(baconpaul::sidequest_ns::visualFloatParameterById(
                        baconpaul::sidequest_ns::kBeamGlowWidthVisualParameterId)
                        ->defaultValue));
+    REQUIRE(state.dot1Intensity ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot1IntensityVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot1Size ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot1SizeVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot1Halo ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot1HaloVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot1ImageMix ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot1ImageMixVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot1Rotation ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot1RotationVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot1Aspect ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot1AspectVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot2Intensity ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot2IntensityVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot2Size ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot2SizeVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot2Halo ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot2HaloVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot2ImageMix ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot2ImageMixVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot2Rotation ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot2RotationVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dot2Aspect ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDot2AspectVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dotOverallIntensity ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDotOverallIntensityVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dotOverallSize ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDotOverallSizeVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dotOverallHalo ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDotOverallHaloVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.dotOverallImageMix ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kDotOverallImageMixVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.screenBurnPersistence ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kScreenBurnPersistenceVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.screenBurnFastDecay ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kScreenBurnFastDecayVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.screenBurnAfterglow ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kScreenBurnAfterglowVisualParameterId)
+                       ->defaultValue));
+    REQUIRE(state.screenBurnFloorFade ==
+            Approx(baconpaul::sidequest_ns::visualFloatParameterById(
+                       baconpaul::sidequest_ns::kScreenBurnFloorFadeVisualParameterId)
+                       ->defaultValue));
 }
 
 TEST_CASE("Prettyscope visual params appear through CLAP patch adapter", "[params]")
@@ -559,6 +639,26 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     patch.visualParams.beamGlowStrength.value = 0.55f;
     patch.visualParams.beamTraceWidth.value = 3.5f;
     patch.visualParams.beamGlowWidth.value = 12.0f;
+    patch.visualParams.dot1Intensity.value = 1.25f;
+    patch.visualParams.dot1Size.value = 4.5f;
+    patch.visualParams.dot1Halo.value = 0.75f;
+    patch.visualParams.dot1ImageMix.value = 0.25f;
+    patch.visualParams.dot1Rotation.value = 15.0f;
+    patch.visualParams.dot1Aspect.value = 1.5f;
+    patch.visualParams.dot2Intensity.value = 0.65f;
+    patch.visualParams.dot2Size.value = 9.0f;
+    patch.visualParams.dot2Halo.value = 1.25f;
+    patch.visualParams.dot2ImageMix.value = 0.4f;
+    patch.visualParams.dot2Rotation.value = -20.0f;
+    patch.visualParams.dot2Aspect.value = 0.75f;
+    patch.visualParams.dotOverallIntensity.value = 1.4f;
+    patch.visualParams.dotOverallSize.value = 1.8f;
+    patch.visualParams.dotOverallHalo.value = 1.2f;
+    patch.visualParams.dotOverallImageMix.value = 0.85f;
+    patch.visualParams.screenBurnPersistence.value = 0.992f;
+    patch.visualParams.screenBurnFastDecay.value = 0.7f;
+    patch.visualParams.screenBurnAfterglow.value = 0.88f;
+    patch.visualParams.screenBurnFloorFade.value = 0.002f;
 
     const auto state = patch.visualParams.visualState();
 
@@ -571,6 +671,26 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     REQUIRE(state.beamGlowStrength == Approx(0.55f));
     REQUIRE(state.beamTraceWidth == Approx(3.5f));
     REQUIRE(state.beamGlowWidth == Approx(12.0f));
+    REQUIRE(state.dot1Intensity == Approx(1.25f));
+    REQUIRE(state.dot1Size == Approx(4.5f));
+    REQUIRE(state.dot1Halo == Approx(0.75f));
+    REQUIRE(state.dot1ImageMix == Approx(0.25f));
+    REQUIRE(state.dot1Rotation == Approx(15.0f));
+    REQUIRE(state.dot1Aspect == Approx(1.5f));
+    REQUIRE(state.dot2Intensity == Approx(0.65f));
+    REQUIRE(state.dot2Size == Approx(9.0f));
+    REQUIRE(state.dot2Halo == Approx(1.25f));
+    REQUIRE(state.dot2ImageMix == Approx(0.4f));
+    REQUIRE(state.dot2Rotation == Approx(-20.0f));
+    REQUIRE(state.dot2Aspect == Approx(0.75f));
+    REQUIRE(state.dotOverallIntensity == Approx(1.4f));
+    REQUIRE(state.dotOverallSize == Approx(1.8f));
+    REQUIRE(state.dotOverallHalo == Approx(1.2f));
+    REQUIRE(state.dotOverallImageMix == Approx(0.85f));
+    REQUIRE(state.screenBurnPersistence == Approx(0.992f));
+    REQUIRE(state.screenBurnFastDecay == Approx(0.7f));
+    REQUIRE(state.screenBurnAfterglow == Approx(0.88f));
+    REQUIRE(state.screenBurnFloorFade == Approx(0.002f));
 }
 
 TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "[params]")
@@ -585,6 +705,26 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     patch.visualParams.beamGlowStrength.value = 100.0f;
     patch.visualParams.beamTraceWidth.value = 0.0f;
     patch.visualParams.beamGlowWidth.value = 100.0f;
+    patch.visualParams.dot1Intensity.value = 100.0f;
+    patch.visualParams.dot1Size.value = 0.0f;
+    patch.visualParams.dot1Halo.value = -1.0f;
+    patch.visualParams.dot1ImageMix.value = 10.0f;
+    patch.visualParams.dot1Rotation.value = -999.0f;
+    patch.visualParams.dot1Aspect.value = 0.0f;
+    patch.visualParams.dot2Intensity.value = -5.0f;
+    patch.visualParams.dot2Size.value = 999.0f;
+    patch.visualParams.dot2Halo.value = 999.0f;
+    patch.visualParams.dot2ImageMix.value = -9.0f;
+    patch.visualParams.dot2Rotation.value = 999.0f;
+    patch.visualParams.dot2Aspect.value = 999.0f;
+    patch.visualParams.dotOverallIntensity.value = 999.0f;
+    patch.visualParams.dotOverallSize.value = 0.0f;
+    patch.visualParams.dotOverallHalo.value = -3.0f;
+    patch.visualParams.dotOverallImageMix.value = 7.0f;
+    patch.visualParams.screenBurnPersistence.value = 2.0f;
+    patch.visualParams.screenBurnFastDecay.value = -1.0f;
+    patch.visualParams.screenBurnAfterglow.value = 2.0f;
+    patch.visualParams.screenBurnFloorFade.value = 2.0f;
 
     const auto state = patch.visualParams.visualState();
 
@@ -597,4 +737,24 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     REQUIRE(state.beamGlowStrength == Approx(2.0f));
     REQUIRE(state.beamTraceWidth == Approx(0.5f));
     REQUIRE(state.beamGlowWidth == Approx(24.0f));
+    REQUIRE(state.dot1Intensity == Approx(4.0f));
+    REQUIRE(state.dot1Size == Approx(0.25f));
+    REQUIRE(state.dot1Halo == Approx(0.0f));
+    REQUIRE(state.dot1ImageMix == Approx(1.0f));
+    REQUIRE(state.dot1Rotation == Approx(-180.0f));
+    REQUIRE(state.dot1Aspect == Approx(0.1f));
+    REQUIRE(state.dot2Intensity == Approx(0.0f));
+    REQUIRE(state.dot2Size == Approx(64.0f));
+    REQUIRE(state.dot2Halo == Approx(4.0f));
+    REQUIRE(state.dot2ImageMix == Approx(0.0f));
+    REQUIRE(state.dot2Rotation == Approx(180.0f));
+    REQUIRE(state.dot2Aspect == Approx(10.0f));
+    REQUIRE(state.dotOverallIntensity == Approx(4.0f));
+    REQUIRE(state.dotOverallSize == Approx(0.1f));
+    REQUIRE(state.dotOverallHalo == Approx(0.0f));
+    REQUIRE(state.dotOverallImageMix == Approx(1.0f));
+    REQUIRE(state.screenBurnPersistence == Approx(0.9995f));
+    REQUIRE(state.screenBurnFastDecay == Approx(0.0f));
+    REQUIRE(state.screenBurnAfterglow == Approx(1.0f));
+    REQUIRE(state.screenBurnFloorFade == Approx(0.01f));
 }

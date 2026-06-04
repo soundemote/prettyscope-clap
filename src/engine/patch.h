@@ -134,7 +134,27 @@ struct Patch : pats::PatchBase<Patch, Param>
               phosphorAfterglow(makeParam(kPhosphorAfterglowVisualParameterId)),
               beamGlowStrength(makeParam(kBeamGlowStrengthVisualParameterId)),
               beamTraceWidth(makeParam(kBeamTraceWidthVisualParameterId)),
-              beamGlowWidth(makeParam(kBeamGlowWidthVisualParameterId))
+              beamGlowWidth(makeParam(kBeamGlowWidthVisualParameterId)),
+              dot1Intensity(makeParam(kDot1IntensityVisualParameterId)),
+              dot1Size(makeParam(kDot1SizeVisualParameterId)),
+              dot1Halo(makeParam(kDot1HaloVisualParameterId)),
+              dot1ImageMix(makeParam(kDot1ImageMixVisualParameterId)),
+              dot1Rotation(makeParam(kDot1RotationVisualParameterId)),
+              dot1Aspect(makeParam(kDot1AspectVisualParameterId)),
+              dot2Intensity(makeParam(kDot2IntensityVisualParameterId)),
+              dot2Size(makeParam(kDot2SizeVisualParameterId)),
+              dot2Halo(makeParam(kDot2HaloVisualParameterId)),
+              dot2ImageMix(makeParam(kDot2ImageMixVisualParameterId)),
+              dot2Rotation(makeParam(kDot2RotationVisualParameterId)),
+              dot2Aspect(makeParam(kDot2AspectVisualParameterId)),
+              dotOverallIntensity(makeParam(kDotOverallIntensityVisualParameterId)),
+              dotOverallSize(makeParam(kDotOverallSizeVisualParameterId)),
+              dotOverallHalo(makeParam(kDotOverallHaloVisualParameterId)),
+              dotOverallImageMix(makeParam(kDotOverallImageMixVisualParameterId)),
+              screenBurnPersistence(makeParam(kScreenBurnPersistenceVisualParameterId)),
+              screenBurnFastDecay(makeParam(kScreenBurnFastDecayVisualParameterId)),
+              screenBurnAfterglow(makeParam(kScreenBurnAfterglowVisualParameterId)),
+              screenBurnFloorFade(makeParam(kScreenBurnFloorFadeVisualParameterId))
         {
         }
 
@@ -178,12 +198,38 @@ struct Patch : pats::PatchBase<Patch, Param>
         Param beamGlowStrength;
         Param beamTraceWidth;
         Param beamGlowWidth;
+        Param dot1Intensity;
+        Param dot1Size;
+        Param dot1Halo;
+        Param dot1ImageMix;
+        Param dot1Rotation;
+        Param dot1Aspect;
+        Param dot2Intensity;
+        Param dot2Size;
+        Param dot2Halo;
+        Param dot2ImageMix;
+        Param dot2Rotation;
+        Param dot2Aspect;
+        Param dotOverallIntensity;
+        Param dotOverallSize;
+        Param dotOverallHalo;
+        Param dotOverallImageMix;
+        Param screenBurnPersistence;
+        Param screenBurnFastDecay;
+        Param screenBurnAfterglow;
+        Param screenBurnFloorFade;
 
         std::vector<Param *> params()
         {
             std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale,
                                      &phosphorFastDecay, &phosphorAfterglow, &beamGlowStrength,
-                                     &beamTraceWidth, &beamGlowWidth};
+                                     &beamTraceWidth, &beamGlowWidth, &dot1Intensity, &dot1Size,
+                                     &dot1Halo, &dot1ImageMix, &dot1Rotation, &dot1Aspect,
+                                     &dot2Intensity, &dot2Size, &dot2Halo, &dot2ImageMix,
+                                     &dot2Rotation, &dot2Aspect, &dotOverallIntensity,
+                                     &dotOverallSize, &dotOverallHalo, &dotOverallImageMix,
+                                     &screenBurnPersistence, &screenBurnFastDecay,
+                                     &screenBurnAfterglow, &screenBurnFloorFade};
             return res;
         }
 
@@ -199,6 +245,26 @@ struct Patch : pats::PatchBase<Patch, Param>
             state.beamGlowStrength = beamGlowStrength.value;
             state.beamTraceWidth = beamTraceWidth.value;
             state.beamGlowWidth = beamGlowWidth.value;
+            state.dot1Intensity = dot1Intensity.value;
+            state.dot1Size = dot1Size.value;
+            state.dot1Halo = dot1Halo.value;
+            state.dot1ImageMix = dot1ImageMix.value;
+            state.dot1Rotation = dot1Rotation.value;
+            state.dot1Aspect = dot1Aspect.value;
+            state.dot2Intensity = dot2Intensity.value;
+            state.dot2Size = dot2Size.value;
+            state.dot2Halo = dot2Halo.value;
+            state.dot2ImageMix = dot2ImageMix.value;
+            state.dot2Rotation = dot2Rotation.value;
+            state.dot2Aspect = dot2Aspect.value;
+            state.dotOverallIntensity = dotOverallIntensity.value;
+            state.dotOverallSize = dotOverallSize.value;
+            state.dotOverallHalo = dotOverallHalo.value;
+            state.dotOverallImageMix = dotOverallImageMix.value;
+            state.screenBurnPersistence = screenBurnPersistence.value;
+            state.screenBurnFastDecay = screenBurnFastDecay.value;
+            state.screenBurnAfterglow = screenBurnAfterglow.value;
+            state.screenBurnFloorFade = screenBurnFloorFade.value;
             return sanitizedScopeVisualState(state);
         }
     };
