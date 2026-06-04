@@ -26,6 +26,16 @@ DAW/build combination.
 
 - Asset paths/dimensions used:
 
+## Visual Controls Under Test
+
+- Signal: Input Gain, Time Scale.
+- Beam: Beam Intensity, Trace Width, Glow Strength, Glow Width.
+- Phosphor: Phosphor Decay, Fast Decay, Afterglow.
+- Dot 1: Dot 1 Intensity, Dot 1 Size, Dot 1 Halo, Dot 1 Image Mix, Dot 1 Rotation, Dot 1 Aspect.
+- Dot 2: Dot 2 Intensity, Dot 2 Size, Dot 2 Halo, Dot 2 Image Mix, Dot 2 Rotation, Dot 2 Aspect.
+- Dot Overall: Overall Dot Intensity, Overall Dot Size, Overall Dot Halo, Overall Dot Image Mix.
+- Screen Burn: Screen Burn Persistence, Screen Burn Fast Decay, Screen Burn Afterglow, Screen Burn Floor Fade.
+
 ## Results
 
 | Area | Pass/Fail | Notes |
