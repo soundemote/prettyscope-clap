@@ -69,7 +69,8 @@ For Dot 1 and Dot 2:
 - Dot Overall controls should multiply Dot 1 and Dot 2 behavior together.
 - Screen Burn controls should change persistence without making the trace stay
   forever.
-- The asymmetric smoke-test PNG should make rotation/aspect behavior obvious.
+- The asymmetric smoke-test PNG should make loaded-image rotation/aspect behavior
+  obvious.
 - The soft-core smoke-test PNG should behave like a round dot.
 - Preset reload and DAW session reopen should restore loaded images and visual
   parameter values.

@@ -138,7 +138,8 @@ Use `docs\DAW_TEST_CHECKLIST.md` to verify:
 ## Known Non-Release Gaps
 
 - The loaded-image dot renderer is a first additive point-sprite path, not the
-  final polished texture-brush renderer.
+  final polished texture-brush renderer, but it now honors Dot 1 / Dot 2
+  rotation and aspect controls.
 - Inherited Sidequest synth internals are still present by design; they should be
   quarantined only after DAW parameter/state behavior is proven.
 - The editor control layout is functional, not final product UI design.

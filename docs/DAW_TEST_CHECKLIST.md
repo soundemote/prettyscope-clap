@@ -239,4 +239,5 @@ Expected:
 - Very large image files are resized for plugin state storage, but unusual image
   formats or extreme files should still be tested carefully.
 - Current image rendering is an additive point-sprite override path, not the final visual polish pass.
+- Loaded image overrides should follow Dot 1 / Dot 2 rotation and aspect controls.
 - If a host saves immediately after an image load while audio is stopped, verify the session restore path carefully.

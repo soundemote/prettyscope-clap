@@ -26,6 +26,7 @@ namespace baconpaul::sidequest_ns::ui
 namespace
 {
 using GlId = unsigned int;
+constexpr float pi = 3.14159265358979323846f;
 
 struct RgbColor
 {
@@ -264,12 +265,26 @@ constexpr const char *kDotImageFragment = R"GLSL(
 uniform sampler2D dotTexture;
 uniform float intensity;
 uniform float imageMix;
+uniform float rotationRadians;
+uniform float dotAspect;
 
 out vec4 fragColor;
 
 void main()
 {
-    vec4 texel = texture(dotTexture, gl_PointCoord);
+    vec2 centered = gl_PointCoord - vec2(0.5);
+    float c = cos(rotationRadians);
+    float s = sin(rotationRadians);
+    vec2 rotated = vec2(c * centered.x + s * centered.y,
+                        -s * centered.x + c * centered.y);
+    rotated.x /= max(dotAspect, 0.001);
+    vec2 uv = rotated + vec2(0.5);
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
+    {
+        discard;
+    }
+
+    vec4 texel = texture(dotTexture, uv);
     fragColor = vec4(texel.rgb * intensity, texel.a * imageMix);
 }
 )GLSL";
@@ -657,7 +672,7 @@ class DotImageRenderer
     }
 
     void draw(size_t dotIndex, int pointCount, float pointSize, float intensity, float imageMix,
-              int viewportWidth, int viewportHeight) const
+              float rotationDegrees, float aspect, int viewportWidth, int viewportHeight) const
     {
         using namespace juce::gl;
 
@@ -674,6 +689,10 @@ class DotImageRenderer
         glUniform1f(glGetUniformLocation(program, "pointSize"), pointSize);
         glUniform1f(glGetUniformLocation(program, "intensity"), intensity);
         glUniform1f(glGetUniformLocation(program, "imageMix"), imageMix);
+        glUniform1f(glGetUniformLocation(program, "rotationRadians"),
+                    rotationDegrees * pi / 180.0f);
+        glUniform1f(glGetUniformLocation(program, "dotAspect"),
+                    std::clamp(aspect, 0.1f, 10.0f));
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures[dotIndex]);
         glUniform1i(glGetUniformLocation(program, "dotTexture"), 0);
@@ -1048,10 +1067,12 @@ struct PhosphorScopeRenderer::Impl
                   height);
         dotImages.draw(1, pointCount, params.glowWidth, visualState.dot2Intensity *
                                                         visualState.dotOverallIntensity,
-                       dot2ImageMix, width, height);
+                       dot2ImageMix, visualState.dot2Rotation, visualState.dot2Aspect, width,
+                       height);
         dotImages.draw(0, pointCount, params.coreWidth, visualState.dot1Intensity *
                                                         visualState.dotOverallIntensity,
-                       dot1ImageMix, width, height);
+                       dot1ImageMix, visualState.dot1Rotation, visualState.dot1Aspect, width,
+                       height);
         persistence.endFrame(quad, width, height);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
