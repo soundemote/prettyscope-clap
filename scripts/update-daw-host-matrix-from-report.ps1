@@ -5,6 +5,7 @@ param(
     [string] $Status = "",
     [string] $Notes = "",
     [switch] $AddMissing,
+    [switch] $Preview,
     [string] $MatrixPath = ""
 )
 
@@ -117,6 +118,23 @@ for ($i = 0; $i -lt $lines.Count; ++$i) {
         $rowIndex = $i
         break
     }
+}
+
+if ($Preview) {
+    $action = if ($rowIndex -ge 0) { "update existing row" } else { "add missing row" }
+    Write-Host "Preview DAW host matrix update"
+    Write-Host "  Matrix: $resolvedMatrixPath"
+    Write-Host "  Action: $action"
+    Write-Host "  Host:   $hostName"
+    Write-Host "  Format: $format"
+    Write-Host "  OS:     $os"
+    Write-Host "  Status: $targetStatus"
+    Write-Host "  Report: $relativeReportPath"
+    Write-Host "  Row:    $newRow"
+    if ($rowIndex -lt 0 -and !$AddMissing) {
+        Write-Host "  Note:   use -AddMissing to write this new row."
+    }
+    return
 }
 
 if ($rowIndex -ge 0) {

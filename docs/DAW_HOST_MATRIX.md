@@ -47,6 +47,7 @@ Before calling this first DAW-test surface ready for broader attention:
 4. Update this matrix row with:
 
    ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
    powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
    ```
 

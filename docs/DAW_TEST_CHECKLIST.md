@@ -39,6 +39,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-host-matrix.ps1
 Update host matrix from a filled report:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```
 
