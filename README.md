@@ -124,6 +124,12 @@ To assemble a local DAW-test handoff folder and zip:
 powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle.ps1
 ```
 
+To verify a local DAW-test handoff folder or zip:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-test-bundle.ps1 -BundlePath .\build-tracer\daw-test-bundle\your-bundle.zip
+```
+
 To create known-good PNGs for Dot 1 / Dot 2 image override testing:
 
 ```powershell

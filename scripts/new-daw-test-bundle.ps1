@@ -69,6 +69,7 @@ try {
         "scripts\new-dot-image-test-assets.ps1",
         "scripts\new-daw-test-bundle-manifest.ps1",
         "scripts\new-daw-test-bundle.ps1",
+        "scripts\test-daw-test-bundle.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     foreach ($script in $scripts) {

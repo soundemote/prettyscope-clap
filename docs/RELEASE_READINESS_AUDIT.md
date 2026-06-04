@@ -46,6 +46,8 @@ the DAW behavior that still needs hands-on testing.
   DAW-test handoff files with SHA256 hashes.
 - A bundle script assembles a local DAW-test folder/zip with artifacts, docs,
   helper scripts, smoke-test dot images, package copy, and manifest.
+- A bundle verifier script checks local handoff folders/zips for required
+  artifacts, docs, scripts, dot image assets, and manifest content.
 - DAW prep/report scripts support `-PassThru` when automation needs the
   generated report path.
 - A smoke-test asset script generates known-good PNGs for Dot 1 / Dot 2 image

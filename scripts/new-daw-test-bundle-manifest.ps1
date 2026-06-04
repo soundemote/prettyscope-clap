@@ -113,6 +113,7 @@ try {
         "scripts\prepare-daw-test.ps1",
         "scripts\new-daw-test-report.ps1",
         "scripts\new-daw-test-bundle.ps1",
+        "scripts\test-daw-test-bundle.ps1",
         "scripts\review-daw-test-report.ps1",
         "scripts\new-dot-image-test-assets.ps1",
         "scripts\show-local-plugin-status.ps1"
