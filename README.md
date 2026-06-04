@@ -72,6 +72,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 If the current installed artifacts are already fresh, add `-SkipBuildInstall` to
 generate another report without rebuilding.
 
+`test-daw-readiness.ps1` performs its own strict freshness check before calling
+the prep script.
+
 Add `-SkipDotImageAssets` for report-only reruns that do not need fresh Dot 1 /
 Dot 2 image test files.
 

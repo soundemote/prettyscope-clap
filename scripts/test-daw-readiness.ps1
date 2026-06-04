@@ -43,6 +43,7 @@ try {
         -OutputPath $reportPath `
         -BundleManifestPath $manifestPath `
         -SkipBuildInstall `
+        -SkipFreshnessCheck `
         -PassThru
 
     $bundleDir = Join-Path $OutputDir "bundle"

@@ -10,6 +10,7 @@ param(
     [string] $OutputPath = "",
     [string] $BundleManifestPath = "",
     [switch] $SkipBuildInstall,
+    [switch] $SkipFreshnessCheck,
     [switch] $SkipDotImageAssets,
     [switch] $SkipBundleManifest,
     [switch] $PassThru
@@ -25,7 +26,9 @@ if (!$SkipBuildInstall) {
         -BuildDir $BuildDir
 }
 else {
-    & (Join-Path $PSScriptRoot "show-local-plugin-status.ps1") -BuildDir $BuildDir -RequireFresh
+    if (!$SkipFreshnessCheck) {
+        & (Join-Path $PSScriptRoot "show-local-plugin-status.ps1") -BuildDir $BuildDir -RequireFresh
+    }
 }
 
 $dotImageAssetPaths = @()
