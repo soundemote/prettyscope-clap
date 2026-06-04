@@ -42,6 +42,12 @@ the DAW behavior that still needs hands-on testing.
 - Generated DAW test reports are kept in `docs\test-reports` by default.
 - A report review script checks filled DAW reports for blank essentials before
   handoff.
+- A report index script lists generated DAW reports with completion state and
+  issue counts.
+- A next-action script recommends whether to prepare a test package, fill an
+  incomplete report, or review completed reports.
+- A DAW test dashboard script combines local plugin status, latest artifacts,
+  next action, and report index output.
 - A bundle manifest script records built artifacts, installed artifacts, and
   DAW-test handoff files with SHA256 hashes.
 - A bundle script assembles a local DAW-test folder/zip with artifacts, docs,
@@ -65,6 +71,8 @@ the DAW behavior that still needs hands-on testing.
 - Host-facing plugin identity is recorded in `docs\PLUGIN_IDENTITY_AUDIT.md`.
 - The first DAW-test visual control surface is recorded in
   `docs\VISUAL_CONTROL_MANIFEST.md`.
+- A visual control manifest verifier checks the manifest against
+  `src\scope\visual-parameters.h`.
 
 ## Local Verification Command
 
@@ -90,6 +98,24 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 
 `prepare-daw-test.ps1 -SkipBuildInstall` is available for report-only prep after
 strict freshness has already been verified.
+
+For the current DAW-test dashboard:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
+```
+
+For the immediate next DAW-test action:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
+```
+
+For visual control manifest drift checks:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-visual-control-manifest.ps1
+```
 
 ## DAW Testing Still Required
 
