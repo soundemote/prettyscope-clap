@@ -36,15 +36,16 @@ The script prints paths for:
 The blank report warnings are expected before DAW testing. Leave the generated
 report open or keep its path handy.
 
-To print the most recent report, manifest, bundle folder, and bundle zip paths
-again later:
+To print the most recent report, summary, manifest, bundle folder, and bundle
+zip paths again later:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
-Add `-OpenReport`, `-OpenBundleFolder`, or `-OpenBundleZipFolder` when you want
-Windows to open the latest report or bundle location directly.
+Add `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, or
+`-OpenBundleZipFolder` when you want Windows to open the latest report, summary,
+or bundle location directly.
 
 ## 2. Load Prettyscope In The DAW
 

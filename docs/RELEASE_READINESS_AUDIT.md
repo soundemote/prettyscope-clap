@@ -76,6 +76,8 @@ the DAW behavior that still needs hands-on testing.
   bundle creation, bundle verification, and report review smoke.
 - The DAW readiness script writes a release candidate summary beside the
   generated report and bundle.
+- The latest-artifact helper reports the release candidate summary and can open
+  it with `-OpenSummary`.
 - The readiness script avoids repeating the freshness check after its initial
   strict preflight.
 - A DAW test quickstart gives the short first hands-on test path.

@@ -37,14 +37,15 @@ default. It records image paths in the report. Add `-SkipDotImageAssets` or
 Add `-PassThru` to either command when automation needs generated paths as
 pipeline output.
 
-Print the latest generated report, manifest, bundle folder, and bundle zip
-paths with:
+Print the latest generated report, release summary, manifest, bundle folder, and
+bundle zip paths with:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
-Add `-OpenReport` to open the latest generated report.
+Add `-OpenReport` to open the latest generated report or `-OpenSummary` to open
+the latest release candidate summary.
 
 Review a filled report before handoff with:
 

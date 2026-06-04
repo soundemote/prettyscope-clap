@@ -1,6 +1,7 @@
 param(
     [string] $BuildDir = "build-tracer",
     [switch] $OpenReport,
+    [switch] $OpenSummary,
     [switch] $OpenBundleFolder,
     [switch] $OpenBundleZipFolder,
     [switch] $PassThru
@@ -60,12 +61,14 @@ if (!$latestReadinessReport) {
 $latestManifest = $null
 $latestBundleZip = $null
 $latestBundleFolder = $null
+$latestReleaseSummary = $null
 
 if ($latestReadinessReport) {
     $reportDirectory = Split-Path -Parent $latestReadinessReport.FullName
     $siblingManifest = Join-Path $reportDirectory "prettyscope-daw-test-bundle-manifest.md"
     $siblingBundleZip = Join-Path $reportDirectory "prettyscope-daw-test-bundle.zip"
     $siblingBundleFolder = Join-Path $reportDirectory "bundle"
+    $siblingReleaseSummary = Join-Path $reportDirectory "prettyscope-release-candidate-summary.md"
 
     if (Test-Path $siblingManifest) {
         $latestManifest = Get-Item $siblingManifest
@@ -76,10 +79,16 @@ if ($latestReadinessReport) {
     if (Test-Path $siblingBundleFolder) {
         $latestBundleFolder = Get-Item $siblingBundleFolder
     }
+    if (Test-Path $siblingReleaseSummary) {
+        $latestReleaseSummary = Get-Item $siblingReleaseSummary
+    }
 }
 
 if (!$latestManifest) {
     $latestManifest = Get-LatestItem -Path $buildRoot -Filter "*bundle-manifest.md"
+}
+if (!$latestReleaseSummary) {
+    $latestReleaseSummary = Get-LatestItem -Path $buildRoot -Filter "prettyscope-release-candidate-summary.md"
 }
 if (!$latestBundleZip) {
     $latestBundleZip = Get-LatestItem -Path $buildRoot -Filter "*daw-test-bundle*.zip"
@@ -134,12 +143,16 @@ function Open-ParentIfPresent {
 
 Write-Host "Latest Prettyscope DAW test artifacts"
 Write-Host "  Report:        $(Format-PathOrMissing $latestReadinessReport)"
+Write-Host "  Summary:       $(Format-PathOrMissing $latestReleaseSummary)"
 Write-Host "  Manifest:      $(Format-PathOrMissing $latestManifest)"
 Write-Host "  Bundle folder: $(Format-PathOrMissing $latestBundleFolder)"
 Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestBundleZip)"
 
 if ($OpenReport) {
     Open-ItemIfPresent -Item $latestReadinessReport -Label "report"
+}
+if ($OpenSummary) {
+    Open-ItemIfPresent -Item $latestReleaseSummary -Label "release summary"
 }
 if ($OpenBundleFolder) {
     Open-ItemIfPresent -Item $latestBundleFolder -Label "bundle folder"
@@ -151,6 +164,7 @@ if ($OpenBundleZipFolder) {
 if ($PassThru) {
     [PSCustomObject]@{
         ReportPath = if ($latestReadinessReport) { $latestReadinessReport.FullName } else { $null }
+        SummaryPath = if ($latestReleaseSummary) { $latestReleaseSummary.FullName } else { $null }
         ManifestPath = if ($latestManifest) { $latestManifest.FullName } else { $null }
         BundleDirectory = if ($latestBundleFolder) { $latestBundleFolder.FullName } else { $null }
         BundleZipPath = if ($latestBundleZip) { $latestBundleZip.FullName } else { $null }

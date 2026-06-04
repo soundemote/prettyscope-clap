@@ -155,7 +155,7 @@ Print the latest generated DAW test artifacts:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
-Optional switches: `-OpenReport`, `-OpenBundleFolder`, and
+Optional switches: `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, and
 `-OpenBundleZipFolder`.
 
 ## Plugin Load
