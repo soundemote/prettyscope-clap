@@ -27,8 +27,16 @@ struct MainPanel : sst::jucegui::components::NamedPanel
     MainPanel(PluginEditor &editor);
     void resized() override;
 
+    struct CategorySection
+    {
+        juce::String name;
+        std::unique_ptr<juce::Label> label;
+        std::vector<size_t> knobIndices;
+    };
+
     std::vector<std::unique_ptr<sst::jucegui::components::Knob>> knobs;
     std::vector<std::unique_ptr<PatchContinuous>> knobAs;
+    std::vector<CategorySection> categories;
 
     PluginEditor &editor;
 

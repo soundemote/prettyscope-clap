@@ -37,10 +37,27 @@ MainPanel::MainPanel(PluginEditor &e)
             continue;
         }
 
+        const auto categoryName = juce::String(descriptor.category.data(),
+                                               static_cast<int>(descriptor.category.size()));
+        if (categories.empty() || categories.back().name != categoryName)
+        {
+            auto label = std::make_unique<juce::Label>();
+            label->setText(categoryName, juce::dontSendNotification);
+            label->setJustificationType(juce::Justification::centredLeft);
+            label->setColour(juce::Label::textColourId, juce::Colours::white.withAlpha(0.72f));
+            addAndMakeVisible(*label);
+
+            auto section = CategorySection{};
+            section.name = categoryName;
+            section.label = std::move(label);
+            categories.push_back(std::move(section));
+        }
+
         auto knob = std::make_unique<sst::jucegui::components::Knob>();
         auto knobData = std::unique_ptr<PatchContinuous>();
         createComponent(editor, *this, *param, knob, knobData);
         addAndMakeVisible(*knob);
+        categories.back().knobIndices.push_back(knobs.size());
         knobs.push_back(std::move(knob));
         knobAs.push_back(std::move(knobData));
     }
@@ -49,26 +66,44 @@ MainPanel::MainPanel(PluginEditor &e)
 void MainPanel::resized()
 {
     auto b = getContentArea();
-    auto w = b.getWidth();
-    auto x = b.getX();
-    auto y = b.getY();
-    auto spw = 82;
-    auto sph = 82;
+    const auto right = b.getRight();
+    constexpr int spw = 82;
+    constexpr int sph = 82;
+    constexpr int labelHeight = 20;
+    constexpr int sectionGap = 4;
 
-    for (size_t i = 0; i < knobs.size(); ++i)
+    auto y = b.getY();
+    for (auto &category : categories)
     {
-        if (!knobs[i])
+        if (category.label)
         {
-            continue;
+            category.label->setBounds(b.getX(), y, b.getWidth(), labelHeight);
+        }
+        y += labelHeight;
+
+        auto x = b.getX();
+        for (const auto index : category.knobIndices)
+        {
+            if (index >= knobs.size() || !knobs[index])
+            {
+                continue;
+            }
+
+            if (x + spw > right)
+            {
+                x = b.getX();
+                y += sph;
+            }
+
+            knobs[index]->setBounds(x, y, spw - 5, sph - 5);
+            x += spw;
         }
 
-        knobs[i]->setBounds(x, y, spw - 5, sph - 5);
-        x += spw;
-        if (x + spw > w)
+        if (!category.knobIndices.empty())
         {
-            x = b.getX();
             y += sph;
         }
+        y += sectionGap;
     }
 }
 
