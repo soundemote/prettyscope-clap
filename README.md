@@ -128,6 +128,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report
 
 Add `-RequireComplete` when automation should fail on missing fields.
 
+After a report is complete, preview and submit the newest completed report:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1 -Preview
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
+```
+
 The first DAW-test visual control surface is recorded in
 `docs\VISUAL_CONTROL_MANIFEST.md`.
 

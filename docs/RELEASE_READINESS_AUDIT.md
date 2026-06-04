@@ -54,6 +54,8 @@ the DAW behavior that still needs hands-on testing.
   falls back to the newest report, and runs the strict DAW report reviewer.
 - A report submit script requires complete DAW reports before updating the host
   matrix, then validates the matrix and prints release gates.
+- A latest-report submit helper selects the newest completed unsubmitted report
+  and uses the same strict submit workflow.
 - Completed reports are only matrix `pass` candidates when all required result
   rows pass and the release decision is pass-ready; completed non-passing
   reports are submitted as `fix needed`.
@@ -190,6 +192,8 @@ For submitting a completed hands-on DAW report:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1 -Preview
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
 powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```

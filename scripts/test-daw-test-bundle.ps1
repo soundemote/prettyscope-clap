@@ -34,6 +34,7 @@ $requiredEntries = @(
     "scripts/new-release-candidate-summary.ps1",
     "scripts/update-daw-host-matrix-from-report.ps1",
     "scripts/submit-daw-test-report.ps1",
+    "scripts/submit-latest-daw-test-report.ps1",
     "scripts/review-daw-test-report.ps1",
     "scripts/test-daw-report-classification.ps1",
     "scripts/test-daw-next-action-routing.ps1",

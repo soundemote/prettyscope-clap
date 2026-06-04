@@ -155,10 +155,22 @@ with repro steps.
 After the report passes review, preview the host matrix row:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -Preview
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1 -Preview
 ```
 
 If the preview looks right, submit it:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
+```
+
+Or submit a specific report path:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -Preview
+```
+
+And then:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT"

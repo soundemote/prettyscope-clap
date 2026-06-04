@@ -102,8 +102,10 @@ $unsubmittedOutput = Invoke-NextAction `
     -MatrixPath $unsubmittedMatrix
 Assert-Contains $unsubmittedOutput "Next DAW test action: submit the latest completed report." `
     "Unsubmitted complete report should route to submit."
-Assert-Contains $unsubmittedOutput "submit-daw-test-report.ps1" `
-    "Unsubmitted complete report should print submit commands."
+Assert-Contains $unsubmittedOutput "submit-latest-daw-test-report.ps1 -Preview" `
+    "Unsubmitted complete report should print latest-report preview command."
+Assert-Contains $unsubmittedOutput "submit-latest-daw-test-report.ps1" `
+    "Unsubmitted complete report should print latest-report submit command."
 Assert-Contains $unsubmittedOutput "Result:" `
     "Unsubmitted complete report should print its result classification."
 Assert-Contains $unsubmittedOutput "show-daw-test-next-action.ps1 -OpenReport" `

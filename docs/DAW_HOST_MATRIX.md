@@ -54,6 +54,13 @@ Before calling this first DAW-test surface ready for broader attention:
 4. Preview and submit this matrix row with:
 
    ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1 -Preview
+   powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
+   ```
+
+   Or submit a specific report path:
+
+   ```powershell
    powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
    powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
    ```

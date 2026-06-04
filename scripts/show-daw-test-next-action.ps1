@@ -85,6 +85,25 @@ function Format-LatestReviewCommand {
     return $command
 }
 
+function Format-LatestSubmitCommand {
+    param([switch] $Preview)
+
+    $command = "powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1"
+    if ($Preview) {
+        $command += " -Preview"
+    }
+    if ($BuildDir -ne "build-tracer") {
+        $command += " -BuildDir `"$BuildDir`""
+    }
+    if ($DocsOnlyReports) {
+        $command += " -DocsOnlyReports"
+    }
+    if ($resolvedMatrixPath -ne $defaultMatrixPath) {
+        $command += " -MatrixPath `"$resolvedMatrixPath`""
+    }
+    return $command
+}
+
 Push-Location $repoRoot
 try {
     $latestArtifacts = & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
@@ -155,9 +174,13 @@ try {
         Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestArtifacts.BundleZipPath)"
         Write-Host ""
         Write-Host "Preview command:"
-        Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -Preview"
+        Write-Host "  $(Format-LatestSubmitCommand -Preview)"
         Write-Host ""
         Write-Host "Submit command:"
+        Write-Host "  $(Format-LatestSubmitCommand)"
+        Write-Host ""
+        Write-Host "Specific report submit commands:"
+        Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -Preview"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath `"$($latest.Path)`""
         Write-Host ""
         Write-Host "Open commands:"

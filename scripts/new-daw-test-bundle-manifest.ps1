@@ -134,6 +134,7 @@ try {
         "scripts\new-release-candidate-summary.ps1",
         "scripts\update-daw-host-matrix-from-report.ps1",
         "scripts\submit-daw-test-report.ps1",
+        "scripts\submit-latest-daw-test-report.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     $handoffLines = ($handoffFiles | ForEach-Object { Format-FileLine $_ }) -join "`r`n"
@@ -181,6 +182,8 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\new-release-candidate-summary.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+    powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1 -Preview
+    powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-classification.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-next-action-routing.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-visual-control-manifest.ps1

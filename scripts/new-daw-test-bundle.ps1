@@ -89,6 +89,7 @@ try {
         "scripts\new-release-candidate-summary.ps1",
         "scripts\update-daw-host-matrix-from-report.ps1",
         "scripts\submit-daw-test-report.ps1",
+        "scripts\submit-latest-daw-test-report.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     foreach ($script in $scripts) {
