@@ -73,6 +73,7 @@ try {
         "scripts\test-daw-report-classification.ps1",
         "scripts\test-daw-next-action-routing.ps1",
         "scripts\test-dot-image-renderer-source.ps1",
+        "scripts\test-dot-image-save-source.ps1",
         "scripts\test-dot-image-state-source.ps1",
         "scripts\test-dot-overall-renderer-source.ps1",
         "scripts\test-screen-burn-renderer-source.ps1",
