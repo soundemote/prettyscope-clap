@@ -83,16 +83,25 @@ try {
         -MatrixPath $MatrixPath `
         -Quiet `
         -PassThru
+    $objectiveCoverage = & (Join-Path $PSScriptRoot "show-release-objective-coverage.ps1") `
+        -BuildDir $BuildDir `
+        -Quiet `
+        -PassThru
 
     $checkRows = @(
         Format-Check "Visual control manifest" $visualManifest.Complete "$($visualManifest.DescriptorCount) descriptor row(s)"
         Format-Check "Release readiness audit" $releaseAudit.Complete "$($releaseAudit.IssueCount) issue(s)"
         Format-Check "DAW host matrix" $hostMatrix.Complete "$($hostMatrix.RowCount) row(s), $($hostMatrix.IssueCount) issue(s)"
+        Format-Check "Release objective local coverage" $objectiveCoverage.LocalImplementationCoverage "DAW evidence complete: $($objectiveCoverage.DawEvidenceComplete)"
         Format-Check "First-pass release gates" $releaseGates.Ready "pass-ready reports: $($releaseGates.PassReadyReportCount)"
     ) -join "`r`n"
 
     $gateRows = ($releaseGates.Gates | ForEach-Object {
             "| $($_.Gate) | $($_.Pass) | $($_.Evidence) |"
+        }) -join "`r`n"
+
+    $coverageRows = ($objectiveCoverage.Coverage | ForEach-Object {
+            "| $($_.Requirement) | $($_.LocalEvidence) | $($_.NeedsDawEvidence) | $($_.Evidence) |"
         }) -join "`r`n"
 
     $summary = @"
@@ -121,6 +130,16 @@ Ready: $(if ($releaseGates.Ready) { "yes" } else { "no" })
 | Gate | Pass | Evidence |
 | --- | --- | --- |
 $gateRows
+
+## Objective Coverage
+
+Local implementation coverage: $(if ($objectiveCoverage.LocalImplementationCoverage) { "yes" } else { "no" })
+DAW evidence complete: $(if ($objectiveCoverage.DawEvidenceComplete) { "yes" } else { "no" })
+Release objective complete: $(if ($objectiveCoverage.ReleaseObjectiveComplete) { "yes" } else { "no" })
+
+| Requirement | Local Evidence | Needs DAW Evidence | Evidence |
+| --- | --- | --- | --- |
+$coverageRows
 
 ## Next Action
 

@@ -68,6 +68,12 @@ First-pass release gate summary:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
 ```
 
+Objective coverage summary:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-release-objective-coverage.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell

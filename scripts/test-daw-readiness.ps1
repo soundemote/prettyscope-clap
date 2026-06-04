@@ -45,6 +45,13 @@ try {
     & (Join-Path $PSScriptRoot "test-daw-report-field-update.ps1")
     & (Join-Path $PSScriptRoot "test-daw-report-classification.ps1")
     & (Join-Path $PSScriptRoot "test-daw-next-action-routing.ps1")
+    $objectiveCoverage = & (Join-Path $PSScriptRoot "show-release-objective-coverage.ps1") `
+        -BuildDir $BuildDir `
+        -Quiet `
+        -PassThru
+    if (!$objectiveCoverage.LocalImplementationCoverage) {
+        throw "Release objective local implementation coverage is incomplete."
+    }
 
     $reportPath = Join-Path $OutputDir "prettyscope-daw-test-report.md"
     $manifestPath = Join-Path $OutputDir "prettyscope-daw-test-bundle-manifest.md"

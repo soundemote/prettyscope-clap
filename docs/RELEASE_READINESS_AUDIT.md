@@ -72,6 +72,8 @@ the DAW behavior that still needs hands-on testing.
 - Release gates re-read linked reports and require pass-ready evidence, so a
   manually edited matrix `pass` row cannot satisfy gates with a non-passing
   report.
+- An objective coverage script summarizes local implementation coverage for the
+  requested controls/workflows and separates remaining DAW evidence gates.
 - A report classification smoke test verifies pass-ready reports, completed
   non-passing reports, matrix status updates, and forced-pass rejection.
 - A next-action routing smoke test verifies incomplete-report, unsubmitted-
@@ -90,6 +92,8 @@ the DAW behavior that still needs hands-on testing.
   next action, release gates, and report index output.
 - A release candidate summary script writes a Markdown snapshot of local status,
   machine checks, release gates, next action, and latest DAW test artifacts.
+- The release candidate summary includes objective coverage separating local
+  implementation evidence from DAW evidence gates.
 - A DAW test handoff opener opens the latest report, release summary, and
   matching bundle folder together for hands-on testing.
 - A DAW handoff currency verifier checks that the latest report, release
