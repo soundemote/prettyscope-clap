@@ -2,6 +2,7 @@ param(
     [string] $BuildDir = "build-tracer",
     [string] $MatrixPath = "",
     [switch] $IncludeBuildScratch,
+    [switch] $IncludeSmokeReports,
     [switch] $DocsOnlyReports,
     [switch] $OpenReport
 )
@@ -73,6 +74,17 @@ function Format-PathOrMissing {
     return $Path
 }
 
+function Format-LatestReviewCommand {
+    $command = "powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete"
+    if ($BuildDir -ne "build-tracer") {
+        $command += " -BuildDir `"$BuildDir`""
+    }
+    if ($DocsOnlyReports) {
+        $command += " -DocsOnlyReports"
+    }
+    return $command
+}
+
 Push-Location $repoRoot
 try {
     $latestArtifacts = & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
@@ -82,6 +94,7 @@ try {
     $reports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
             -BuildDir $BuildDir `
             -IncludeBuildScratch:$scanBuildScratch `
+            -IncludeSmokeReports:$IncludeSmokeReports `
             -Quiet `
             -PassThru)
     $matrixRows = Read-MatrixRows -Path $MatrixPath
@@ -107,6 +120,9 @@ try {
         Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestArtifacts.BundleZipPath)"
         Write-Host ""
         Write-Host "Review command:"
+        Write-Host "  $(Format-LatestReviewCommand)"
+        Write-Host ""
+        Write-Host "Specific report review command:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -RequireComplete"
         Write-Host ""
         Write-Host "Open commands:"

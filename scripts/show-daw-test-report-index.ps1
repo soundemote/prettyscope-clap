@@ -2,6 +2,7 @@ param(
     [string] $BuildDir = "build-tracer",
     [int] $Limit = 20,
     [switch] $IncludeBuildScratch,
+    [switch] $IncludeSmokeReports,
     [switch] $CompleteOnly,
     [switch] $IncompleteOnly,
     [switch] $OpenLatest,
@@ -56,8 +57,10 @@ foreach ($root in $reportRoots) {
 
     Get-ChildItem -Path $root -File -Recurse -ErrorAction SilentlyContinue |
         Where-Object {
+            $normalizedPath = $_.FullName.Replace('/', '\')
             $_.Name -match "daw-test.*\.md$" -and
-            $_.Name -notmatch "bundle-manifest"
+            $_.Name -notmatch "bundle-manifest" -and
+            ($IncludeSmokeReports -or $normalizedPath -notmatch '\\build-tracer\\.*-smoke\\')
         } |
         ForEach-Object {
             $lines = Get-Content -Path $_.FullName

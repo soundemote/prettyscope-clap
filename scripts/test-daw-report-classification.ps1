@@ -192,6 +192,7 @@ Assert-True (($failWithoutIssueReview.Issues -join "`n") -match "Non-passing rep
 $indexedReports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
         -BuildDir ($OutputDir.Substring($repoRoot.Path.Length).TrimStart('\', '/')) `
         -IncludeBuildScratch `
+        -IncludeSmokeReports `
         -Quiet `
         -PassThru)
 $indexedPassReport = $indexedReports | Where-Object { $_.Path -eq (Resolve-Path $passReport).Path } | Select-Object -First 1

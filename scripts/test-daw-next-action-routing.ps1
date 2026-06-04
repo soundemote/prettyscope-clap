@@ -43,7 +43,8 @@ function Invoke-NextAction {
         "-BuildDir",
         $BuildDir,
         "-MatrixPath",
-        $MatrixPath
+        $MatrixPath,
+        "-IncludeSmokeReports"
     )
     if ($ExplicitScratch) {
         $arguments += "-IncludeBuildScratch"
@@ -87,6 +88,8 @@ $incompleteOutput = Invoke-NextAction `
     -MatrixPath $incompleteMatrix
 Assert-Contains $incompleteOutput "Next DAW test action: fill the latest incomplete report." `
     "Incomplete build scratch report should route to fill/review by default."
+Assert-Contains $incompleteOutput "review-latest-daw-test-report.ps1 -RequireComplete" `
+    "Incomplete report guidance should include the latest-report review command."
 Assert-Contains $incompleteOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Incomplete report guidance should include an open-report command."
 

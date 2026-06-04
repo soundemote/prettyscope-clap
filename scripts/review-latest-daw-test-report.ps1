@@ -1,6 +1,7 @@
 param(
     [string] $BuildDir = "build-tracer",
     [switch] $DocsOnlyReports,
+    [switch] $IncludeSmokeReports,
     [switch] $OpenReport,
     [switch] $RequireComplete,
     [switch] $PassThru
@@ -15,6 +16,9 @@ $indexArgs = @{
 }
 if (!$DocsOnlyReports) {
     $indexArgs.IncludeBuildScratch = $true
+}
+if ($IncludeSmokeReports) {
+    $indexArgs.IncludeSmokeReports = $true
 }
 
 $reports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") @indexArgs)
