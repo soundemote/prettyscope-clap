@@ -57,13 +57,38 @@ if (!$latestReadinessReport) {
     $latestReadinessReport = Get-LatestItem -Path $reportRoot -Filter "*daw-test-report*.md"
 }
 
-$latestManifest = Get-LatestItem -Path $buildRoot -Filter "*bundle-manifest.md"
-$latestBundleZip = Get-LatestItem -Path $buildRoot -Filter "*daw-test-bundle*.zip"
-$latestBundleFolder = if ($latestManifest) {
-    Get-Item (Split-Path -Parent $latestManifest.FullName)
+$latestManifest = $null
+$latestBundleZip = $null
+$latestBundleFolder = $null
+
+if ($latestReadinessReport) {
+    $reportDirectory = Split-Path -Parent $latestReadinessReport.FullName
+    $siblingManifest = Join-Path $reportDirectory "prettyscope-daw-test-bundle-manifest.md"
+    $siblingBundleZip = Join-Path $reportDirectory "prettyscope-daw-test-bundle.zip"
+    $siblingBundleFolder = Join-Path $reportDirectory "bundle"
+
+    if (Test-Path $siblingManifest) {
+        $latestManifest = Get-Item $siblingManifest
+    }
+    if (Test-Path $siblingBundleZip) {
+        $latestBundleZip = Get-Item $siblingBundleZip
+    }
+    if (Test-Path $siblingBundleFolder) {
+        $latestBundleFolder = Get-Item $siblingBundleFolder
+    }
 }
-else {
-    $null
+
+if (!$latestManifest) {
+    $latestManifest = Get-LatestItem -Path $buildRoot -Filter "*bundle-manifest.md"
+}
+if (!$latestBundleZip) {
+    $latestBundleZip = Get-LatestItem -Path $buildRoot -Filter "*daw-test-bundle*.zip"
+}
+if (!$latestBundleFolder -and $latestManifest) {
+    $candidateFolder = Get-Item (Split-Path -Parent $latestManifest.FullName)
+    if ($candidateFolder.Name -eq "bundle") {
+        $latestBundleFolder = $candidateFolder
+    }
 }
 
 function Format-PathOrMissing {
