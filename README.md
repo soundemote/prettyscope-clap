@@ -58,6 +58,9 @@ To build, run tests, and install the local artifacts in one step:
 powershell -ExecutionPolicy Bypass -File .\scripts\build-test-install-local-plugin.ps1
 ```
 
+This also verifies that the installed CLAP/VST3 copies match the build
+artifacts.
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 

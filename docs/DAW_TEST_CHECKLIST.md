@@ -14,6 +14,7 @@ Expected:
 
 - CLAP, VST3, and standalone artifacts build.
 - `prettyscope-clap-tests` passes.
+- Installed CLAP/VST3 copies match the build artifacts.
 
 Optional status check:
 

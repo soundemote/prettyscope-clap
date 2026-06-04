@@ -17,6 +17,7 @@ Push-Location $repoRoot
 try {
     cmd.exe /d /c "call `"$vcvars`" && cmake -S . -B `"$BuildDir`" -G Ninja && cmake --build `"$BuildDir`" && ctest --test-dir `"$BuildDir`" --output-on-failure"
     & (Join-Path $PSScriptRoot "install-local-plugin.ps1") -Format $Format -BuildDir $BuildDir
+    & (Join-Path $PSScriptRoot "show-local-plugin-status.ps1") -BuildDir $BuildDir -RequireFresh
 }
 finally {
     Pop-Location

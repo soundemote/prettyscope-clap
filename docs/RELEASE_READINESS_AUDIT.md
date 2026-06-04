@@ -49,6 +49,8 @@ For a local install handoff:
 powershell -ExecutionPolicy Bypass -File .\scripts\build-test-install-local-plugin.ps1 -Format All -BuildDir build-tracer
 ```
 
+The handoff script runs the strict freshness check after install.
+
 ## DAW Testing Still Required
 
 Use `docs\DAW_TEST_CHECKLIST.md` to verify:
