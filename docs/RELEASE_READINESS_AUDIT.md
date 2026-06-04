@@ -48,6 +48,8 @@ the DAW behavior that still needs hands-on testing.
   helper scripts, smoke-test dot images, package copy, and manifest.
 - A bundle verifier script checks local handoff folders/zips for required
   artifacts, docs, scripts, dot image assets, and manifest content.
+- The bundle packager runs the verifier by default after creating the folder and
+  zip.
 - DAW prep/report scripts support `-PassThru` when automation needs the
   generated report path.
 - A smoke-test asset script generates known-good PNGs for Dot 1 / Dot 2 image

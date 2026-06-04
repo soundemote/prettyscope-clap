@@ -44,6 +44,8 @@ Optional local handoff folder/zip:
 powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle.ps1
 ```
 
+The packager verifies the folder and zip by default.
+
 Verify a handoff folder or zip before testing:
 
 ```powershell

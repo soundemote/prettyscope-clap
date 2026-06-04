@@ -3,6 +3,7 @@ param(
     [string] $OutputDir = "",
     [string] $ZipPath = "",
     [switch] $SkipZip,
+    [switch] $SkipVerify,
     [switch] $PassThru
 )
 
@@ -109,6 +110,18 @@ try {
 
     $createdOutputDir = (Resolve-Path $OutputDir).Path
     Write-Host "Created DAW test bundle folder: $createdOutputDir"
+
+    if (!$SkipVerify) {
+        & (Join-Path $PSScriptRoot "test-daw-test-bundle.ps1") `
+            -BundlePath $createdOutputDir `
+            -RequireComplete | Out-Host
+
+        if ($createdZipPath) {
+            & (Join-Path $PSScriptRoot "test-daw-test-bundle.ps1") `
+                -BundlePath $createdZipPath `
+                -RequireComplete | Out-Host
+        }
+    }
 
     if ($PassThru) {
         [PSCustomObject]@{

@@ -124,6 +124,9 @@ To assemble a local DAW-test handoff folder and zip:
 powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle.ps1
 ```
 
+The packager verifies the folder and zip by default. Add `-SkipVerify` only for
+temporary packaging diagnostics.
+
 To verify a local DAW-test handoff folder or zip:
 
 ```powershell
