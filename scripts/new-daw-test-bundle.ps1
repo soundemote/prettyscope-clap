@@ -91,6 +91,7 @@ try {
         "scripts\test-daw-handoff-current.ps1",
         "scripts\show-daw-test-report-index.ps1",
         "scripts\review-latest-daw-test-report.ps1",
+        "scripts\show-daw-test-gaps.ps1",
         "scripts\update-daw-test-report-artifacts.ps1",
         "scripts\update-daw-test-report-fields.ps1",
         "scripts\show-daw-test-next-action.ps1",

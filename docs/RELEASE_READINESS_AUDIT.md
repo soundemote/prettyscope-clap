@@ -60,6 +60,8 @@ the DAW behavior that still needs hands-on testing.
   `fix-needed`.
 - A latest-report review helper selects the newest incomplete report by default,
   falls back to the newest report, and runs the strict DAW report reviewer.
+- A DAW test gap helper summarizes the latest report's missing artifact, result,
+  visual note, and release decision fields for hands-on testers.
 - A report submit script requires complete DAW reports before updating the host
   matrix, then validates the matrix and prints release gates.
 - A latest-report submit helper selects the newest completed unsubmitted report

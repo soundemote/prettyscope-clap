@@ -74,6 +74,12 @@ Objective coverage summary:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-release-objective-coverage.ps1
 ```
 
+Current report gap summary:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-gaps.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell

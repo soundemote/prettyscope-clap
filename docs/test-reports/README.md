@@ -78,6 +78,13 @@ with:
 powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
 ```
 
+From the repository root, summarize only the fields still missing from the
+current report with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-gaps.ps1
+```
+
 After exporting the Dot 1 / Dot 2 generated and loaded PNGs, and after saving
 the tested preset/session, fill those report fields with:
 

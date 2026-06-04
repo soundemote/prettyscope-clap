@@ -20,6 +20,12 @@ This includes generated readiness reports under `build-tracer` by default. Add
 When a report is ready to fill or submit, the helper prints an open command for
 the active report and, when available, the paired release summary.
 
+To see only the report fields still missing from the current handoff:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-gaps.ps1
+```
+
 To see status, latest artifacts, next action, and report index together:
 
 ```powershell
