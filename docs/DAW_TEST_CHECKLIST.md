@@ -49,6 +49,12 @@ Host matrix summary:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-host-matrix.ps1
 ```
 
+First-pass release gate summary:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell

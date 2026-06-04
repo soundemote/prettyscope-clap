@@ -5,6 +5,7 @@ plugin test pass. Use host-specific DAW reports from `docs\test-reports` as the
 evidence source for each row.
 Run `scripts\test-daw-host-matrix.ps1` after matrix updates.
 Run `scripts\show-daw-host-matrix.ps1` for a quick summary.
+Run `scripts\show-daw-release-gates.ps1` to see which first-pass gates remain.
 
 Status values:
 
@@ -52,4 +53,5 @@ Before calling this first DAW-test surface ready for broader attention:
    ```
 
 5. Run `scripts\test-daw-host-matrix.ps1`.
-6. Keep detailed reproduction steps in the report, not in this matrix.
+6. Run `scripts\show-daw-release-gates.ps1`.
+7. Keep detailed reproduction steps in the report, not in this matrix.

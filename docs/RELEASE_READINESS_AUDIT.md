@@ -137,6 +137,12 @@ For the immediate next DAW-test action:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
 ```
 
+For first-pass DAW release gates:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
+```
+
 For visual control manifest drift checks:
 
 ```powershell
