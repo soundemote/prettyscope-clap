@@ -92,6 +92,7 @@ try {
         "scripts\show-daw-test-report-index.ps1",
         "scripts\review-latest-daw-test-report.ps1",
         "scripts\update-daw-test-report-artifacts.ps1",
+        "scripts\update-daw-test-report-fields.ps1",
         "scripts\show-daw-test-next-action.ps1",
         "scripts\show-daw-test-dashboard.ps1",
         "scripts\show-daw-host-matrix.ps1",
@@ -101,6 +102,7 @@ try {
         "scripts\submit-daw-test-report.ps1",
         "scripts\submit-latest-daw-test-report.ps1",
         "scripts\test-daw-report-artifact-update.ps1",
+        "scripts\test-daw-report-field-update.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     foreach ($script in $scripts) {

@@ -102,7 +102,16 @@ powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifa
 ```
 
 Use the artifact update helper after exporting the generated/loaded PNGs and
-saving the preset/session, then review the report:
+saving the preset/session. Use the field update helper for result rows, visual
+notes, release decisions, and issue rows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -ResultArea "Scope follows input signal" -PassFail pass -ResultNotes "Trace follows the test signal."
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -VisualNoteField "Trace appearance" -VisualNote "No reset line or dotted endpoints observed."
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -ReadyForNextVisualPolish yes -NeedsCodeFixBeforeMoreTesting no -HighestPriorityFollowUp "Continue visual polish."
+```
+
+Then review the report:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md

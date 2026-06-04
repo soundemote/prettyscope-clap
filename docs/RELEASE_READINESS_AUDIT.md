@@ -50,6 +50,8 @@ the DAW behavior that still needs hands-on testing.
   name/path, and DAW session/project path before they are complete.
 - A report artifact update helper fills those produced-artifact fields from
   concrete exported PNG, preset, and DAW session paths.
+- A report field update helper fills result rows, visual notes, release
+  decisions, and issue rows without hand-editing Markdown tables.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
 - The report index labels reports as `incomplete`, `pass-ready`, or

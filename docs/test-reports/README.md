@@ -85,6 +85,14 @@ the tested preset/session, fill those report fields with:
 powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifacts.ps1 -ReportPath .\docs\test-reports\your-report.md -Dot1GeneratedPng "path\to\dot1-generated.png" -Dot1LoadedPng "path\to\dot1-loaded.png" -Dot2GeneratedPng "path\to\dot2-generated.png" -Dot2LoadedPng "path\to\dot2-loaded.png" -PresetPath "path\to\preset" -SessionPath "path\to\session"
 ```
 
+Fill result rows, visual notes, release decisions, or issue rows with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -ResultArea "Scope follows input signal" -PassFail pass -ResultNotes "Trace follows the test signal."
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -VisualNoteField "Trace appearance" -VisualNote "No reset line or dotted endpoints observed."
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath .\docs\test-reports\your-report.md -ReadyForNextVisualPolish yes -NeedsCodeFixBeforeMoreTesting no -HighestPriorityFollowUp "Continue visual polish."
+```
+
 After strict review passes, preview and submit the matching host matrix update
 from the repository root:
 

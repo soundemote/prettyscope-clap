@@ -149,7 +149,16 @@ powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifa
 ```
 
 That helper fills the `Test Artifacts Produced` fields after you export the PNGs
-and save the preset/session. Then run:
+and save the preset/session. You can also fill report rows without hand-editing
+Markdown:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -ResultArea "Scope follows input signal" -PassFail pass -ResultNotes "Trace follows the test signal."
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -VisualNoteField "Trace appearance" -VisualNote "No reset line or dotted endpoints observed."
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-fields.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -ReadyForNextVisualPolish yes -NeedsCodeFixBeforeMoreTesting no -HighestPriorityFollowUp "Continue visual polish."
+```
+
+Then run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -RequireComplete
