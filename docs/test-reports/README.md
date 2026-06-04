@@ -114,9 +114,10 @@ Add `-IncompleteOnly` or `-CompleteOnly` to filter by review status. Add
 Use `-Quiet -PassThru` when another script needs structured report-index data.
 The index reports each row as `incomplete`, `pass-ready`, or `fix-needed`.
 
-The reviewer expects real Dot Image Test Assets, Test Artifacts Produced fields,
-all visual control groups, all required result rows, visual notes, and release
-decision fields before a report is complete.
+Generated reports include a `Test Procedure` section that maps the DAW actions
+to the result rows. The reviewer expects real Dot Image Test Assets, Test
+Artifacts Produced fields, all visual control groups, all required result rows,
+visual notes, and release decision fields before a report is complete.
 
 Use `-Quiet -PassThru` with `review-daw-test-report.ps1` when another script
 needs structured completion and issue-count data.

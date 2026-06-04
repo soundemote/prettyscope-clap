@@ -41,6 +41,8 @@ the DAW behavior that still needs hands-on testing.
   installed artifact path, installed artifact SHA256, and dot image asset
   dimensions.
 - Generated DAW test reports list the visual control groups under test.
+- Generated DAW test reports include a concrete test procedure that maps the
+  plugin checks to the required result rows.
 - Generated DAW test reports are kept in `docs\test-reports` by default.
 - A report review script checks filled DAW reports for blank essentials before
   handoff.

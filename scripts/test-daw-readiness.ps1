@@ -59,6 +59,19 @@ try {
         -SkipFreshnessCheck `
         -PassThru
 
+    $reportContent = Get-Content -Raw -Path $prep.ReportPath
+    foreach ($needle in @(
+            "## Test Procedure",
+            "Use these steps to fill the matching result rows below.",
+            "Move at least one control in each visual group",
+            "click Clear and confirm the dot returns to Generated mode",
+            "Save/reload a plugin preset, then save/reopen the DAW session"
+        )) {
+        if ($reportContent -notmatch [regex]::Escape($needle)) {
+            throw "Generated DAW report is missing test procedure text: $needle"
+        }
+    }
+
     $bundleDir = Join-Path $OutputDir "bundle"
     $bundleZip = Join-Path $OutputDir "prettyscope-daw-test-bundle.zip"
     $bundle = & (Join-Path $PSScriptRoot "new-daw-test-bundle.ps1") `

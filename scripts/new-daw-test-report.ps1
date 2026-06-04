@@ -136,6 +136,32 @@ $dotImageAssetLines
 
 $visualControlLines
 
+## Test Procedure
+
+Use these steps to fill the matching result rows below.
+
+1. Scan/load Prettyscope in the host and instantiate it on an audio track.
+2. Play a steady synth, loop, or test tone and confirm audio still reaches the
+   track/master output.
+3. Open the editor, confirm the trace follows the audio, and watch the snapshot
+   inspector while changing input level.
+4. Move at least one control in each visual group: Signal, Beam, Phosphor,
+   Dot 1, Dot 2, Dot Overall, and Screen Burn.
+5. For Dot Overall, change the overall intensity/size/halo/image mix controls
+   and confirm both dots respond together without losing individual dot offsets.
+6. For Screen Burn, check that persistence lingers, fast decay affects the
+   first falloff, afterglow changes the tail, and floor fade eventually clears
+   old burn-in.
+7. For each dot, save a generated PNG, load the soft-core and asymmetric streak
+   test images, adjust image mix/rotation/aspect, save the loaded PNG, then
+   click Clear and confirm the dot returns to Generated mode.
+8. Load an intentionally large image, confirm it is accepted and status labels
+   show bounded dimensions.
+9. Save/reload a plugin preset, then save/reopen the DAW session, and confirm
+   loaded images and visual settings restore.
+10. Close/reopen the editor during playback and watch for black frames,
+    crashes, stuck textures, or stale controls.
+
 ## Results
 
 | Area | Pass/Fail | Notes |

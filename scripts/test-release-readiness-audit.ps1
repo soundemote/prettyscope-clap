@@ -50,6 +50,7 @@ Require-Text "screen burn source verifier coverage" 'Descriptor/editor/renderer/
 Require-Text "DAW testing still required" '## DAW Testing Still Required'
 Require-Text "host matrix" 'Host coverage is tracked in `docs\\DAW_HOST_MATRIX\.md`'
 Require-Text "produced artifacts" 'DAW reports require concrete generated/loaded dot PNG export paths'
+Require-Text "generated report test procedure" 'Generated DAW test reports include a concrete test procedure'
 Require-Text "completed report submit" 'submit-daw-test-report\.ps1'
 Require-Text "latest report submit helper" 'latest-report submit helper selects the newest completed unsubmitted report'
 Require-Text "report index result labels" 'report index labels reports as `incomplete`, `pass-ready`, or\s+`fix-needed`'
