@@ -117,6 +117,7 @@ try {
         "scripts\test-daw-test-bundle.ps1",
         "scripts\review-daw-test-report.ps1",
         "scripts\new-dot-image-test-assets.ps1",
+        "scripts\show-latest-daw-test-artifacts.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     $handoffLines = ($handoffFiles | ForEach-Object { Format-FileLine $_ }) -join "`r`n"
@@ -154,6 +155,7 @@ $handoffLines
 ## Suggested Next Commands
 
     powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
+    powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 "@
 
