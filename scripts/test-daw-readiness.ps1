@@ -32,6 +32,7 @@ try {
         -RequireFresh
 
     & (Join-Path $PSScriptRoot "test-dot-image-renderer-source.ps1")
+    & (Join-Path $PSScriptRoot "test-dot-image-clear-source.ps1")
     & (Join-Path $PSScriptRoot "test-dot-image-load-source.ps1")
     & (Join-Path $PSScriptRoot "test-dot-image-save-source.ps1")
     & (Join-Path $PSScriptRoot "test-dot-image-state-source.ps1")

@@ -126,6 +126,9 @@ the DAW behavior that still needs hands-on testing.
   textures, and updates status labels.
 - A dot-image save source verifier checks that dot `Save` can export either the
   generated dot texture or the active loaded/normalized override as a PNG.
+- A dot-image clear source verifier checks that dot `Clear` returns the slot
+  to generated mode, syncs patch state, refreshes renderer textures, and
+  updates status labels.
 - A dot-image state source verifier checks that loaded image labels and PNG
   payloads remain wired through normalization, patch XML state, editor restore,
   engine handoff, preset load, and renderer refresh paths.
@@ -142,7 +145,7 @@ the DAW behavior that still needs hands-on testing.
 | --- | --- | --- |
 | Dot 1 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
 | Dot 2 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
-| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; source-verifier coverage for load formats, normalization, PNG payloads, labels, and renderer refresh. | Host preset/session restore with real DAW reports. |
+| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; source-verifier coverage for load formats, clear-to-generated behavior, normalization, PNG payloads, labels, and renderer refresh. | Host preset/session restore with real DAW reports. |
 | Generated dot texture export | `Save` exports the generated texture in Generated mode; source verifier checks generated-dot PNG export wiring. | Tester confirms exported PNG is usable in DAW workflow. |
 | Loaded image export | `Save` exports the loaded/normalized image when an override is active; source verifier checks loaded-image PNG export wiring. | Tester confirms loaded override export in DAW workflow. |
 | Loaded image aspect preservation | Renderer source verification checks native image aspect handling before Dot Aspect stretch. | Tester confirms asymmetric streak behavior in a DAW. |
