@@ -48,6 +48,9 @@ the DAW behavior that still needs hands-on testing.
   issue counts.
 - A report submit script requires complete DAW reports before updating the host
   matrix, then validates the matrix and prints release gates.
+- Completed reports are only matrix `pass` candidates when all required result
+  rows pass and the release decision is pass-ready; completed non-passing
+  reports are submitted as `fix needed`.
 - A next-action script recommends whether to prepare a test package, fill an
   incomplete report, or review completed reports.
 - A DAW test dashboard script combines local plugin status, latest artifacts,

@@ -62,6 +62,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -R
 
 The submit command requires a complete report, updates and validates the host
 matrix, then prints first-pass release gates.
+Complete reports with any `fail` result row, a `no` value for
+`Ready for next visual polish pass`, or a `yes` value for
+`Needs code fix before more testing` are submitted as `fix needed` rather than
+`pass`.
 
 List generated reports and their completion state with:
 

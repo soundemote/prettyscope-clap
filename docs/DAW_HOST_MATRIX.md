@@ -11,9 +11,11 @@ Status values:
 
 - `untested`: no hands-on report yet.
 - `testing`: test started, report incomplete.
-- `pass`: report complete, no blocking issue.
+- `pass`: report complete, all required result rows pass, and release decision
+  is pass-ready.
 - `blocked`: host-specific issue prevents useful testing.
-- `fix needed`: reproducible plugin issue needs code work before retest.
+- `fix needed`: completed report has failures, the release decision says code
+  fix needed, or a reproducible plugin issue needs code work before retest.
 
 ## Current Matrix
 

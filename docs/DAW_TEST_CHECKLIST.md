@@ -98,6 +98,10 @@ visual control groups, required result rows, visual notes, and release decision
 fields. Add `-RequireComplete` when the report should fail automation if any of
 those are incomplete.
 Use `-Quiet -PassThru` when another script needs structured review data.
+The reviewer also classifies completed reports as pass-ready only when every
+required result row is `pass`, `Ready for next visual polish pass` is `yes`, and
+`Needs code fix before more testing` is `no`. The submit helper records completed
+non-passing reports as `fix needed`.
 
 Optional handoff manifest:
 

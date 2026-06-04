@@ -92,10 +92,21 @@ $review = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
 
 $targetStatus = $Status
 if (!$targetStatus) {
-    $targetStatus = if ($review.Complete) { "pass" } else { "testing" }
+    if (!$review.Complete) {
+        $targetStatus = "testing"
+    }
+    elseif ($review.Passed) {
+        $targetStatus = "pass"
+    }
+    else {
+        $targetStatus = "fix needed"
+    }
 }
 if ($targetStatus -eq "pass" -and !$review.Complete) {
     throw "Cannot mark host matrix row as pass until report review is complete: $resolvedReportPath"
+}
+if ($targetStatus -eq "pass" -and !$review.Passed) {
+    throw "Cannot mark host matrix row as pass until all result rows pass and release decision is pass-ready: $resolvedReportPath"
 }
 
 $relativeReportPath = Relative-Path-FromRepo $resolvedReportPath
@@ -104,6 +115,18 @@ $matrixNotes = if ($Notes) {
 }
 elseif ($targetStatus -eq "testing") {
     "Report started; $($review.IssueCount) incomplete field(s)."
+}
+elseif ($targetStatus -eq "fix needed") {
+    $failureSummary = if ($review.ResultFailureCount -gt 0) {
+        "$($review.ResultFailureCount) failed result(s)."
+    }
+    elseif ($review.NeedsCodeFix) {
+        "Release decision needs code fix."
+    }
+    else {
+        "Release decision is not pass-ready."
+    }
+    "Reviewed report needs follow-up; $failureSummary"
 }
 else {
     "Updated from reviewed DAW report."

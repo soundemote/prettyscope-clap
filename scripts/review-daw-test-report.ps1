@@ -15,6 +15,9 @@ if (!(Test-Path $ReportPath)) {
 $resolvedReportPath = (Resolve-Path $ReportPath).Path
 $lines = Get-Content -Path $resolvedReportPath
 $issues = New-Object System.Collections.Generic.List[string]
+$resultFailures = New-Object System.Collections.Generic.List[string]
+$readyForNextVisualPolish = $false
+$needsCodeFix = $false
 
 function Add-Issue {
     param([string] $Message)
@@ -170,6 +173,15 @@ foreach ($row in $resultRows) {
     if ($passFail.Length -eq 0) {
         Add-Issue "Missing Pass/Fail value for result: $area"
     }
+    else {
+        $normalizedPassFail = $passFail.ToLowerInvariant()
+        if ($normalizedPassFail -notin @("pass", "fail")) {
+            Add-Issue "Invalid Pass/Fail value for result ${area}: $passFail"
+        }
+        elseif ($normalizedPassFail -eq "fail") {
+            $resultFailures.Add($area) | Out-Null
+        }
+    }
     if ($notes.Length -eq 0) {
         Add-Issue "Missing notes for result: $area"
     }
@@ -192,14 +204,40 @@ foreach ($line in $releaseDecision) {
     if ($line -match "^- (.+):\s*(.*)$" -and (Is-PlaceholderValue $matches[2])) {
         Add-Issue "Release decision is blank or placeholder: $($matches[1])"
     }
+    elseif ($line -match "^- (.+):\s*(.*)$") {
+        $label = $matches[1]
+        $value = $matches[2].Trim().ToLowerInvariant()
+        if ($label -in @("Ready for next visual polish pass", "Needs code fix before more testing")) {
+            if ($value -notin @("yes", "no")) {
+                Add-Issue "Release decision must be yes or no for ${label}: $($matches[2])"
+            }
+            elseif ($label -eq "Ready for next visual polish pass") {
+                $readyForNextVisualPolish = ($value -eq "yes")
+            }
+            elseif ($label -eq "Needs code fix before more testing") {
+                $needsCodeFix = ($value -eq "yes")
+            }
+        }
+    }
 }
+
+$complete = ($issues.Count -eq 0)
+$passed = $complete -and
+    $resultFailures.Count -eq 0 -and
+    $readyForNextVisualPolish -and
+    !$needsCodeFix
 
 if ($PassThru) {
     [PSCustomObject]@{
         ReportPath = $resolvedReportPath
-        Complete = ($issues.Count -eq 0)
+        Complete = $complete
+        Passed = $passed
         IssueCount = $issues.Count
         Issues = $issues.ToArray()
+        ResultFailureCount = $resultFailures.Count
+        ResultFailures = $resultFailures.ToArray()
+        ReadyForNextVisualPolish = $readyForNextVisualPolish
+        NeedsCodeFix = $needsCodeFix
     }
     return
 }
@@ -210,6 +248,21 @@ if (!$Quiet) {
 if ($issues.Count -eq 0) {
     if (!$Quiet) {
         Write-Host "Report looks complete."
+        if ($passed) {
+            Write-Host "Report result: pass."
+        }
+        else {
+            Write-Host "Report result: not pass."
+            if ($resultFailures.Count -gt 0) {
+                Write-Host "  Failed result areas: $([string]::Join(', ', $resultFailures.ToArray()))"
+            }
+            if (!$readyForNextVisualPolish) {
+                Write-Host "  Ready for next visual polish pass is not yes."
+            }
+            if ($needsCodeFix) {
+                Write-Host "  Needs code fix before more testing is yes."
+            }
+        }
     }
     exit 0
 }
