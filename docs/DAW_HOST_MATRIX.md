@@ -4,6 +4,7 @@ This matrix tracks host coverage for the first Prettyscope CLAP oscilloscope
 plugin test pass. Use host-specific DAW reports from `docs\test-reports` as the
 evidence source for each row.
 Run `scripts\test-daw-host-matrix.ps1` after matrix updates.
+Run `scripts\show-daw-host-matrix.ps1` for a quick summary.
 
 Status values:
 

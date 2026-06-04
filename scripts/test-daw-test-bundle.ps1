@@ -28,6 +28,7 @@ $requiredEntries = @(
     "scripts/show-daw-test-report-index.ps1",
     "scripts/show-daw-test-next-action.ps1",
     "scripts/show-daw-test-dashboard.ps1",
+    "scripts/show-daw-host-matrix.ps1",
     "scripts/review-daw-test-report.ps1",
     "scripts/test-visual-control-manifest.ps1",
     "scripts/test-daw-host-matrix.ps1",

@@ -36,6 +36,12 @@ Host matrix check:
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-host-matrix.ps1
 ```
 
+Host matrix summary:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-host-matrix.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell
