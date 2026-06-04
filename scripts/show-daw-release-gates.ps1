@@ -94,29 +94,36 @@ $passedRows = @($rows | Where-Object { $_.Status -eq "pass" })
 $passedReports = @($passedRows | ForEach-Object {
         $reportPath = Resolve-ReportPath $_.LatestReport
         if ($reportPath) {
+            $review = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
+                -ReportPath $reportPath `
+                -Quiet `
+                -PassThru
             [PSCustomObject]@{
                 Row = $_
                 ReportPath = $reportPath
+                Complete = $review.Complete
+                IssueCount = $review.IssueCount
             }
         }
     })
+$completePassedReports = @($passedReports | Where-Object { $_.Complete })
 
-$clapRows = @($passedRows | Where-Object { $_.Format -eq "CLAP" })
-$vst3Rows = @($passedRows | Where-Object { $_.Format -eq "VST3" })
+$clapRows = @($completePassedReports | Where-Object { $_.Row.Format -eq "CLAP" })
+$vst3Rows = @($completePassedReports | Where-Object { $_.Row.Format -eq "VST3" })
 $fixNeededRows = @($rows | Where-Object { $_.Status -eq "fix needed" })
 
-$presetRows = @($passedReports | Where-Object {
+$presetRows = @($completePassedReports | Where-Object {
         (Get-ReportResult -ReportPath $_.ReportPath -Area "Preset save/reload restores images") -match '^pass$'
     })
-$sessionRows = @($passedReports | Where-Object {
+$sessionRows = @($completePassedReports | Where-Object {
         (Get-ReportResult -ReportPath $_.ReportPath -Area "DAW session save/reopen restores images") -match '^pass$'
     })
 
 $gates = New-Object System.Collections.Generic.List[object]
 $gates.Add((New-Gate "At least one CLAP host passed" ($clapRows.Count -gt 0) `
-            ($(if ($clapRows.Count -gt 0) { "$($clapRows[0].Host) $($clapRows[0].Format)" } else { "No pass row yet." })))) | Out-Null
+            ($(if ($clapRows.Count -gt 0) { "$($clapRows[0].Row.Host) $($clapRows[0].Row.Format)" } else { "No complete pass report yet." })))) | Out-Null
 $gates.Add((New-Gate "At least one VST3 host passed" ($vst3Rows.Count -gt 0) `
-            ($(if ($vst3Rows.Count -gt 0) { "$($vst3Rows[0].Host) $($vst3Rows[0].Format)" } else { "No pass row yet." })))) | Out-Null
+            ($(if ($vst3Rows.Count -gt 0) { "$($vst3Rows[0].Row.Host) $($vst3Rows[0].Row.Format)" } else { "No complete pass report yet." })))) | Out-Null
 $gates.Add((New-Gate "Preset image restore passed" ($presetRows.Count -gt 0) `
             ($(if ($presetRows.Count -gt 0) { $presetRows[0].ReportPath } else { "No pass report row yet." })))) | Out-Null
 $gates.Add((New-Gate "Session image restore passed" ($sessionRows.Count -gt 0) `
