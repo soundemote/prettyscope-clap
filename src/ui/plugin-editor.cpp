@@ -361,10 +361,15 @@ void PluginEditor::resized()
 
 void PluginEditor::showTooltipOn(juce::Component *c)
 {
+    if (!c || !toolTip)
+    {
+        return;
+    }
+
     int x = 0;
     int y = 0;
     juce::Component *component = c;
-    while (component != this)
+    while (component && component != this)
     {
         auto bounds = component->getBoundsInParent();
         x += bounds.getX();
@@ -372,6 +377,11 @@ void PluginEditor::showTooltipOn(juce::Component *c)
 
         component = component->getParentComponent();
     }
+    if (component != this)
+    {
+        return;
+    }
+
     y += c->getHeight();
     toolTip->resetSizeFromData();
     if (y + toolTip->getHeight() > getHeight() - 40)
@@ -390,15 +400,31 @@ void PluginEditor::showTooltipOn(juce::Component *c)
 }
 void PluginEditor::updateTooltip(jdat::Continuous *c)
 {
+    if (!c || !toolTip)
+    {
+        return;
+    }
+
     toolTip->setTooltipTitleAndData(c->getLabel(), {c->getValueAsString()});
     toolTip->resetSizeFromData();
 }
 void PluginEditor::updateTooltip(jdat::Discrete *d)
 {
+    if (!d || !toolTip)
+    {
+        return;
+    }
+
     toolTip->setTooltipTitleAndData(d->getLabel(), {d->getValueAsString()});
     toolTip->resetSizeFromData();
 }
-void PluginEditor::hideTooltip() { toolTip->setVisible(false); }
+void PluginEditor::hideTooltip()
+{
+    if (toolTip)
+    {
+        toolTip->setVisible(false);
+    }
+}
 
 struct MenuValueTypein : HasEditor, juce::PopupMenu::CustomComponent, juce::TextEditor::Listener
 {

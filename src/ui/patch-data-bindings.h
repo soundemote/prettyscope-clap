@@ -189,19 +189,24 @@ void createComponent(PluginEditor &e, P &panel, const Param &parm, std::unique_p
     if constexpr (std::is_same_v<Q, PatchContinuous> &&
                   !std::is_same_v<T, jcmp::DraggableTextEditableValue>) // hack
     {
-        cm->onPopupMenu = [&e, ptr = cm.get()](auto &mods)
+        cm->onPopupMenu = [&e, ptr = juce::Component::SafePointer<T>(cm.get())](auto &mods)
         {
             e.hideTooltip();
-            e.popupMenuForContinuous(ptr);
+            if (ptr)
+            {
+                e.popupMenuForContinuous(ptr.getComponent());
+            }
         };
     }
-    cm->onBeginEdit = [&e, &cm, &pc, args..., id, &panel]()
+    auto componentPtr = juce::Component::SafePointer<T>(cm.get());
+    auto dataPtr = pc.get();
+    cm->onBeginEdit = [&e, componentPtr, dataPtr, args..., id, &panel]()
     {
         e.mainToAudio.push({Engine::MainToAudioMsg::Action::BEGIN_EDIT, id});
-        if (std::is_same_v<Q, PatchContinuous>)
+        if constexpr (std::is_same_v<Q, PatchContinuous>)
         {
-            e.updateTooltip(pc.get());
-            e.showTooltipOn(cm.get());
+            e.updateTooltip(dataPtr);
+            e.showTooltipOn(componentPtr.getComponent());
         }
 
         panel.beginEdit(args...);
@@ -209,23 +214,29 @@ void createComponent(PluginEditor &e, P &panel, const Param &parm, std::unique_p
     cm->onEndEdit = [&e, id, &panel]()
     {
         e.mainToAudio.push({Engine::MainToAudioMsg::Action::END_EDIT, id});
-        if (std::is_same_v<Q, PatchContinuous>)
+        if constexpr (std::is_same_v<Q, PatchContinuous>)
         {
             e.hideTooltip();
         }
     };
-    cm->onWheelEditOccurred = [&cm]()
+    cm->onWheelEditOccurred = [componentPtr]()
     {
-        if (std::is_same_v<Q, PatchContinuous>)
+        if constexpr (std::is_same_v<Q, PatchContinuous>)
         {
-            cm->immediatelyInitiateIdleAction(2000);
+            if (componentPtr)
+            {
+                componentPtr->immediatelyInitiateIdleAction(2000);
+            }
         }
     };
 
-    cm->onIdleHover = [&e, &cm, &pc]()
+    cm->onIdleHover = [&e, componentPtr, dataPtr]()
     {
-        e.updateTooltip(pc.get());
-        e.showTooltipOn(cm.get());
+        if constexpr (std::is_same_v<Q, PatchContinuous>)
+        {
+            e.updateTooltip(dataPtr);
+            e.showTooltipOn(componentPtr.getComponent());
+        }
     };
     cm->onIdleHoverEnd = [&e]() { e.hideTooltip(); };
 
@@ -245,17 +256,22 @@ void createRescaledComponent(PluginEditor &e, P &panel, const Param &parm, std::
 
     if constexpr (!std::is_same_v<T, jcmp::DraggableTextEditableValue>) // hack
     {
-        cm->onPopupMenu = [&e, ptr = cm.get()](auto &mods)
+        cm->onPopupMenu = [&e, ptr = juce::Component::SafePointer<T>(cm.get())](auto &mods)
         {
             e.hideTooltip();
-            e.popupMenuForContinuous(ptr);
+            if (ptr)
+            {
+                e.popupMenuForContinuous(ptr.getComponent());
+            }
         };
     }
-    cm->onBeginEdit = [&e, &cm, &rc, args..., id, &panel]()
+    auto componentPtr = juce::Component::SafePointer<T>(cm.get());
+    auto dataPtr = rc.get();
+    cm->onBeginEdit = [&e, componentPtr, dataPtr, args..., id, &panel]()
     {
         e.mainToAudio.push({Engine::MainToAudioMsg::Action::BEGIN_EDIT, id});
-        e.updateTooltip(rc.get());
-        e.showTooltipOn(cm.get());
+        e.updateTooltip(dataPtr);
+        e.showTooltipOn(componentPtr.getComponent());
 
         panel.beginEdit(args...);
     };
@@ -264,10 +280,10 @@ void createRescaledComponent(PluginEditor &e, P &panel, const Param &parm, std::
         e.mainToAudio.push({Engine::MainToAudioMsg::Action::END_EDIT, id});
         e.hideTooltip();
     };
-    cm->onIdleHover = [&e, &cm, &rc]()
+    cm->onIdleHover = [&e, componentPtr, dataPtr]()
     {
-        e.updateTooltip(rc.get());
-        e.showTooltipOn(cm.get());
+        e.updateTooltip(dataPtr);
+        e.showTooltipOn(componentPtr.getComponent());
     };
     cm->onIdleHoverEnd = [&e]() { e.hideTooltip(); };
     cm->setSource(rc.get());
