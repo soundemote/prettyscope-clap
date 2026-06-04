@@ -118,6 +118,7 @@ try {
         "scripts\new-daw-test-bundle.ps1",
         "scripts\test-daw-test-bundle.ps1",
         "scripts\review-daw-test-report.ps1",
+        "scripts\test-daw-report-classification.ps1",
         "scripts\test-visual-control-manifest.ps1",
         "scripts\test-release-readiness-audit.ps1",
         "scripts\test-daw-host-matrix.ps1",
@@ -175,6 +176,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+    powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-classification.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-visual-control-manifest.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-release-readiness-audit.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-host-matrix.ps1

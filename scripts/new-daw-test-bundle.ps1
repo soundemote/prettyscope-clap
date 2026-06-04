@@ -70,6 +70,7 @@ try {
         "scripts\prepare-daw-test.ps1",
         "scripts\new-daw-test-report.ps1",
         "scripts\review-daw-test-report.ps1",
+        "scripts\test-daw-report-classification.ps1",
         "scripts\test-visual-control-manifest.ps1",
         "scripts\test-release-readiness-audit.ps1",
         "scripts\test-daw-host-matrix.ps1",
