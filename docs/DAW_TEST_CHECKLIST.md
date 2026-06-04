@@ -97,6 +97,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-report-index.ps
 
 Use `-IncompleteOnly -OpenLatest` to jump to the newest report that still needs
 test results filled in.
+The report index also shows `Result`: `incomplete`, `pass-ready`, or
+`fix-needed`.
 
 The reviewer checks session fields, preflight fields, Dot Image Test Assets,
 Test Artifacts Produced, visual control groups, required result rows, visual

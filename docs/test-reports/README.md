@@ -85,6 +85,7 @@ Add `-IncludeBuildScratch` to also scan scratch reports under `build-tracer`.
 Add `-IncompleteOnly` or `-CompleteOnly` to filter by review status. Add
 `-OpenLatest` to open the newest report after filtering.
 Use `-Quiet -PassThru` when another script needs structured report-index data.
+The index reports each row as `incomplete`, `pass-ready`, or `fix-needed`.
 
 The reviewer expects real Dot Image Test Assets, Test Artifacts Produced fields,
 all visual control groups, all required result rows, visual notes, and release

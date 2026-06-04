@@ -48,6 +48,8 @@ the DAW behavior that still needs hands-on testing.
   name/path, and DAW session/project path before they are complete.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
+- The report index labels reports as `incomplete`, `pass-ready`, or
+  `fix-needed`.
 - A report submit script requires complete DAW reports before updating the host
   matrix, then validates the matrix and prints release gates.
 - Completed reports are only matrix `pass` candidates when all required result

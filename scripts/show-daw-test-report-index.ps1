@@ -62,9 +62,19 @@ foreach ($root in $reportRoots) {
         ForEach-Object {
             $lines = Get-Content -Path $_.FullName
             $review = Test-ReportComplete -Path $_.FullName
+            $result = if (!$review.Complete) {
+                "incomplete"
+            }
+            elseif ($review.Passed) {
+                "pass-ready"
+            }
+            else {
+                "fix-needed"
+            }
             $reports.Add([PSCustomObject]@{
                     Modified = $_.LastWriteTime
                     Complete = if ($review.Complete) { "yes" } else { "no" }
+                    Result = $result
                     Issues = $review.IssueCount
                     Format = Get-ReportField -Lines $lines -Field "Plugin format tested"
                     Daw = Get-ReportField -Lines $lines -Field "DAW"
@@ -94,7 +104,7 @@ if (!$Quiet) {
     }
     else {
         $sortedReports |
-            Format-Table -AutoSize Modified, Complete, Issues, Format, Daw, DawVersion, Tester, Commit, Path |
+            Format-Table -AutoSize Modified, Complete, Result, Issues, Format, Daw, DawVersion, Tester, Commit, Path |
             Out-Host
     }
 }

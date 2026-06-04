@@ -11,6 +11,7 @@ if (!$OutputDir) {
 }
 
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+$OutputDir = (Resolve-Path $OutputDir).Path
 
 function New-SmokeReport {
     param(
@@ -187,6 +188,18 @@ Assert-True ($failReview.ResultFailureCount -eq 1) "Failing smoke report should 
 Assert-True (!$failWithoutIssueReview.Complete) "Failing smoke report without a real issue row should be incomplete."
 Assert-True (($failWithoutIssueReview.Issues -join "`n") -match "Non-passing reports must include at least one complete Issues Found row") `
     "Failing smoke report without a real issue row should explain the missing issue evidence."
+
+$indexedReports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
+        -BuildDir ($OutputDir.Substring($repoRoot.Path.Length).TrimStart('\', '/')) `
+        -IncludeBuildScratch `
+        -Quiet `
+        -PassThru)
+$indexedPassReport = $indexedReports | Where-Object { $_.Path -eq (Resolve-Path $passReport).Path } | Select-Object -First 1
+$indexedFailReport = $indexedReports | Where-Object { $_.Path -eq (Resolve-Path $failReport).Path } | Select-Object -First 1
+$indexedFailWithoutIssueReport = $indexedReports | Where-Object { $_.Path -eq (Resolve-Path $failWithoutIssueReport).Path } | Select-Object -First 1
+Assert-True ($indexedPassReport.Result -eq "pass-ready") "Report index should classify passing reports as pass-ready."
+Assert-True ($indexedFailReport.Result -eq "fix-needed") "Report index should classify complete failing reports as fix-needed."
+Assert-True ($indexedFailWithoutIssueReport.Result -eq "incomplete") "Report index should classify missing-issue reports as incomplete."
 
 & (Join-Path $PSScriptRoot "submit-daw-test-report.ps1") `
     -ReportPath $passReport `
