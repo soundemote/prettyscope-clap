@@ -55,6 +55,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-test-install-local-plug
 
 The handoff script runs the strict freshness check after install.
 
+For a complete DAW-test prep handoff:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
+```
+
 ## DAW Testing Still Required
 
 Use `docs\DAW_TEST_CHECKLIST.md` to verify:

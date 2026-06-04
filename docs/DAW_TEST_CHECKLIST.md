@@ -9,6 +9,14 @@ Generated reports go to `docs\test-reports` by default.
 
 From `C:\Users\argit\Documents\_PROGRAMMING\prettyscope-clap`:
 
+One-command DAW test prep:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
+```
+
+Build/test only:
+
 ```powershell
 cmd.exe /d /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"" && cmake --build build-tracer && ctest --test-dir build-tracer --output-on-failure"
 ```

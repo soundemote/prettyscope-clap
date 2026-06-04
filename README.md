@@ -61,6 +61,13 @@ powershell -ExecutionPolicy Bypass -File .\scripts\build-test-install-local-plug
 This also verifies that the installed CLAP/VST3 copies match the build
 artifacts.
 
+To prepare a DAW test in one command, including build/test/install/freshness
+verification plus a prefilled report:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
+```
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 
