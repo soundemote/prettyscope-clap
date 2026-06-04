@@ -121,6 +121,9 @@ the DAW behavior that still needs hands-on testing.
 - A dot-image renderer source verifier checks that loaded image aspect
   preservation remains wired through the shader, texture upload, and uniform
   binding paths.
+- A dot-image state source verifier checks that loaded image labels and PNG
+  payloads remain wired through normalization, patch XML state, editor restore,
+  engine handoff, preset load, and renderer refresh paths.
 - A dot-overall renderer source verifier checks that shared intensity, size,
   halo, and image mix multipliers remain wired through generated-dot export,
   beam rendering, and loaded-image rendering paths.
@@ -134,7 +137,7 @@ the DAW behavior that still needs hands-on testing.
 | --- | --- | --- |
 | Dot 1 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
 | Dot 2 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
-| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; state stores PNG payloads and labels. | Host preset/session restore with real DAW reports. |
+| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; state/source-verifier coverage for normalized PNG payloads and labels. | Host preset/session restore with real DAW reports. |
 | Generated dot texture export | `Save` exports the generated texture in Generated mode. | Tester confirms exported PNG is usable in DAW workflow. |
 | Loaded image export | `Save` exports the loaded/normalized image when an override is active. | Tester confirms loaded override export in DAW workflow. |
 | Loaded image aspect preservation | Renderer source verification checks native image aspect handling before Dot Aspect stretch. | Tester confirms asymmetric streak behavior in a DAW. |
