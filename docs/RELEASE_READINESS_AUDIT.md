@@ -121,6 +121,9 @@ the DAW behavior that still needs hands-on testing.
 - A dot-image renderer source verifier checks that loaded image aspect
   preservation remains wired through the shader, texture upload, and uniform
   binding paths.
+- A dot-image load source verifier checks that dot `Load` accepts image formats,
+  normalizes loaded images, stores labels, syncs patch state, refreshes renderer
+  textures, and updates status labels.
 - A dot-image save source verifier checks that dot `Save` can export either the
   generated dot texture or the active loaded/normalized override as a PNG.
 - A dot-image state source verifier checks that loaded image labels and PNG
@@ -139,7 +142,7 @@ the DAW behavior that still needs hands-on testing.
 | --- | --- | --- |
 | Dot 1 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
 | Dot 2 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
-| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; state/source-verifier coverage for normalized PNG payloads and labels. | Host preset/session restore with real DAW reports. |
+| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; source-verifier coverage for load formats, normalization, PNG payloads, labels, and renderer refresh. | Host preset/session restore with real DAW reports. |
 | Generated dot texture export | `Save` exports the generated texture in Generated mode; source verifier checks generated-dot PNG export wiring. | Tester confirms exported PNG is usable in DAW workflow. |
 | Loaded image export | `Save` exports the loaded/normalized image when an override is active; source verifier checks loaded-image PNG export wiring. | Tester confirms loaded override export in DAW workflow. |
 | Loaded image aspect preservation | Renderer source verification checks native image aspect handling before Dot Aspect stretch. | Tester confirms asymmetric streak behavior in a DAW. |

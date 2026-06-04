@@ -121,6 +121,7 @@ try {
         "scripts\test-daw-report-classification.ps1",
         "scripts\test-daw-next-action-routing.ps1",
         "scripts\test-dot-image-renderer-source.ps1",
+        "scripts\test-dot-image-load-source.ps1",
         "scripts\test-dot-image-save-source.ps1",
         "scripts\test-dot-image-state-source.ps1",
         "scripts\test-dot-overall-renderer-source.ps1",
@@ -196,6 +197,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-classification.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-next-action-routing.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-image-renderer-source.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-image-load-source.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-image-save-source.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-image-state-source.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-overall-renderer-source.ps1
