@@ -37,6 +37,7 @@ the DAW behavior that still needs hands-on testing.
   test preflight.
 - A report script generates prefilled DAW test reports from the current commit
   and installed artifact SHA256.
+- Generated DAW test reports are kept in `docs\test-reports` by default.
 
 ## Local Verification Command
 

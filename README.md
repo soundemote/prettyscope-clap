@@ -81,6 +81,8 @@ To create a prefilled DAW test report:
 powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-report.ps1 -Format CLAP -Daw "Your DAW"
 ```
 
+Reports are written to `docs\test-reports` by default.
+
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads
 the same block stream.
