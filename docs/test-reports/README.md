@@ -40,9 +40,20 @@ Review a filled report before handoff with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\review-daw-test-report.ps1 -ReportPath .\your-report.md
 ```
 
+List generated reports and their completion state with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-daw-test-report-index.ps1
+```
+
+Add `-IncludeBuildScratch` to also scan scratch reports under `build-tracer`.
+
 The reviewer expects real Dot Image Test Assets, all visual control groups, all
 required result rows, visual notes, and release decision fields before a report
 is complete.
+
+Use `-Quiet -PassThru` with `review-daw-test-report.ps1` when another script
+needs structured completion and issue-count data.
 
 Keep reports that capture useful host behavior, regressions, or release
 decisions. Scratch reports can be written elsewhere with `-OutputPath`; parent

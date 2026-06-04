@@ -1,6 +1,8 @@
 param(
     [Parameter(Mandatory = $true)]
     [string] $ReportPath,
+    [switch] $Quiet,
+    [switch] $PassThru,
     [switch] $RequireComplete
 )
 
@@ -191,15 +193,31 @@ foreach ($line in $releaseDecision) {
     }
 }
 
-Write-Host "Reviewed DAW test report: $resolvedReportPath"
+if ($PassThru) {
+    [PSCustomObject]@{
+        ReportPath = $resolvedReportPath
+        Complete = ($issues.Count -eq 0)
+        IssueCount = $issues.Count
+        Issues = $issues.ToArray()
+    }
+    return
+}
+
+if (!$Quiet) {
+    Write-Host "Reviewed DAW test report: $resolvedReportPath"
+}
 if ($issues.Count -eq 0) {
-    Write-Host "Report looks complete."
+    if (!$Quiet) {
+        Write-Host "Report looks complete."
+    }
     exit 0
 }
 
-Write-Host "Report review found $($issues.Count) issue(s):"
-foreach ($issue in $issues) {
-    Write-Host "  - $issue"
+if (!$Quiet) {
+    Write-Host "Report review found $($issues.Count) issue(s):"
+    foreach ($issue in $issues) {
+        Write-Host "  - $issue"
+    }
 }
 
 if ($RequireComplete) {
