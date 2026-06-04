@@ -56,6 +56,12 @@ To open the latest report, release summary, and matching bundle folder together:
 powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
 ```
 
+To verify the handoff matches the current repo commit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
+```
+
 Add `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, or
 `-OpenBundleZipFolder` when you want Windows to open the latest report, summary,
 or bundle location directly.

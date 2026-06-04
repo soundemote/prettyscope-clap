@@ -98,6 +98,12 @@ folder together:
 powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
 ```
 
+To verify the latest generated handoff matches the current repo commit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
+```
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 

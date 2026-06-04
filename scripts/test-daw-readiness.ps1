@@ -66,6 +66,10 @@ try {
         -OutputPath $summaryPath `
         -PassThru
 
+    & (Join-Path $PSScriptRoot "test-daw-handoff-current.ps1") `
+        -BuildDir $BuildDir `
+        -RequireCurrent
+
     & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
         -ReportPath $prep.ReportPath
 

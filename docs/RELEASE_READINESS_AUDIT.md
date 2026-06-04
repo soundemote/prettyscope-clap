@@ -84,6 +84,9 @@ the DAW behavior that still needs hands-on testing.
   machine checks, release gates, next action, and latest DAW test artifacts.
 - A DAW test handoff opener opens the latest report, release summary, and
   matching bundle folder together for hands-on testing.
+- A DAW handoff currency verifier checks that the latest report, release
+  summary, bundle folder, and bundle zip exist and match the current repo
+  commit.
 - The release candidate summary includes the DAW report index with
   `incomplete`, `pass-ready`, and `fix-needed` report labels.
 - A bundle manifest script records built artifacts, installed artifacts, and
@@ -181,6 +184,12 @@ For opening the latest DAW test handoff files together:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
+```
+
+For verifying the latest DAW test handoff is current:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
 ```
 
 For first-pass DAW release gates:

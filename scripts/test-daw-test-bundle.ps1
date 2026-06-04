@@ -26,6 +26,7 @@ $requiredEntries = @(
     "scripts/test-daw-test-bundle.ps1",
     "scripts/show-latest-daw-test-artifacts.ps1",
     "scripts/open-daw-test-handoff.ps1",
+    "scripts/test-daw-handoff-current.ps1",
     "scripts/show-daw-test-report-index.ps1",
     "scripts/review-latest-daw-test-report.ps1",
     "scripts/show-daw-test-next-action.ps1",
@@ -150,6 +151,7 @@ foreach ($needle in @(
         "Built Standalone",
         "scripts\new-daw-test-bundle.ps1",
         "scripts\open-daw-test-handoff.ps1",
+        "scripts\test-daw-handoff-current.ps1",
         "scripts\submit-latest-daw-test-report.ps1")) {
     if (!$manifestText.Contains($needle)) {
         $issues.Add("Manifest does not mention: $needle") | Out-Null

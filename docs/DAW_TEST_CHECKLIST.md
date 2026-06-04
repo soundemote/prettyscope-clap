@@ -187,6 +187,12 @@ Open the latest report, release summary, and matching bundle folder together:
 powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
 ```
 
+Verify the latest handoff matches the current repo commit:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
+```
+
 Optional switches: `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, and
 `-OpenBundleZipFolder`.
 
