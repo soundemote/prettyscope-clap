@@ -52,6 +52,14 @@ Review a filled report before handoff with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\review-daw-test-report.ps1 -ReportPath .\your-report.md
 ```
 
+After strict review passes, preview and apply the matching host matrix update
+from the repository root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+```
+
 List generated reports and their completion state with:
 
 ```powershell

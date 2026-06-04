@@ -113,7 +113,7 @@ Expected:
 - Dot textures return without needing the original image paths.
 - Image Mix, Dot Overall, and Screen Burn values match the saved state.
 
-## 6. Fill And Review The Report
+## 6. Fill, Review, And Record The Report
 
 Fill the generated report as you test. Then run:
 
@@ -124,6 +124,23 @@ powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -R
 If the review finds missing fields, fill them in and rerun it.
 The review includes the Dot Image Test Assets section, visual control groups,
 required result rows, visual notes, and release decision fields.
+
+After the report passes review, preview and apply the host matrix update:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -Preview
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT"
+```
+
+Then check matrix validity and first-pass release gates:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-host-matrix.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1 -IncludeBuildScratch
+```
+
+The dashboard should show the updated matrix state, next action, report index,
+and remaining release gates.
 
 ## Highest-Value Notes
 
