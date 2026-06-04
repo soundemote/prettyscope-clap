@@ -25,7 +25,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1 
 Expected:
 
 - The status script reports installed CLAP/VST3 copies.
-- Install freshness says the installed copies match the build artifacts.
+- Install freshness says the installed copies match the build artifacts by
+  SHA256 hash.
 - The command exits successfully.
 
 ## Plugin Load

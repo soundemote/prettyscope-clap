@@ -19,6 +19,32 @@ function Get-ArtifactSize {
     return $Artifact.Length
 }
 
+function Get-ArtifactHash {
+    param([System.IO.FileSystemInfo] $Artifact)
+
+    if (!$Artifact.PSIsContainer) {
+        return (Get-FileHash -Algorithm SHA256 -Path $Artifact.FullName).Hash
+    }
+
+    $relativeHashes = Get-ChildItem -Recurse -File -Path $Artifact.FullName |
+        Sort-Object FullName |
+        ForEach-Object {
+            $relativePath = $_.FullName.Substring($Artifact.FullName.Length).TrimStart('\', '/')
+            $fileHash = (Get-FileHash -Algorithm SHA256 -Path $_.FullName).Hash
+            "${relativePath}:${fileHash}"
+        }
+
+    $joined = [string]::Join("`n", $relativeHashes)
+    $bytes = [System.Text.Encoding]::UTF8.GetBytes($joined)
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        return [System.BitConverter]::ToString($sha.ComputeHash($bytes)).Replace("-", "")
+    }
+    finally {
+        $sha.Dispose()
+    }
+}
+
 function Write-ArtifactStatus {
     param(
         [string] $Label,
@@ -33,10 +59,12 @@ function Write-ArtifactStatus {
 
     $artifact = Get-Item $Path
     $size = Get-ArtifactSize $artifact
+    $hash = Get-ArtifactHash $artifact
     Write-Host "${Label}: present"
     Write-Host "  Path: $($artifact.FullName)"
     Write-Host "  Size: $size bytes"
     Write-Host "  Modified: $($artifact.LastWriteTime)"
+    Write-Host "  SHA256: $hash"
 }
 
 function Get-ArtifactInfo {
@@ -51,6 +79,7 @@ function Get-ArtifactInfo {
         Path = $artifact.FullName
         Size = Get-ArtifactSize $artifact
         LastWriteTime = $artifact.LastWriteTime
+        Hash = Get-ArtifactHash $artifact
     }
 }
 
@@ -79,8 +108,7 @@ function Write-InstallComparison {
         return $false
     }
 
-    $timeDelta = [Math]::Abs(($built.LastWriteTime - $installed.LastWriteTime).TotalSeconds)
-    if ($built.Size -eq $installed.Size -and $timeDelta -le 2.0) {
+    if ($built.Hash -eq $installed.Hash) {
         Write-Host "${Label}: installed copy matches build artifact"
         return $true
     }
@@ -88,6 +116,8 @@ function Write-InstallComparison {
         Write-Host "${Label}: installed copy may be stale"
         Write-Host "  Built:     $($built.Size) bytes, modified $($built.LastWriteTime)"
         Write-Host "  Installed: $($installed.Size) bytes, modified $($installed.LastWriteTime)"
+        Write-Host "  Built SHA256:     $($built.Hash)"
+        Write-Host "  Installed SHA256: $($installed.Hash)"
         return $false
     }
 }
