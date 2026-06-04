@@ -39,6 +39,11 @@ After filling the report, review it for missing essentials:
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```
 
+The reviewer checks session fields, preflight fields, Dot Image Test Assets,
+visual control groups, required result rows, visual notes, and release decision
+fields. Add `-RequireComplete` when the report should fail automation if any of
+those are incomplete.
+
 Optional handoff manifest:
 
 ```powershell

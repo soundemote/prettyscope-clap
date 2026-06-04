@@ -103,6 +103,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -R
 ```
 
 If the review finds missing fields, fill them in and rerun it.
+The review includes the Dot Image Test Assets section, visual control groups,
+required result rows, visual notes, and release decision fields.
 
 ## Highest-Value Notes
 

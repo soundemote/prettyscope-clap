@@ -97,12 +97,62 @@ foreach ($line in $preflightLines) {
     }
 }
 
+$dotImageAssetLines = Get-SectionLines "Dot Image Test Assets"
+$dotAssetContent = ($dotImageAssetLines | Where-Object {
+        $trimmed = $_.Trim()
+        $trimmed.Length -gt 0 -and $trimmed -notmatch "^-\s*None generated"
+    })
+if ($dotAssetContent.Count -eq 0) {
+    Add-Issue "Dot Image Test Assets section has no generated or recorded asset paths."
+}
+
+$visualControlLines = Get-SectionLines "Visual Controls Under Test"
+$requiredVisualGroups = @(
+    "Signal",
+    "Beam",
+    "Phosphor",
+    "Dot 1",
+    "Dot 2",
+    "Dot Overall",
+    "Screen Burn"
+)
+foreach ($group in $requiredVisualGroups) {
+    $match = $visualControlLines | Where-Object {
+        $_ -match "^- $([regex]::Escape($group)):\s*(.+)$"
+    } | Select-Object -First 1
+    if (!$match) {
+        Add-Issue "Missing visual control group: $group"
+        continue
+    }
+
+    $value = [regex]::Match($match, "^- $([regex]::Escape($group)):\s*(.+)$").Groups[1].Value
+    if (Is-PlaceholderValue $value) {
+        Add-Issue "Visual control group is blank or placeholder: $group"
+    }
+}
+
 $resultLines = Get-SectionLines "Results"
 $resultRows = $resultLines | Where-Object { $_ -match "^\| [^|]+ \| [^|]* \| [^|]* \|$" -and $_ -notmatch "^\| ---" -and $_ -notmatch "^\| Area" }
 if ($resultRows.Count -eq 0) {
     Add-Issue "No result rows found."
 }
 
+$requiredResultAreas = @(
+    "Plugin scans and loads",
+    "Audio passes through",
+    "Scope follows input signal",
+    "Snapshot inspector shows active input",
+    "Visual controls respond",
+    "Dot Overall multiplies Dot 1 / Dot 2",
+    "Screen Burn controls decay/persistence",
+    "Dot 1 image load/save/clear",
+    "Dot 2 image load/save/clear",
+    "Large image resize behavior",
+    "Preset save/reload restores images",
+    "DAW session save/reopen restores images",
+    "Editor remains stable during close/reopen"
+)
+$seenResultAreas = @{}
 foreach ($row in $resultRows) {
     $cells = $row.Trim("|").Split("|") | ForEach-Object { $_.Trim() }
     if ($cells.Count -lt 3) {
@@ -113,11 +163,17 @@ foreach ($row in $resultRows) {
     $area = $cells[0]
     $passFail = $cells[1]
     $notes = $cells[2]
+    $seenResultAreas[$area] = $true
     if ($passFail.Length -eq 0) {
         Add-Issue "Missing Pass/Fail value for result: $area"
     }
     if ($notes.Length -eq 0) {
         Add-Issue "Missing notes for result: $area"
+    }
+}
+foreach ($area in $requiredResultAreas) {
+    if (!$seenResultAreas.ContainsKey($area)) {
+        Add-Issue "Missing required result row: $area"
     }
 }
 

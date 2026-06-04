@@ -38,6 +38,10 @@ Review a filled report before handoff with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\review-daw-test-report.ps1 -ReportPath .\your-report.md
 ```
 
+The reviewer expects real Dot Image Test Assets, all visual control groups, all
+required result rows, visual notes, and release decision fields before a report
+is complete.
+
 Keep reports that capture useful host behavior, regressions, or release
 decisions. Scratch reports can be written elsewhere with `-OutputPath`; parent
 folders are created automatically.
