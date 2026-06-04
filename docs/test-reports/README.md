@@ -78,6 +78,13 @@ with:
 powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
 ```
 
+After exporting the Dot 1 / Dot 2 generated and loaded PNGs, and after saving
+the tested preset/session, fill those report fields with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifacts.ps1 -ReportPath .\docs\test-reports\your-report.md -Dot1GeneratedPng "path\to\dot1-generated.png" -Dot1LoadedPng "path\to\dot1-loaded.png" -Dot2GeneratedPng "path\to\dot2-generated.png" -Dot2LoadedPng "path\to\dot2-loaded.png" -PresetPath "path\to\preset" -SessionPath "path\to\session"
+```
+
 After strict review passes, preview and submit the matching host matrix update
 from the repository root:
 

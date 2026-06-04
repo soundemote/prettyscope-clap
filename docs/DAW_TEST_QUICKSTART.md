@@ -145,6 +145,13 @@ under `Test Artifacts Produced`.
 Fill the generated report as you test. Then run:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifacts.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -Dot1GeneratedPng "path\to\dot1-generated.png" -Dot1LoadedPng "path\to\dot1-loaded.png" -Dot2GeneratedPng "path\to\dot2-generated.png" -Dot2LoadedPng "path\to\dot2-loaded.png" -PresetPath "path\to\preset" -SessionPath "path\to\session"
+```
+
+That helper fills the `Test Artifacts Produced` fields after you export the PNGs
+and save the preset/session. Then run:
+
+```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -RequireComplete
 ```
 

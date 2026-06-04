@@ -98,6 +98,13 @@ paths as pipeline output.
 After filling the report, review it for missing essentials:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifacts.ps1 -ReportPath .\docs\test-reports\your-report.md -Dot1GeneratedPng "path\to\dot1-generated.png" -Dot1LoadedPng "path\to\dot1-loaded.png" -Dot2GeneratedPng "path\to\dot2-generated.png" -Dot2LoadedPng "path\to\dot2-loaded.png" -PresetPath "path\to\preset" -SessionPath "path\to\session"
+```
+
+Use the artifact update helper after exporting the generated/loaded PNGs and
+saving the preset/session, then review the report:
+
+```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```
 

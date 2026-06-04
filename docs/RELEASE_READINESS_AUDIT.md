@@ -48,6 +48,8 @@ the DAW behavior that still needs hands-on testing.
   handoff.
 - DAW reports require concrete generated/loaded dot PNG export paths, preset
   name/path, and DAW session/project path before they are complete.
+- A report artifact update helper fills those produced-artifact fields from
+  concrete exported PNG, preset, and DAW session paths.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
 - The report index labels reports as `incomplete`, `pass-ready`, or

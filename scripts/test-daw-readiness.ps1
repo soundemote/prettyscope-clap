@@ -41,6 +41,7 @@ try {
     & (Join-Path $PSScriptRoot "test-visual-control-manifest.ps1")
     & (Join-Path $PSScriptRoot "test-release-readiness-audit.ps1")
     & (Join-Path $PSScriptRoot "test-daw-host-matrix.ps1")
+    & (Join-Path $PSScriptRoot "test-daw-report-artifact-update.ps1")
     & (Join-Path $PSScriptRoot "test-daw-report-classification.ps1")
     & (Join-Path $PSScriptRoot "test-daw-next-action-routing.ps1")
 

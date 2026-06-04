@@ -136,6 +136,7 @@ try {
         "scripts\test-daw-handoff-current.ps1",
         "scripts\show-daw-test-report-index.ps1",
         "scripts\review-latest-daw-test-report.ps1",
+        "scripts\update-daw-test-report-artifacts.ps1",
         "scripts\show-daw-test-next-action.ps1",
         "scripts\show-daw-test-dashboard.ps1",
         "scripts\show-daw-host-matrix.ps1",
@@ -144,6 +145,7 @@ try {
         "scripts\update-daw-host-matrix-from-report.ps1",
         "scripts\submit-daw-test-report.ps1",
         "scripts\submit-latest-daw-test-report.ps1",
+        "scripts\test-daw-report-artifact-update.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     $handoffLines = ($handoffFiles | ForEach-Object { Format-FileLine $_ }) -join "`r`n"
@@ -185,6 +187,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-handoff-current.ps1 -RequireCurrent
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-report-index.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-test-report-artifacts.ps1 -Dot1GeneratedPng "path\to\dot1-generated.png" -Dot1LoadedPng "path\to\dot1-loaded.png" -Dot2GeneratedPng "path\to\dot2-generated.png" -Dot2LoadedPng "path\to\dot2-loaded.png" -PresetPath "path\to\preset" -SessionPath "path\to\session"
     powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
@@ -195,6 +198,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1 -Preview
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-latest-daw-test-report.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-artifact-update.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-classification.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-next-action-routing.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\test-dot-image-renderer-source.ps1
