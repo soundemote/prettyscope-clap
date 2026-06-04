@@ -4,6 +4,7 @@ Use this checklist when testing the current oscilloscope-plugin release surface 
 Record host-specific results with `docs\DAW_TEST_REPORT_TEMPLATE.md`.
 You can generate a prefilled report with `scripts\new-daw-test-report.ps1`.
 Generated reports go to `docs\test-reports` by default.
+For a shorter first pass, use `docs\DAW_TEST_QUICKSTART.md`.
 
 ## Build Gate
 

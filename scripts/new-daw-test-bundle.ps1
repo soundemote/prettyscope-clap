@@ -53,6 +53,7 @@ try {
 
     $docs = @(
         "README.md",
+        "docs\DAW_TEST_QUICKSTART.md",
         "docs\DAW_TEST_CHECKLIST.md",
         "docs\DAW_TEST_REPORT_TEMPLATE.md",
         "docs\PLUGIN_IDENTITY_AUDIT.md",

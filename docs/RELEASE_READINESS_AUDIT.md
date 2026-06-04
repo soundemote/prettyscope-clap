@@ -54,6 +54,7 @@ the DAW behavior that still needs hands-on testing.
   bundle creation, bundle verification, and report review smoke.
 - The readiness script avoids repeating the freshness check after its initial
   strict preflight.
+- A DAW test quickstart gives the short first hands-on test path.
 - DAW prep/report scripts support `-PassThru` when automation needs the
   generated report path.
 - A smoke-test asset script generates known-good PNGs for Dot 1 / Dot 2 image
@@ -93,6 +94,7 @@ strict freshness has already been verified.
 Use `docs\DAW_TEST_CHECKLIST.md` to verify:
 
 - Host-specific results are captured with `docs\DAW_TEST_REPORT_TEMPLATE.md`.
+- The short first-pass workflow is in `docs\DAW_TEST_QUICKSTART.md`.
 
 - The plugin scans and opens in the target DAW.
 - Audio passes through in the host while the editor scope follows the signal.
