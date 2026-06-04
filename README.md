@@ -70,3 +70,5 @@ cmd.exe /d /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC
 
 See `docs/PLUGIN_BRIDGE_PLAN.md` for the current bridge sequence and boundaries.
 See `docs/DAW_TEST_CHECKLIST.md` for the current hands-on test checklist.
+See `docs/RELEASE_READINESS_AUDIT.md` for locally verified release-prep status
+and remaining DAW testing gates.
