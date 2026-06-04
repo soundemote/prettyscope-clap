@@ -100,6 +100,14 @@ powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-report.ps1 -Form
 Reports are written to `docs\test-reports` by default.
 Add `-PassThru` to return the generated report path.
 
+To review a filled DAW report for missing essentials:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+```
+
+Add `-RequireComplete` when automation should fail on missing fields.
+
 To create known-good PNGs for Dot 1 / Dot 2 image override testing:
 
 ```powershell

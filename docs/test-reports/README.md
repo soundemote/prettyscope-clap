@@ -25,6 +25,12 @@ need fresh image assets.
 Add `-PassThru` to either command when automation needs the generated report
 path as pipeline output.
 
+Review a filled report before handoff with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ..\..\scripts\review-daw-test-report.ps1 -ReportPath .\your-report.md
+```
+
 Keep reports that capture useful host behavior, regressions, or release
 decisions. Scratch reports can be written elsewhere with `-OutputPath`; parent
 folders are created automatically.

@@ -25,6 +25,12 @@ reruns that do not need fresh image assets.
 Add `-PassThru` when automation needs the generated report path as pipeline
 output.
 
+After filling the report, review it for missing essentials:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+```
+
 Build/test only:
 
 ```powershell
