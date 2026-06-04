@@ -63,6 +63,8 @@ the DAW behavior that still needs hands-on testing.
   default and records their paths in the generated report.
 - The one-command DAW prep script creates a bundle manifest by default.
 - Host-facing plugin identity is recorded in `docs\PLUGIN_IDENTITY_AUDIT.md`.
+- The first DAW-test visual control surface is recorded in
+  `docs\VISUAL_CONTROL_MANIFEST.md`.
 
 ## Local Verification Command
 

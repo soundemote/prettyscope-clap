@@ -122,6 +122,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -R
 
 Add `-RequireComplete` when automation should fail on missing fields.
 
+The first DAW-test visual control surface is recorded in
+`docs\VISUAL_CONTROL_MANIFEST.md`.
+
 To create a local manifest of build artifacts and DAW-test handoff files:
 
 ```powershell
