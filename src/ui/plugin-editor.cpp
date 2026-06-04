@@ -101,6 +101,23 @@ juce::String dotName(size_t dotIndex)
 {
     return dotIndex == 1 ? "Dot 2" : "Dot 1";
 }
+
+juce::String compactDotImageLabel(const juce::String &label)
+{
+    constexpr int maxLabelLength = 28;
+    if (label.length() <= maxLabelLength)
+    {
+        return label;
+    }
+
+    const auto extension = juce::File(label).getFileExtension();
+    const auto extensionLength = extension.length();
+    const auto suffixLength = std::min(extensionLength + 8, maxLabelLength - 4);
+    const auto prefixLength = maxLabelLength - suffixLength - 3;
+
+    return label.substring(0, prefixLength) + "..." +
+           label.substring(label.length() - suffixLength);
+}
 } // namespace
 
 PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQueue_T &utoa,
@@ -991,7 +1008,7 @@ juce::String PluginEditor::dotImageStatusText(size_t dotIndex) const
     auto status = dotName(dotIndex) + ": ";
     if (dot.hasImage())
     {
-        status += "Image " + dot.label;
+        status += "Image " + compactDotImageLabel(dot.label);
         status += " ";
         status += juce::String(dot.image.getWidth());
         status += "x";
