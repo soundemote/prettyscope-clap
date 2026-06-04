@@ -2,6 +2,7 @@ param(
     [string] $BuildDir = "build-tracer",
     [string] $MatrixPath = "",
     [switch] $IncludeBuildScratch,
+    [switch] $DocsOnlyReports,
     [switch] $OpenReport
 )
 
@@ -18,6 +19,7 @@ else {
     $MatrixPath
 }
 $defaultMatrixPath = (Resolve-Path (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md")).Path
+$scanBuildScratch = ([bool] $IncludeBuildScratch) -or !$DocsOnlyReports
 
 function Resolve-ReportPath {
     param([string] $Path)
@@ -65,7 +67,7 @@ Push-Location $repoRoot
 try {
     $reports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
             -BuildDir $BuildDir `
-            -IncludeBuildScratch:([bool] $IncludeBuildScratch) `
+            -IncludeBuildScratch:$scanBuildScratch `
             -Quiet `
             -PassThru)
     $matrixRows = Read-MatrixRows -Path $MatrixPath

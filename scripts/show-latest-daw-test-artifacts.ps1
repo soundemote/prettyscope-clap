@@ -51,9 +51,35 @@ function Get-LatestFileByName {
         Select-Object -First 1
 }
 
-$latestReadinessReport = Get-LatestFileByName `
-    -Path $buildRoot `
-    -Name "prettyscope-daw-test-report.md"
+function Get-LatestGroupedReadinessReport {
+    param([string] $Path)
+
+    if (!(Test-Path $Path)) {
+        return $null
+    }
+
+    $reports = Get-ChildItem -Path $Path -File -Filter "prettyscope-daw-test-report.md" -Recurse -ErrorAction SilentlyContinue |
+        Sort-Object LastWriteTime -Descending
+
+    foreach ($report in $reports) {
+        $reportDirectory = Split-Path -Parent $report.FullName
+        $siblingManifest = Join-Path $reportDirectory "prettyscope-daw-test-bundle-manifest.md"
+        $siblingBundleZip = Join-Path $reportDirectory "prettyscope-daw-test-bundle.zip"
+        $siblingBundleFolder = Join-Path $reportDirectory "bundle"
+        $siblingReleaseSummary = Join-Path $reportDirectory "prettyscope-release-candidate-summary.md"
+
+        if ((Test-Path $siblingManifest) -or
+            (Test-Path $siblingBundleZip) -or
+            (Test-Path $siblingBundleFolder) -or
+            (Test-Path $siblingReleaseSummary)) {
+            return $report
+        }
+    }
+
+    return $null
+}
+
+$latestReadinessReport = Get-LatestGroupedReadinessReport -Path $buildRoot
 if (!$latestReadinessReport) {
     $latestReadinessReport = Get-LatestItem -Path $reportRoot -Filter "*daw-test-report*.md"
 }

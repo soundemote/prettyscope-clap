@@ -24,6 +24,10 @@ Dashboard:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
 ```
 
+The next-action helper and dashboard include generated readiness reports under
+`build-tracer` by default. Add `-DocsOnlyReports` to either command when you only
+want reports from `docs\test-reports`.
+
 Visual control manifest check:
 
 ```powershell

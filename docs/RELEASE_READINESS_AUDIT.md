@@ -60,6 +60,9 @@ the DAW behavior that still needs hands-on testing.
   report, submitted-but-not-ready, and ready-gate guidance.
 - A next-action script recommends whether to prepare a test package, fill an
   incomplete report, or review completed reports.
+- The next-action script and dashboard include generated readiness reports under
+  `build-tracer` by default, with `-DocsOnlyReports` available for docs-only
+  report scans.
 - A DAW test dashboard script combines local plugin status, latest artifacts,
   next action, release gates, and report index output.
 - A release candidate summary script writes a Markdown snapshot of local status,

@@ -14,6 +14,7 @@ if (Test-Path $OutputDir) {
     Remove-Item -LiteralPath $OutputDir -Recurse -Force
 }
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
+$OutputDir = (Resolve-Path $OutputDir).Path
 
 function Assert-Contains {
     param(
@@ -30,15 +31,25 @@ function Assert-Contains {
 function Invoke-NextAction {
     param(
         [string] $BuildDir,
-        [string] $MatrixPath
+        [string] $MatrixPath,
+        [switch] $ExplicitScratch
     )
 
-    return (powershell -ExecutionPolicy Bypass `
-            -File (Join-Path $PSScriptRoot "show-daw-test-next-action.ps1") `
-            -BuildDir $BuildDir `
-            -MatrixPath $MatrixPath `
-            -IncludeBuildScratch `
-            2>&1) | Out-String
+    $arguments = @(
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        (Join-Path $PSScriptRoot "show-daw-test-next-action.ps1"),
+        "-BuildDir",
+        $BuildDir,
+        "-MatrixPath",
+        $MatrixPath
+    )
+    if ($ExplicitScratch) {
+        $arguments += "-IncludeBuildScratch"
+    }
+
+    return (powershell @arguments 2>&1) | Out-String
 }
 
 function Copy-ReportWithFormat {
@@ -75,7 +86,7 @@ $incompleteOutput = Invoke-NextAction `
     -BuildDir ($incompleteDir.Substring($repoRoot.Path.Length).TrimStart('\', '/')) `
     -MatrixPath $incompleteMatrix
 Assert-Contains $incompleteOutput "Next DAW test action: fill the latest incomplete report." `
-    "Incomplete report should route to fill/review."
+    "Incomplete build scratch report should route to fill/review by default."
 
 $unsubmittedReport = Join-Path $unsubmittedDir "prettyscope-daw-test-report.md"
 Copy-Item $classification.PassingReport $unsubmittedReport -Force

@@ -39,6 +39,7 @@ Require-Text "completed report pass classification" 'Completed reports are only 
 Require-Text "release gates require pass-ready evidence" 'Release gates re-read linked reports and require pass-ready evidence'
 Require-Text "report classification smoke" 'report classification smoke test verifies pass-ready reports'
 Require-Text "next-action routing smoke" 'next-action routing smoke test verifies incomplete-report'
+Require-Text "next-action build scratch default" 'next-action script and dashboard include generated readiness reports under\s+`build-tracer` by default'
 Require-Text "release candidate summary" 'release candidate summary script writes a Markdown snapshot'
 Require-Text "readiness release summary" 'DAW readiness script writes a release candidate summary'
 Require-Text "latest artifact summary" 'latest-artifact helper reports the release candidate summary'

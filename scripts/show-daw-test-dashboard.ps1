@@ -3,6 +3,7 @@ param(
     [string] $MatrixPath = "",
     [int] $ReportLimit = 5,
     [switch] $IncludeBuildScratch,
+    [switch] $DocsOnlyReports,
     [switch] $RequireFresh
 )
 
@@ -12,6 +13,7 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 if (!$MatrixPath) {
     $MatrixPath = Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md"
 }
+$scanBuildScratch = ([bool] $IncludeBuildScratch) -or !$DocsOnlyReports
 
 function Write-Section {
     param([string] $Title)
@@ -35,10 +37,18 @@ try {
         -BuildDir $BuildDir
 
     Write-Section "Next Action"
-    & (Join-Path $PSScriptRoot "show-daw-test-next-action.ps1") `
-        -BuildDir $BuildDir `
-        -MatrixPath $MatrixPath `
-        -IncludeBuildScratch:$IncludeBuildScratch
+    if ($scanBuildScratch) {
+        & (Join-Path $PSScriptRoot "show-daw-test-next-action.ps1") `
+            -BuildDir $BuildDir `
+            -MatrixPath $MatrixPath `
+            -IncludeBuildScratch
+    }
+    else {
+        & (Join-Path $PSScriptRoot "show-daw-test-next-action.ps1") `
+            -BuildDir $BuildDir `
+            -MatrixPath $MatrixPath `
+            -DocsOnlyReports
+    }
 
     Write-Section "Release Gates"
     & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") `
@@ -47,7 +57,7 @@ try {
     Write-Section "Report Index"
     & (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
         -BuildDir $BuildDir `
-        -IncludeBuildScratch:$IncludeBuildScratch `
+        -IncludeBuildScratch:$scanBuildScratch `
         -Limit $ReportLimit
 }
 finally {

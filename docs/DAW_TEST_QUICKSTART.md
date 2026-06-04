@@ -15,11 +15,16 @@ To ask the tooling what to do next:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
 ```
 
+This includes generated readiness reports under `build-tracer` by default. Add
+`-DocsOnlyReports` when you only want reports from `docs\test-reports`.
+
 To see status, latest artifacts, next action, and report index together:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
 ```
+
+The dashboard also includes readiness reports under `build-tracer` by default.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Format CLAP -Daw "Your DAW" -Tester "Your Name"
