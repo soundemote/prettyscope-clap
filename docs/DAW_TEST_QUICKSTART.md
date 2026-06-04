@@ -103,6 +103,9 @@ Expected:
   image when an override is active.
 - Clear returns the slot to generated mode.
 
+Record the Dot 1 and Dot 2 generated/loaded PNG export paths in the generated
+report under `Test Artifacts Produced`.
+
 ## 5. Test Preset And Session Restore
 
 1. Load Dot 1 and Dot 2 smoke images.
@@ -120,6 +123,9 @@ Expected:
 - Dot textures return without needing the original image paths.
 - Image Mix, Dot Overall, and Screen Burn values match the saved state.
 
+Record the preset name/path and DAW session/project path in the generated report
+under `Test Artifacts Produced`.
+
 ## 6. Fill, Review, And Record The Report
 
 Fill the generated report as you test. Then run:
@@ -129,8 +135,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -R
 ```
 
 If the review finds missing fields, fill them in and rerun it.
-The review includes the Dot Image Test Assets section, visual control groups,
-required result rows, visual notes, and release decision fields.
+The review includes Dot Image Test Assets, Test Artifacts Produced, visual
+control groups, required result rows, visual notes, and release decision fields.
 Complete reports are not automatically passing reports. If any required result
 row is `fail`, if `Ready for next visual polish pass` is `no`, or if
 `Needs code fix before more testing` is `yes`, submission records the matrix row

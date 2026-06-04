@@ -99,9 +99,9 @@ Use `-IncompleteOnly -OpenLatest` to jump to the newest report that still needs
 test results filled in.
 
 The reviewer checks session fields, preflight fields, Dot Image Test Assets,
-visual control groups, required result rows, visual notes, and release decision
-fields. Add `-RequireComplete` when the report should fail automation if any of
-those are incomplete.
+Test Artifacts Produced, visual control groups, required result rows, visual
+notes, and release decision fields. Add `-RequireComplete` when the report
+should fail automation if any of those are incomplete.
 Use `-Quiet -PassThru` when another script needs structured review data.
 The reviewer also classifies completed reports as pass-ready only when every
 required result row is `pass`, `Ready for next visual polish pass` is `yes`, and
@@ -230,6 +230,8 @@ Expected:
 - Clear returns the dot to Generated mode.
 - Loaded images are normalized to a maximum 512 px longest side before plugin
   state storage.
+- The generated and loaded PNG export paths are recorded in the DAW report under
+  `Test Artifacts Produced`.
 
 ## Preset Persistence
 
@@ -244,6 +246,8 @@ Expected:
 - Parameters return to saved values.
 - Dot status labels return to the saved image names.
 - Loaded dot textures reappear without needing the original external file path.
+- The preset name/path is recorded in the DAW report under
+  `Test Artifacts Produced`.
 
 ## DAW Session Persistence
 
@@ -258,6 +262,8 @@ Expected:
 - The editor restores the dot image labels.
 - The loaded image textures reappear.
 - Image Mix values and screen-burn values match the saved session.
+- The DAW session/project path is recorded in the DAW report under
+  `Test Artifacts Produced`.
 
 ## Known Watch Points
 

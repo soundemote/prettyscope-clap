@@ -51,6 +51,15 @@ function New-SmokeReport {
 - ``C:\Smoke\prettyscope-dot-soft-core.png`` (256x256, 1024 bytes)
 - ``C:\Smoke\prettyscope-dot-asymmetric-streak.png`` (256x128, 1024 bytes)
 
+## Test Artifacts Produced
+
+- Dot 1 generated PNG export: C:\Smoke\dot1-generated.png
+- Dot 1 loaded PNG export: C:\Smoke\dot1-loaded.png
+- Dot 2 generated PNG export: C:\Smoke\dot2-generated.png
+- Dot 2 loaded PNG export: C:\Smoke\dot2-loaded.png
+- Preset name/path used: Smoke preset
+- DAW session/project path used: C:\Smoke\prettyscope-smoke-session
+
 ## Visual Controls Under Test
 
 - Signal: Input Gain, Time Scale.

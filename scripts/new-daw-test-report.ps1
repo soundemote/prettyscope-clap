@@ -123,6 +123,15 @@ $dotImageAssetLines
 - Load the soft-core dot and asymmetric streak assets into both Dot 1 and Dot 2.
 - Use the asymmetric streak to check rotation, aspect, image mix, and clear behavior.
 
+## Test Artifacts Produced
+
+- Dot 1 generated PNG export:
+- Dot 1 loaded PNG export:
+- Dot 2 generated PNG export:
+- Dot 2 loaded PNG export:
+- Preset name/path used:
+- DAW session/project path used:
+
 ## Visual Controls Under Test
 
 $visualControlLines

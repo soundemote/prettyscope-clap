@@ -84,9 +84,9 @@ Add `-IncompleteOnly` or `-CompleteOnly` to filter by review status. Add
 `-OpenLatest` to open the newest report after filtering.
 Use `-Quiet -PassThru` when another script needs structured report-index data.
 
-The reviewer expects real Dot Image Test Assets, all visual control groups, all
-required result rows, visual notes, and release decision fields before a report
-is complete.
+The reviewer expects real Dot Image Test Assets, Test Artifacts Produced fields,
+all visual control groups, all required result rows, visual notes, and release
+decision fields before a report is complete.
 
 Use `-Quiet -PassThru` with `review-daw-test-report.ps1` when another script
 needs structured completion and issue-count data.

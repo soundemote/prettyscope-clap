@@ -44,6 +44,8 @@ the DAW behavior that still needs hands-on testing.
 - Generated DAW test reports are kept in `docs\test-reports` by default.
 - A report review script checks filled DAW reports for blank essentials before
   handoff.
+- DAW reports require concrete generated/loaded dot PNG export paths, preset
+  name/path, and DAW session/project path before they are complete.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
 - A report submit script requires complete DAW reports before updating the host

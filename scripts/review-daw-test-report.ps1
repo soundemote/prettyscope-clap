@@ -111,6 +111,28 @@ if ($dotAssetContent.Count -eq 0) {
     Add-Issue "Dot Image Test Assets section has no generated or recorded asset paths."
 }
 
+$producedArtifactLines = Get-SectionLines "Test Artifacts Produced"
+$requiredProducedArtifacts = @(
+    "Dot 1 generated PNG export",
+    "Dot 1 loaded PNG export",
+    "Dot 2 generated PNG export",
+    "Dot 2 loaded PNG export",
+    "Preset name/path used",
+    "DAW session/project path used"
+)
+foreach ($field in $requiredProducedArtifacts) {
+    $match = $producedArtifactLines | Where-Object { $_ -match "^- $([regex]::Escape($field)):\s*(.*)$" } | Select-Object -First 1
+    if (!$match) {
+        Add-Issue "Missing produced artifact field: $field"
+        continue
+    }
+
+    $value = [regex]::Match($match, "^- $([regex]::Escape($field)):\s*(.*)$").Groups[1].Value
+    if (Is-PlaceholderValue $value) {
+        Add-Issue "Produced artifact field is blank or placeholder: $field"
+    }
+}
+
 $visualControlLines = Get-SectionLines "Visual Controls Under Test"
 $requiredVisualGroups = @(
     "Signal",
