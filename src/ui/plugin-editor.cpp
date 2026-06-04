@@ -992,6 +992,10 @@ juce::String PluginEditor::dotImageStatusText(size_t dotIndex) const
     if (dot.hasImage())
     {
         status += "Image " + dot.label;
+        status += " ";
+        status += juce::String(dot.image.getWidth());
+        status += "x";
+        status += juce::String(dot.image.getHeight());
     }
     else
     {

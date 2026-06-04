@@ -61,7 +61,7 @@ For Dot 1 and Dot 2:
 Expected:
 
 - Save writes a PNG.
-- Load updates the dot status label.
+- Load updates the dot status label with the active texture dimensions.
 - Image Mix fades generated dot drawing while adding the loaded texture.
 - Clear returns the dot to Generated mode.
 - Loaded images are normalized to a maximum 512 px longest side before plugin
