@@ -58,6 +58,13 @@ Review a filled report before handoff with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\review-daw-test-report.ps1 -ReportPath .\your-report.md
 ```
 
+From the repository root, review the newest incomplete report automatically
+with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
+```
+
 After strict review passes, preview and submit the matching host matrix update
 from the repository root:
 

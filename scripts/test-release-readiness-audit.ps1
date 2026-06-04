@@ -37,6 +37,7 @@ Require-Text "host matrix" 'Host coverage is tracked in `docs\\DAW_HOST_MATRIX\.
 Require-Text "produced artifacts" 'DAW reports require concrete generated/loaded dot PNG export paths'
 Require-Text "completed report submit" 'submit-daw-test-report\.ps1'
 Require-Text "report index result labels" 'report index labels reports as `incomplete`, `pass-ready`, or\s+`fix-needed`'
+Require-Text "latest report review helper" 'latest-report review helper selects the newest incomplete report'
 Require-Text "completed report pass classification" 'Completed reports are only matrix `pass` candidates when all required result\s+rows pass and the release decision is pass-ready'
 Require-Text "non-passing issue rows" 'Non-passing DAW reports require at least one complete issue row'
 Require-Text "release gates require pass-ready evidence" 'Release gates re-read linked reports and require pass-ready evidence'

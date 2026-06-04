@@ -50,6 +50,8 @@ the DAW behavior that still needs hands-on testing.
   issue counts.
 - The report index labels reports as `incomplete`, `pass-ready`, or
   `fix-needed`.
+- A latest-report review helper selects the newest incomplete report by default,
+  falls back to the newest report, and runs the strict DAW report reviewer.
 - A report submit script requires complete DAW reports before updating the host
   matrix, then validates the matrix and prints release gates.
 - Completed reports are only matrix `pass` candidates when all required result
@@ -187,6 +189,7 @@ artifacts, and the DAW report index with pass-readiness labels.
 For submitting a completed hands-on DAW report:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
 powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
 powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```

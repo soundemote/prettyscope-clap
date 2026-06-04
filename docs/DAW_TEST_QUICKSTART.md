@@ -136,6 +136,12 @@ Fill the generated report as you test. Then run:
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -RequireComplete
 ```
 
+Or review the newest incomplete report automatically:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1 -RequireComplete
+```
+
 If the review finds missing fields, fill them in and rerun it.
 The review includes Dot Image Test Assets, Test Artifacts Produced, visual
 control groups, required result rows, visual notes, and release decision fields.

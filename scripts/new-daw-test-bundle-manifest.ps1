@@ -126,6 +126,7 @@ try {
         "scripts\new-dot-image-test-assets.ps1",
         "scripts\show-latest-daw-test-artifacts.ps1",
         "scripts\show-daw-test-report-index.ps1",
+        "scripts\review-latest-daw-test-report.ps1",
         "scripts\show-daw-test-next-action.ps1",
         "scripts\show-daw-test-dashboard.ps1",
         "scripts\show-daw-host-matrix.ps1",
@@ -172,6 +173,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format CLAP -Daw "Your DAW"
     powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-report-index.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\review-latest-daw-test-report.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-host-matrix.ps1
