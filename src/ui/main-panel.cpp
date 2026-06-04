@@ -24,6 +24,31 @@ namespace baconpaul::sidequest_ns::ui
 MainPanel::MainPanel(PluginEditor &e)
     : sst::jucegui::components::NamedPanel("Visual Parameters"), editor(e)
 {
+    for (size_t i = 0; i < dotImageStatusLabels.size(); ++i)
+    {
+        auto status = std::make_unique<juce::Label>();
+        status->setJustificationType(juce::Justification::centredLeft);
+        status->setColour(juce::Label::textColourId, juce::Colours::white.withAlpha(0.72f));
+        addAndMakeVisible(*status);
+        dotImageStatusLabels[i] = std::move(status);
+
+        auto load = std::make_unique<juce::TextButton>("Load");
+        load->onClick = [this, i]() { editor.loadDotImageOverride(i); };
+        addAndMakeVisible(*load);
+        dotImageLoadButtons[i] = std::move(load);
+
+        auto save = std::make_unique<juce::TextButton>("Save");
+        save->onClick = [this, i]() { editor.saveGeneratedDotImage(i); };
+        addAndMakeVisible(*save);
+        dotImageSaveButtons[i] = std::move(save);
+
+        auto clear = std::make_unique<juce::TextButton>("Clear");
+        clear->onClick = [this, i]() { editor.clearDotImageOverride(i); };
+        addAndMakeVisible(*clear);
+        dotImageClearButtons[i] = std::move(clear);
+    }
+    refreshDotImageStatus();
+
     const auto descriptors = visualFloatParameters();
     knobs.reserve(descriptors.size());
     knobAs.reserve(descriptors.size());
@@ -63,6 +88,18 @@ MainPanel::MainPanel(PluginEditor &e)
     }
 }
 
+void MainPanel::refreshDotImageStatus()
+{
+    for (size_t i = 0; i < dotImageStatusLabels.size(); ++i)
+    {
+        if (dotImageStatusLabels[i])
+        {
+            dotImageStatusLabels[i]->setText(editor.dotImageStatusText(i),
+                                             juce::dontSendNotification);
+        }
+    }
+}
+
 void MainPanel::resized()
 {
     auto b = getContentArea();
@@ -71,8 +108,37 @@ void MainPanel::resized()
     constexpr int sph = 82;
     constexpr int labelHeight = 20;
     constexpr int sectionGap = 4;
+    constexpr int buttonWidth = 48;
+    constexpr int buttonHeight = 22;
+    constexpr int buttonGap = 4;
 
     auto y = b.getY();
+    for (size_t i = 0; i < dotImageStatusLabels.size(); ++i)
+    {
+        auto row = juce::Rectangle<int>(b.getX(), y, b.getWidth(), buttonHeight);
+        auto buttons = row.removeFromRight(buttonWidth * 3 + buttonGap * 2);
+        if (dotImageClearButtons[i])
+        {
+            dotImageClearButtons[i]->setBounds(buttons.removeFromRight(buttonWidth));
+        }
+        buttons.removeFromRight(buttonGap);
+        if (dotImageSaveButtons[i])
+        {
+            dotImageSaveButtons[i]->setBounds(buttons.removeFromRight(buttonWidth));
+        }
+        buttons.removeFromRight(buttonGap);
+        if (dotImageLoadButtons[i])
+        {
+            dotImageLoadButtons[i]->setBounds(buttons.removeFromRight(buttonWidth));
+        }
+        if (dotImageStatusLabels[i])
+        {
+            dotImageStatusLabels[i]->setBounds(row);
+        }
+        y += buttonHeight + buttonGap;
+    }
+    y += sectionGap;
+
     for (auto &category : categories)
     {
         if (category.label)

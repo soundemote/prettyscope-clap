@@ -28,6 +28,9 @@
 #include "scope-opengl-view.h"
 #include "scope-snapshot-inspector.h"
 
+#include <algorithm>
+#include <cmath>
+
 namespace baconpaul::sidequest_ns::ui
 {
 struct IdleTimer : juce::Timer
@@ -40,6 +43,64 @@ struct IdleTimer : juce::Timer
 namespace jstl = sst::jucegui::style;
 using sheet_t = jstl::StyleSheet;
 static constexpr sheet_t::Class PatchMenu("prettyscope.patch-menu");
+
+namespace
+{
+juce::Image createGeneratedDotImage(const ScopeVisualState &state, size_t dotIndex)
+{
+    constexpr int imageSize = 256;
+    constexpr float pi = 3.14159265358979323846f;
+
+    const auto isDot2 = dotIndex == 1;
+    const auto dotSize = (isDot2 ? state.dot2Size : state.dot1Size) * state.dotOverallSize;
+    const auto dotHalo = (isDot2 ? state.dot2Halo : state.dot1Halo) * state.dotOverallHalo;
+    const auto dotIntensity =
+        (isDot2 ? state.dot2Intensity : state.dot1Intensity) * state.dotOverallIntensity;
+    const auto dotAspect = std::clamp(isDot2 ? state.dot2Aspect : state.dot1Aspect, 0.1f, 10.0f);
+    const auto dotRotation = (isDot2 ? state.dot2Rotation : state.dot1Rotation) * pi / 180.0f;
+
+    const auto sigma = std::clamp(dotSize * 3.4f, 1.5f, 96.0f);
+    const auto haloSigma = sigma * (1.0f + std::clamp(dotHalo, 0.0f, 6.0f));
+    const auto cosR = std::cos(dotRotation);
+    const auto sinR = std::sin(dotRotation);
+
+    auto image = juce::Image(juce::Image::ARGB, imageSize, imageSize, true);
+    const auto centre = static_cast<float>(imageSize - 1) * 0.5f;
+    const auto coreColour = isDot2 ? juce::Colour(0xff86d7ff) : juce::Colour(0xffff38a8);
+    const auto haloColour = juce::Colour(0xff2ed6ff);
+
+    for (int y = 0; y < imageSize; ++y)
+    {
+        for (int x = 0; x < imageSize; ++x)
+        {
+            const auto dx = static_cast<float>(x) - centre;
+            const auto dy = static_cast<float>(y) - centre;
+            const auto rx = cosR * dx + sinR * dy;
+            const auto ry = -sinR * dx + cosR * dy;
+            const auto ax = rx / dotAspect;
+            const auto r2 = ax * ax + ry * ry;
+            const auto core = std::exp(-r2 / (2.0f * sigma * sigma)) * dotIntensity;
+            const auto halo = std::exp(-r2 / (2.0f * haloSigma * haloSigma)) * dotHalo * 0.22f;
+            const auto alpha = std::clamp(core + halo, 0.0f, 1.0f);
+            if (alpha <= 0.001f)
+            {
+                continue;
+            }
+
+            const auto mix = std::clamp(halo / std::max(core + halo, 0.0001f), 0.0f, 1.0f);
+            const auto colour = coreColour.interpolatedWith(haloColour, mix).withAlpha(alpha);
+            image.setPixelAt(x, y, colour);
+        }
+    }
+
+    return image;
+}
+
+juce::String dotName(size_t dotIndex)
+{
+    return dotIndex == 1 ? "Dot 2" : "Dot 1";
+}
+} // namespace
 
 PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQueue_T &utoa,
                            ScopeAudioSnapshotQueue &snapshots, const clap_host_t *h)
@@ -853,6 +914,137 @@ void PluginEditor::refreshScopeVisualState()
     {
         scopeOpenGLView->setVisualState(currentScopeVisualState());
     }
+}
+
+juce::String PluginEditor::dotImageStatusText(size_t dotIndex) const
+{
+    if (dotIndex >= dotImageOverrides.size())
+    {
+        return {};
+    }
+
+    const auto &dot = dotImageOverrides[dotIndex];
+    auto status = dotName(dotIndex) + ": ";
+    if (dot.hasImage())
+    {
+        status += "Image " + dot.label;
+    }
+    else
+    {
+        status += "Generated";
+    }
+    return status;
+}
+
+void PluginEditor::loadDotImageOverride(size_t dotIndex)
+{
+    if (dotIndex >= dotImageOverrides.size())
+    {
+        return;
+    }
+
+    fileChooser = std::make_unique<juce::FileChooser>("Load " + dotName(dotIndex) + " Image",
+                                                      juce::File{},
+                                                      "*.png;*.jpg;*.jpeg;*.bmp;*.gif");
+    fileChooser->launchAsync(
+        juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::openMode,
+        [this, dotIndex](const juce::FileChooser &chooser)
+        {
+            const auto file = chooser.getResult();
+            if (file == juce::File{})
+            {
+                return;
+            }
+
+            auto image = juce::ImageFileFormat::loadFrom(file);
+            if (!image.isValid())
+            {
+                juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
+                                                       "Dot Image Load Failed",
+                                                       "Prettyscope could not read that image.");
+                return;
+            }
+
+            auto &dot = dotImageOverrides[dotIndex];
+            dot.image = image;
+            dot.label = file.getFileName();
+            dot.revision++;
+
+            if (mainPanel)
+            {
+                mainPanel->refreshDotImageStatus();
+            }
+            repaint();
+        });
+}
+
+void PluginEditor::saveGeneratedDotImage(size_t dotIndex)
+{
+    if (dotIndex >= dotImageOverrides.size())
+    {
+        return;
+    }
+
+    fileChooser = std::make_unique<juce::FileChooser>("Save " + dotName(dotIndex) + " Image",
+                                                      juce::File::getSpecialLocation(
+                                                          juce::File::userDocumentsDirectory)
+                                                          .getChildFile(dotName(dotIndex)
+                                                                        .replaceCharacter(' ', '-')
+                                                                        .toLowerCase() +
+                                                                        ".png"),
+                                                      "*.png");
+    fileChooser->launchAsync(
+        juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::saveMode |
+            juce::FileBrowserComponent::warnAboutOverwriting,
+        [this, dotIndex](const juce::FileChooser &chooser)
+        {
+            auto file = chooser.getResult();
+            if (file == juce::File{})
+            {
+                return;
+            }
+            if (!file.hasFileExtension(".png"))
+            {
+                file = file.withFileExtension(".png");
+            }
+
+            auto stream = file.createOutputStream();
+            if (!stream)
+            {
+                juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
+                                                       "Dot Image Save Failed",
+                                                       "Prettyscope could not write that file.");
+                return;
+            }
+
+            auto generated = createGeneratedDotImage(currentScopeVisualState(), dotIndex);
+            auto png = juce::PNGImageFormat();
+            if (!png.writeImageToStream(generated, *stream))
+            {
+                juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
+                                                       "Dot Image Save Failed",
+                                                       "Prettyscope could not encode the PNG.");
+            }
+        });
+}
+
+void PluginEditor::clearDotImageOverride(size_t dotIndex)
+{
+    if (dotIndex >= dotImageOverrides.size())
+    {
+        return;
+    }
+
+    auto &dot = dotImageOverrides[dotIndex];
+    dot.image = {};
+    dot.label = "Generated";
+    dot.revision++;
+
+    if (mainPanel)
+    {
+        mainPanel->refreshDotImageStatus();
+    }
+    repaint();
 }
 
 bool PluginEditor::toggleDebug()

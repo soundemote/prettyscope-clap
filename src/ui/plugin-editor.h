@@ -16,6 +16,7 @@
 #ifndef BACONPAUL_SIDEQUEST_UI_PLUGIN_EDITOR_H
 #define BACONPAUL_SIDEQUEST_UI_PLUGIN_EDITOR_H
 
+#include <array>
 #include <functional>
 #include <utility>
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -141,6 +142,21 @@ struct PluginEditor : jcmp::WindowPanel
 
     ScopeVisualState currentScopeVisualState() const;
     void refreshScopeVisualState();
+
+    struct DotImageOverride
+    {
+        juce::Image image;
+        juce::String label{"Generated"};
+        uint64_t revision{};
+
+        bool hasImage() const { return image.isValid(); }
+    };
+
+    std::array<DotImageOverride, 2> dotImageOverrides;
+    juce::String dotImageStatusText(size_t dotIndex) const;
+    void loadDotImageOverride(size_t dotIndex);
+    void saveGeneratedDotImage(size_t dotIndex);
+    void clearDotImageOverride(size_t dotIndex);
 };
 
 struct HasEditor

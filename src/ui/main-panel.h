@@ -16,6 +16,8 @@
 #ifndef BACONPAUL_SIDEQUEST_UI_MAIN_PANEL_H
 #define BACONPAUL_SIDEQUEST_UI_MAIN_PANEL_H
 
+#include <array>
+
 #include "sst/jucegui/components/NamedPanel.h"
 #include "patch-data-bindings.h"
 #include "plugin-editor.h"
@@ -26,6 +28,7 @@ struct MainPanel : sst::jucegui::components::NamedPanel
 {
     MainPanel(PluginEditor &editor);
     void resized() override;
+    void refreshDotImageStatus();
 
     struct CategorySection
     {
@@ -37,6 +40,10 @@ struct MainPanel : sst::jucegui::components::NamedPanel
     std::vector<std::unique_ptr<sst::jucegui::components::Knob>> knobs;
     std::vector<std::unique_ptr<PatchContinuous>> knobAs;
     std::vector<CategorySection> categories;
+    std::array<std::unique_ptr<juce::Label>, 2> dotImageStatusLabels;
+    std::array<std::unique_ptr<juce::TextButton>, 2> dotImageLoadButtons;
+    std::array<std::unique_ptr<juce::TextButton>, 2> dotImageSaveButtons;
+    std::array<std::unique_ptr<juce::TextButton>, 2> dotImageClearButtons;
 
     PluginEditor &editor;
 
