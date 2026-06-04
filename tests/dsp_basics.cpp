@@ -757,7 +757,7 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
 
     REQUIRE(state.phosphorDecay == Approx(0.999f));
     REQUIRE(state.beamIntensity == Approx(0.0f));
-    REQUIRE(state.inputGain == Approx(8.0f));
+    REQUIRE(state.inputGain == Approx(32.0f));
     REQUIRE(state.timeScale == Approx(0.25f));
     REQUIRE(state.phosphorFastDecay == Approx(1.0f));
     REQUIRE(state.phosphorAfterglow == Approx(0.0f));

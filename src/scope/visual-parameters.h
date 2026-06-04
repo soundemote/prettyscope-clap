@@ -74,7 +74,7 @@ inline constexpr std::array<VisualFloatParameterDescriptor, 29> kVisualFloatPara
      0.95f, 0.999f, true, true},
     {kBeamIntensityVisualParameterId, {1001}, "Beam Intensity", "Beam", 1.6f, 0.0f, 1.0f,
      4.0f, true, true},
-    {kInputGainVisualParameterId, {1002}, "Input Gain", "Signal", 1.0f, 0.1f, 1.0f, 8.0f,
+    {kInputGainVisualParameterId, {1002}, "Input Gain", "Signal", 1.0f, 0.1f, 1.0f, 32.0f,
      true, true},
     {kTimeScaleVisualParameterId, {1003}, "Time Scale", "Signal", 1.0f, 0.25f, 1.0f, 4.0f,
      true, true},

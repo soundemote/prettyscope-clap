@@ -28,6 +28,7 @@
 #include "main-panel.h"
 #include "scope-opengl-view.h"
 #include "scope-snapshot-inspector.h"
+#include "scope/visual-parameters.h"
 
 #include <algorithm>
 #include <cmath>
@@ -150,6 +151,26 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
     scopeOpenGLView = std::make_unique<ScopeOpenGLView>();
     scopeOpenGLView->setVisualState(currentScopeVisualState());
     scopeOpenGLView->setDotImages(currentScopeDotImages());
+    scopeOpenGLView->onSignalGainWheel =
+        [this](float wheelDelta)
+    {
+        if (std::abs(wheelDelta) <= 0.0001f)
+        {
+            return;
+        }
+
+        const auto *descriptor = visualFloatParameterById(kInputGainVisualParameterId);
+        auto *param = descriptor ? patchCopy.paramById(descriptor->stableId.value) : nullptr;
+        if (!param)
+        {
+            return;
+        }
+
+        const auto factor = std::pow(2.0f, wheelDelta * 4.0f);
+        const auto nextValue = std::clamp(param->value * factor, param->meta.minVal,
+                                          param->meta.maxVal);
+        setAndSendParamValue(*param, nextValue);
+    };
     addAndMakeVisible(*scopeOpenGLView);
 
     scopeInspector = std::make_unique<ScopeSnapshotInspector>();

@@ -59,6 +59,16 @@ void ScopeOpenGLView::resized()
     renderBounds = getLocalBounds();
 }
 
+void ScopeOpenGLView::mouseWheelMove(const juce::MouseEvent &event,
+                                     const juce::MouseWheelDetails &wheel)
+{
+    juce::Component::mouseWheelMove(event, wheel);
+    if (onSignalGainWheel)
+    {
+        onSignalGainWheel(wheel.deltaY != 0.0f ? wheel.deltaY : wheel.deltaX);
+    }
+}
+
 void ScopeOpenGLView::newOpenGLContextCreated()
 {
     if (renderer)

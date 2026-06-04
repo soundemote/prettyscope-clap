@@ -13,6 +13,8 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_opengl/juce_opengl.h>
 
+#include <functional>
+
 #include "scope/scope-audio-snapshot.h"
 #include "scope-renderer.h"
 
@@ -28,6 +30,9 @@ struct ScopeOpenGLView : juce::Component, private juce::OpenGLRenderer
     void setVisualState(const ScopeVisualState &visualState);
     void setDotImages(const ScopeDotImages &dotImages);
     void resized() override;
+    void mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel) override;
+
+    std::function<void(float wheelDelta)> onSignalGainWheel;
 
   private:
     void newOpenGLContextCreated() override;
