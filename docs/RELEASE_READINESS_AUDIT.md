@@ -52,6 +52,8 @@ the DAW behavior that still needs hands-on testing.
   concrete exported PNG, preset, and DAW session paths.
 - A report field update helper fills result rows, visual notes, release
   decisions, and issue rows without hand-editing Markdown tables.
+- A report field update smoke test verifies both pass-ready and fix-needed
+  completed report paths.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
 - The report index labels reports as `incomplete`, `pass-ready`, or

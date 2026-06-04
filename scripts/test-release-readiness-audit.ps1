@@ -52,6 +52,7 @@ Require-Text "host matrix" 'Host coverage is tracked in `docs\\DAW_HOST_MATRIX\.
 Require-Text "produced artifacts" 'DAW reports require concrete generated/loaded dot PNG export paths'
 Require-Text "report artifact update helper" 'report artifact update helper fills those produced-artifact fields'
 Require-Text "report field update helper" 'report field update helper fills result rows, visual notes, release\s+decisions, and issue rows'
+Require-Text "report field update smoke coverage" 'report field update smoke test verifies both pass-ready and fix-needed'
 Require-Text "generated report test procedure" 'Generated DAW test reports include a concrete test procedure'
 Require-Text "completed report submit" 'submit-daw-test-report\.ps1'
 Require-Text "latest report submit helper" 'latest-report submit helper selects the newest completed unsubmitted report'

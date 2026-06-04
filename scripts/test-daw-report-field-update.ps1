@@ -8,6 +8,7 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $outputDir = Join-Path $repoRoot "build-tracer\daw-report-field-update-smoke"
 $assetDir = Join-Path $outputDir "dot-assets"
 $reportPath = Join-Path $outputDir "prettyscope-daw-test-report.md"
+$failingReportPath = Join-Path $outputDir "prettyscope-daw-test-report-failing.md"
 $exportDir = Join-Path $outputDir "exports"
 $presetPath = Join-Path $outputDir "Prettyscope field helper smoke.preset"
 $sessionPath = Join-Path $outputDir "Prettyscope field helper smoke.dawsession"
@@ -28,6 +29,16 @@ $assets = @(& (Join-Path $PSScriptRoot "new-dot-image-test-assets.ps1") `
     -OutputPath $reportPath `
     -SkipFreshnessCheck | Out-Null
 
+& (Join-Path $PSScriptRoot "new-daw-test-report.ps1") `
+    -Format CLAP `
+    -Daw "FieldUpdateSmoke" `
+    -DawVersion "1.0" `
+    -Tester "Tracer" `
+    -AudioSource "test sine" `
+    -DotImageAssetPaths $assets `
+    -OutputPath $failingReportPath `
+    -SkipFreshnessCheck | Out-Null
+
 $dot1Generated = Join-Path $exportDir "dot1-generated.png"
 $dot1Loaded = Join-Path $exportDir "dot1-loaded.png"
 $dot2Generated = Join-Path $exportDir "dot2-generated.png"
@@ -41,6 +52,15 @@ Set-Content -Path $sessionPath -Value "field helper smoke session" -Encoding UTF
 
 & (Join-Path $PSScriptRoot "update-daw-test-report-artifacts.ps1") `
     -ReportPath $reportPath `
+    -Dot1GeneratedPng $dot1Generated `
+    -Dot1LoadedPng $dot1Loaded `
+    -Dot2GeneratedPng $dot2Generated `
+    -Dot2LoadedPng $dot2Loaded `
+    -PresetPath $presetPath `
+    -SessionPath $sessionPath | Out-Null
+
+& (Join-Path $PSScriptRoot "update-daw-test-report-artifacts.ps1") `
+    -ReportPath $failingReportPath `
     -Dot1GeneratedPng $dot1Generated `
     -Dot1LoadedPng $dot1Loaded `
     -Dot2GeneratedPng $dot2Generated `
@@ -70,6 +90,19 @@ foreach ($area in $resultAreas) {
         -ResultArea $area `
         -PassFail pass `
         -ResultNotes "Field helper smoke: $area passed." | Out-Null
+
+    $failingPassFail = if ($area -eq "Scope follows input signal") { "fail" } else { "pass" }
+    $failingNotes = if ($area -eq "Scope follows input signal") {
+        "Field helper smoke: trace did not follow input."
+    }
+    else {
+        "Field helper smoke: $area passed."
+    }
+    & (Join-Path $PSScriptRoot "update-daw-test-report-fields.ps1") `
+        -ReportPath $failingReportPath `
+        -ResultArea $area `
+        -PassFail $failingPassFail `
+        -ResultNotes $failingNotes | Out-Null
 }
 
 $visualNotes = @{
@@ -85,6 +118,11 @@ foreach ($entry in $visualNotes.GetEnumerator()) {
         -ReportPath $reportPath `
         -VisualNoteField $entry.Key `
         -VisualNote $entry.Value | Out-Null
+
+    & (Join-Path $PSScriptRoot "update-daw-test-report-fields.ps1") `
+        -ReportPath $failingReportPath `
+        -VisualNoteField $entry.Key `
+        -VisualNote $entry.Value | Out-Null
 }
 
 & (Join-Path $PSScriptRoot "update-daw-test-report-fields.ps1") `
@@ -93,8 +131,23 @@ foreach ($entry in $visualNotes.GetEnumerator()) {
     -NeedsCodeFixBeforeMoreTesting no `
     -HighestPriorityFollowUp "Field helper smoke complete." | Out-Null
 
+& (Join-Path $PSScriptRoot "update-daw-test-report-fields.ps1") `
+    -ReportPath $failingReportPath `
+    -ReadyForNextVisualPolish no `
+    -NeedsCodeFixBeforeMoreTesting yes `
+    -HighestPriorityFollowUp "Fix trace response before more testing." `
+    -IssueSeverity "P1" `
+    -IssueArea "Scope follows input signal" `
+    -IssueDescription "Trace did not move with the smoke input." `
+    -IssueReproSteps "Load plugin, feed sine, observe no trace motion." | Out-Null
+
 $review = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
     -ReportPath $reportPath `
+    -Quiet `
+    -PassThru
+
+$failingReview = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
+    -ReportPath $failingReportPath `
     -Quiet `
     -PassThru
 
@@ -104,6 +157,15 @@ if (!$review.Complete) {
 }
 if (!$review.Passed) {
     $issues.Add("Updated report should be pass-ready.") | Out-Null
+}
+if (!$failingReview.Complete) {
+    $issues.Add("Failing updated report should be complete: $([string]::Join('; ', $failingReview.Issues))") | Out-Null
+}
+if ($failingReview.Passed) {
+    $issues.Add("Failing updated report should not be pass-ready.") | Out-Null
+}
+if ($failingReview.ResultFailureCount -ne 1) {
+    $issues.Add("Failing updated report should record exactly one failed result.") | Out-Null
 }
 
 $content = Get-Content -Raw -Path $reportPath
@@ -119,6 +181,19 @@ foreach ($needle in @(
     }
 }
 
+$failingContent = Get-Content -Raw -Path $failingReportPath
+foreach ($needle in @(
+        "| Scope follows input signal | fail | Field helper smoke: trace did not follow input. |",
+        "| P1 | Scope follows input signal | Trace did not move with the smoke input. | Load plugin, feed sine, observe no trace motion. |",
+        "- Ready for next visual polish pass: no",
+        "- Needs code fix before more testing: yes",
+        "- Highest-priority follow-up: Fix trace response before more testing."
+    )) {
+    if ($failingContent -notmatch [regex]::Escape($needle)) {
+        $issues.Add("Failing report is missing field helper update: $needle") | Out-Null
+    }
+}
+
 if ($PassThru) {
     [PSCustomObject]@{
         ReportPath = (Resolve-Path $reportPath).Path
@@ -131,9 +206,10 @@ if ($PassThru) {
 
 Write-Host "Reviewed DAW report field update helper"
 Write-Host "  Report: $reportPath"
+Write-Host "  Failing report: $failingReportPath"
 
 if ($issues.Count -eq 0) {
-    Write-Host "DAW report field update helper fills result rows, visual notes, and release decisions."
+    Write-Host "DAW report field update helper fills result rows, visual notes, release decisions, and issue rows."
     exit 0
 }
 
