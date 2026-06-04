@@ -118,6 +118,12 @@ To create a local manifest of build artifacts and DAW-test handoff files:
 powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle-manifest.ps1
 ```
 
+To assemble a local DAW-test handoff folder and zip:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle.ps1
+```
+
 To create known-good PNGs for Dot 1 / Dot 2 image override testing:
 
 ```powershell

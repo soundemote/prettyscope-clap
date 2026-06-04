@@ -38,6 +38,12 @@ Optional handoff manifest:
 powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle-manifest.ps1
 ```
 
+Optional local handoff folder/zip:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle.ps1
+```
+
 Build/test only:
 
 ```powershell
