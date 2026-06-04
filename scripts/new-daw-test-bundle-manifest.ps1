@@ -108,6 +108,7 @@ try {
         "docs\DAW_TEST_QUICKSTART.md",
         "docs\DAW_TEST_CHECKLIST.md",
         "docs\DAW_TEST_REPORT_TEMPLATE.md",
+        "docs\DAW_HOST_MATRIX.md",
         "docs\VISUAL_CONTROL_MANIFEST.md",
         "docs\PLUGIN_IDENTITY_AUDIT.md",
         "docs\RELEASE_READINESS_AUDIT.md",

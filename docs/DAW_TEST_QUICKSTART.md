@@ -3,6 +3,7 @@
 Use this when you are ready to do the first hands-on DAW test. The full checklist
 is `docs\DAW_TEST_CHECKLIST.md`; this is the shorter path.
 The expected visual controls are listed in `docs\VISUAL_CONTROL_MANIFEST.md`.
+Host coverage is tracked in `docs\DAW_HOST_MATRIX.md`.
 
 ## 1. Prep The Test Package
 

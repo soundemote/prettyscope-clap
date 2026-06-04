@@ -3,6 +3,7 @@
 Use this checklist when testing the current oscilloscope-plugin release surface in a DAW.
 Record host-specific results with `docs\DAW_TEST_REPORT_TEMPLATE.md`.
 Compare expected controls against `docs\VISUAL_CONTROL_MANIFEST.md`.
+Track host coverage in `docs\DAW_HOST_MATRIX.md`.
 You can generate a prefilled report with `scripts\new-daw-test-report.ps1`.
 Generated reports go to `docs\test-reports` by default.
 For a shorter first pass, use `docs\DAW_TEST_QUICKSTART.md`.

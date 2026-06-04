@@ -172,5 +172,6 @@ inherited Sidequest boundary notes.
 See `docs/DAW_TEST_QUICKSTART.md` for the short first DAW test path.
 See `docs/DAW_TEST_CHECKLIST.md` for the current hands-on test checklist.
 See `docs/DAW_TEST_REPORT_TEMPLATE.md` for recording host-specific DAW results.
+See `docs/DAW_HOST_MATRIX.md` for the host coverage matrix.
 See `docs/RELEASE_READINESS_AUDIT.md` for locally verified release-prep status
 and remaining DAW testing gates.

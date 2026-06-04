@@ -123,6 +123,7 @@ Use `docs\DAW_TEST_CHECKLIST.md` to verify:
 
 - Host-specific results are captured with `docs\DAW_TEST_REPORT_TEMPLATE.md`.
 - The short first-pass workflow is in `docs\DAW_TEST_QUICKSTART.md`.
+- Host coverage is tracked in `docs\DAW_HOST_MATRIX.md`.
 
 - The plugin scans and opens in the target DAW.
 - Audio passes through in the host while the editor scope follows the signal.
@@ -141,5 +142,5 @@ Use `docs\DAW_TEST_CHECKLIST.md` to verify:
 - Inherited Sidequest synth internals are still present by design; they should be
   quarantined only after DAW parameter/state behavior is proven.
 - The editor control layout is functional, not final product UI design.
-- Cross-platform package signing, installer polish, and host matrix testing are
-  not done yet.
+- Cross-platform package signing, installer polish, and host matrix completion
+  are not done yet.
