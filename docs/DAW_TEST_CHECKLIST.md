@@ -30,6 +30,12 @@ Visual control manifest check:
 powershell -ExecutionPolicy Bypass -File .\scripts\test-visual-control-manifest.ps1
 ```
 
+Host matrix check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-host-matrix.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell
