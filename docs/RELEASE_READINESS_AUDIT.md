@@ -46,6 +46,8 @@ the DAW behavior that still needs hands-on testing.
   handoff.
 - A report index script lists generated DAW reports with completion state and
   issue counts.
+- A report submit script requires complete DAW reports before updating the host
+  matrix, then validates the matrix and prints release gates.
 - A next-action script recommends whether to prepare a test package, fill an
   incomplete report, or review completed reports.
 - A DAW test dashboard script combines local plugin status, latest artifacts,
@@ -141,6 +143,13 @@ For first-pass DAW release gates:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
+```
+
+For submitting a completed hands-on DAW report:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```
 
 For visual control manifest drift checks:

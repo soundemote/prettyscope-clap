@@ -45,13 +45,14 @@ Before calling this first DAW-test surface ready for broader attention:
 1. Generate or locate a report with `scripts\show-daw-test-dashboard.ps1`.
 2. Fill the report while testing the host.
 3. Run `scripts\review-daw-test-report.ps1 -RequireComplete`.
-4. Update this matrix row with:
+4. Preview and submit this matrix row with:
 
    ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
-   powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
+   powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md -Preview
+   powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
    ```
 
-5. Run `scripts\test-daw-host-matrix.ps1`.
-6. Run `scripts\show-daw-release-gates.ps1`.
-7. Keep detailed reproduction steps in the report, not in this matrix.
+5. Keep detailed reproduction steps in the report, not in this matrix.
+
+The submit command requires a complete report before writing, then runs matrix
+validation and release gate review.

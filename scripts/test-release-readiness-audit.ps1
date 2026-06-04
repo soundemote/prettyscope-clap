@@ -34,6 +34,7 @@ Require-Text "active dot image save" 'Save exports the generated texture in Gene
 Require-Text "Dot image state persistence" 'Dot image labels and PNG payloads are stored in patch XML state'
 Require-Text "DAW testing still required" '## DAW Testing Still Required'
 Require-Text "host matrix" 'Host coverage is tracked in `docs\\DAW_HOST_MATRIX\.md`'
+Require-Text "completed report submit" 'submit-daw-test-report\.ps1'
 
 if ($PassThru) {
     [PSCustomObject]@{

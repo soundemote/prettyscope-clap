@@ -125,22 +125,20 @@ If the review finds missing fields, fill them in and rerun it.
 The review includes the Dot Image Test Assets section, visual control groups,
 required result rows, visual notes, and release decision fields.
 
-After the report passes review, preview and apply the host matrix update:
+After the report passes review, preview the host matrix row:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -Preview
-powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT"
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT" -Preview
 ```
 
-Then check matrix validity and first-pass release gates:
+If the preview looks right, submit it:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-host-matrix.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1 -IncludeBuildScratch
+powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath "PATH_FROM_READINESS_OUTPUT"
 ```
 
-The dashboard should show the updated matrix state, next action, report index,
-and remaining release gates.
+The submit command requires a complete report, updates the host matrix, validates
+the matrix, prints release gates, and shows the dashboard for the default matrix.
 
 ## Highest-Value Notes
 
