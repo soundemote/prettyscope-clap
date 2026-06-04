@@ -7,7 +7,8 @@ param(
     [string] $Tester = "",
     [string] $AudioSource = "",
     [string] $OutputPath = "",
-    [switch] $SkipBuildInstall
+    [switch] $SkipBuildInstall,
+    [switch] $PassThru
 )
 
 $ErrorActionPreference = "Stop"
@@ -35,6 +36,10 @@ $reportArgs = @{
 
 if ($OutputPath) {
     $reportArgs.OutputPath = $OutputPath
+}
+
+if ($PassThru) {
+    $reportArgs.PassThru = $true
 }
 
 & (Join-Path $PSScriptRoot "new-daw-test-report.ps1") @reportArgs

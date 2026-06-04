@@ -7,7 +7,8 @@ param(
     [string] $Tester = "",
     [string] $AudioSource = "",
     [string] $OutputPath = "",
-    [switch] $SkipFreshnessCheck
+    [switch] $SkipFreshnessCheck,
+    [switch] $PassThru
 )
 
 $ErrorActionPreference = "Stop"
@@ -121,7 +122,12 @@ DAW/build combination.
 "@
 
     Set-Content -Path $OutputPath -Value $report -Encoding UTF8
-    Write-Host "Created DAW test report: $OutputPath"
+    $createdPath = (Resolve-Path $OutputPath).Path
+    Write-Host "Created DAW test report: $createdPath"
+
+    if ($PassThru) {
+        Write-Output $createdPath
+    }
 }
 finally {
     Pop-Location

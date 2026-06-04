@@ -38,6 +38,8 @@ the DAW behavior that still needs hands-on testing.
 - A report script generates prefilled DAW test reports from the current commit
   and installed artifact SHA256.
 - Generated DAW test reports are kept in `docs\test-reports` by default.
+- DAW prep/report scripts support `-PassThru` when automation needs the
+  generated report path.
 
 ## Local Verification Command
 

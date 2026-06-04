@@ -18,6 +18,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 Use `-SkipBuildInstall` only when strict freshness already passes and you only
 need another report.
 
+Add `-PassThru` when automation needs the generated report path as pipeline
+output.
+
 Build/test only:
 
 ```powershell

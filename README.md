@@ -71,6 +71,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 If the current installed artifacts are already fresh, add `-SkipBuildInstall` to
 generate another report without rebuilding.
 
+Add `-PassThru` when automation needs the generated report path as pipeline
+output.
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 
@@ -92,6 +95,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-report.ps1 -Form
 ```
 
 Reports are written to `docs\test-reports` by default.
+Add `-PassThru` to return the generated report path.
 
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads

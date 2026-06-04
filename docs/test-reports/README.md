@@ -17,6 +17,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\prepare-daw-test.ps1 -Format 
 Add `-SkipBuildInstall` to the prep command when the installed artifacts are
 already fresh and you only need another report.
 
+Add `-PassThru` to either command when automation needs the generated report
+path as pipeline output.
+
 Keep reports that capture useful host behavior, regressions, or release
 decisions. Scratch reports can be written elsewhere with `-OutputPath`; parent
 folders are created automatically.
