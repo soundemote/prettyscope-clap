@@ -56,6 +56,8 @@ the DAW behavior that still needs hands-on testing.
   report.
 - A report classification smoke test verifies pass-ready reports, completed
   non-passing reports, matrix status updates, and forced-pass rejection.
+- A next-action routing smoke test verifies incomplete-report, unsubmitted-
+  report, submitted-but-not-ready, and ready-gate guidance.
 - A next-action script recommends whether to prepare a test package, fill an
   incomplete report, or review completed reports.
 - A DAW test dashboard script combines local plugin status, latest artifacts,
