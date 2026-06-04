@@ -75,6 +75,7 @@ try {
         "scripts\show-latest-daw-test-artifacts.ps1",
         "scripts\show-daw-test-report-index.ps1",
         "scripts\show-daw-test-next-action.ps1",
+        "scripts\show-daw-test-dashboard.ps1",
         "scripts\show-local-plugin-status.ps1"
     )
     foreach ($script in $scripts) {

@@ -16,6 +16,12 @@ Next-action helper:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
 ```
 
+Dashboard:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell

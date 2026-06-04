@@ -14,6 +14,12 @@ Ask for the next test/report action from the repository root with:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
 ```
 
+Show the combined DAW test dashboard with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
+```
+
 Or run the full build/test/install/asset/report handoff from the repository
 root:
 
