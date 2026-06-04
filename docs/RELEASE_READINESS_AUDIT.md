@@ -50,6 +50,8 @@ the DAW behavior that still needs hands-on testing.
   artifacts, docs, scripts, dot image assets, and manifest content.
 - The bundle packager runs the verifier by default after creating the folder and
   zip.
+- A DAW readiness script runs local freshness, report prep, self-verifying
+  bundle creation, bundle verification, and report review smoke.
 - DAW prep/report scripts support `-PassThru` when automation needs the
   generated report path.
 - A smoke-test asset script generates known-good PNGs for Dot 1 / Dot 2 image

@@ -81,6 +81,13 @@ manifest.
 Add `-PassThru` when automation needs the generated report and bundle manifest
 paths as pipeline output.
 
+To run the local DAW readiness smoke, including freshness, report prep, bundle
+creation, and bundle verification:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1
+```
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 
