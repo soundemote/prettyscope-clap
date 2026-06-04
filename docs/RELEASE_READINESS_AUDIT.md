@@ -35,6 +35,8 @@ the DAW behavior that still needs hands-on testing.
   freshness.
 - The status script supports `-RequireFresh` for machine-checkable local DAW
   test preflight.
+- A report script generates prefilled DAW test reports from the current commit
+  and installed artifact SHA256.
 
 ## Local Verification Command
 

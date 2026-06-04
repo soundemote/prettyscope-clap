@@ -75,6 +75,12 @@ copies are missing or stale:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1 -RequireFresh
 ```
 
+To create a prefilled DAW test report:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-report.ps1 -Format CLAP -Daw "Your DAW"
+```
+
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads
 the same block stream.
