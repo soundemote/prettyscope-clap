@@ -58,9 +58,15 @@ foreach ($root in $reportRoots) {
     Get-ChildItem -Path $root -File -Recurse -ErrorAction SilentlyContinue |
         Where-Object {
             $normalizedPath = $_.FullName.Replace('/', '\')
+            $isDefaultBuildScratchReport = $IncludeBuildScratch -and
+                $BuildDir -eq "build-tracer" -and
+                $normalizedPath -match '\\build-tracer\\'
             $_.Name -match "daw-test.*\.md$" -and
             $_.Name -notmatch "bundle-manifest" -and
-            ($IncludeSmokeReports -or $normalizedPath -notmatch '\\build-tracer\\.*-smoke\\')
+            ($IncludeSmokeReports -or $normalizedPath -notmatch '\\build-tracer\\.*-smoke\\') -and
+            (!$isDefaultBuildScratchReport -or
+                $IncludeSmokeReports -or
+                $normalizedPath -match '\\build-tracer\\daw-readiness\\')
         } |
         ForEach-Object {
             $lines = Get-Content -Path $_.FullName
