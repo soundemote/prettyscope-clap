@@ -4,7 +4,7 @@
  * Copyright 2026, Soundemote.
  *
  * Adapted from the standalone Prettyscope renderer files in
- * C:\Users\argit\Desktop\prettyscope\src\visual:
+ * C:\Users\argit\Documents\_PROGRAMMING\prettyscope\src\visual:
  * scope_renderer, beam_renderer, persistence_buffer, screen_quad, shaders,
  * and gl_utils. This plugin version keeps the golden phosphor beam/decay math
  * while adapting ownership and inputs to the JUCE OpenGL renderer slot.
@@ -108,12 +108,14 @@ struct PhosphorParams
     RgbColor traceColor{1.0f, 0.22f, 0.70f};
     RgbColor glowColor{0.18f, 0.80f, 1.0f};
     float traceGain{0.10f};
-    float glowStrength{0.35f};
-    float traceWidth{2.0f};
+    float coreIntensity{1.15f};
+    float coreWidth{2.0f};
+    float glowIntensity{0.35f};
     float glowWidth{7.0f};
     float persistence{0.98f};
     float fastDecay{0.25f};
     float afterglow{0.95f};
+    float floorFade{0.00035f};
     int clearRevision{0};
 };
 
@@ -247,6 +249,7 @@ uniform vec3 backgroundColor;
 uniform float persistence;
 uniform float fastDecay;
 uniform float afterglow;
+uniform float floorFade;
 
 void main()
 {
@@ -259,7 +262,7 @@ void main()
     float tailBoost = dimTail * mix(0.0, 0.055, afterglow) + softTail * afterglow * 0.012;
     float keep = clamp(persistence + tailBoost - brightDrain, 0.0, mix(0.982, 0.9975, afterglow));
     signal *= keep;
-    signal = max(signal - vec3(mix(0.0009, 0.00018, afterglow)), vec3(0.0));
+    signal = max(signal - vec3(floorFade), vec3(0.0));
     signal = pow(signal, vec3(mix(1.035, 1.012, afterglow)));
     fragColor = vec4(backgroundColor + signal, 1.0);
 }
@@ -560,6 +563,7 @@ class PersistenceBuffer
         glUniform1f(glGetUniformLocation(decayProgram, "persistence"), params.persistence);
         glUniform1f(glGetUniformLocation(decayProgram, "fastDecay"), params.fastDecay);
         glUniform1f(glGetUniformLocation(decayProgram, "afterglow"), params.afterglow);
+        glUniform1f(glGetUniformLocation(decayProgram, "floorFade"), params.floorFade);
         quad.draw();
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -727,25 +731,47 @@ struct PhosphorScopeRenderer::Impl
         const auto height = context.pixelHeight();
 
         PhosphorParams params;
-        params.persistence = std::clamp(visualState.phosphorDecay, 0.0f, 0.9995f);
+        const auto persistenceRatio = visualState.screenBurnPersistence / 0.98f;
+        const auto fastDecayRatio = visualState.screenBurnFastDecay / 0.25f;
+        const auto afterglowRatio = visualState.screenBurnAfterglow / 0.95f;
+        const auto dot1HaloRatio =
+            (visualState.dot1Halo / 0.35f) * visualState.dotOverallHalo;
+        const auto dot2HaloRatio =
+            (visualState.dot2Halo / 0.65f) * visualState.dotOverallHalo;
+
+        params.persistence =
+            std::clamp(visualState.phosphorDecay * persistenceRatio, 0.0f, 0.9995f);
         params.traceGain = std::clamp(0.10f * visualState.inputGain, 0.002f, 1.2f);
-        params.glowStrength =
-            std::clamp(visualState.beamGlowStrength * visualState.beamIntensity / 1.6f, 0.0f,
-                       4.0f);
-        params.traceWidth = visualState.beamTraceWidth;
-        params.glowWidth = visualState.beamGlowWidth;
-        params.fastDecay = visualState.phosphorFastDecay;
-        params.afterglow = visualState.phosphorAfterglow;
+        params.coreWidth = std::clamp(visualState.beamTraceWidth * visualState.dot1Size *
+                                          visualState.dotOverallSize / 2.0f *
+                                          (0.65f + 0.35f * dot1HaloRatio),
+                                      0.15f, 96.0f);
+        params.glowWidth = std::clamp(visualState.beamGlowWidth * visualState.dot2Size *
+                                          visualState.dotOverallSize / 6.0f,
+                                      0.25f, 160.0f);
+        params.coreIntensity = std::clamp(1.15f * visualState.beamIntensity / 1.6f *
+                                              visualState.dot1Intensity *
+                                              visualState.dotOverallIntensity,
+                                          0.0f, 12.0f);
+        params.glowIntensity =
+            std::clamp(visualState.beamGlowStrength * visualState.beamIntensity / 1.6f *
+                           (visualState.dot2Intensity / 0.45f) *
+                           visualState.dotOverallIntensity * dot2HaloRatio,
+                       0.0f, 12.0f);
+        params.fastDecay =
+            std::clamp(visualState.phosphorFastDecay * fastDecayRatio, 0.0f, 1.0f);
+        params.afterglow =
+            std::clamp(visualState.phosphorAfterglow * afterglowRatio, 0.0f, 1.0f);
+        params.floorFade = visualState.screenBurnFloorFade;
 
         signal.append(snapshot, visualState.timeScale, snapshot.serial);
         const auto vertexCount = beam.uploadSegments(signal, params, width, height);
 
         persistence.beginFrame(params, width, height, quad);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        beam.draw(vertexCount, params.glowColor, params.glowWidth, params.glowStrength, width,
+        beam.draw(vertexCount, params.glowColor, params.glowWidth, params.glowIntensity, width,
                   height);
-        beam.draw(vertexCount, params.traceColor, params.traceWidth,
-                  std::clamp(1.15f * visualState.beamIntensity / 1.6f, 0.02f, 4.0f), width,
+        beam.draw(vertexCount, params.traceColor, params.coreWidth, params.coreIntensity, width,
                   height);
         persistence.endFrame(quad, width, height);
 

@@ -121,4 +121,16 @@ make_clapfirst_plugins(
         # STANDALONE_MACOS_ICON "${CMAKE_SOURCE_DIR}/resources/mac_installer/Icon.icns"
 )
 
+if (MSVC)
+    foreach(target_name
+            ${PROJECT_NAME}_clap
+            ${PROJECT_NAME}_vst3
+            ${PROJECT_NAME}_standalone)
+        if (TARGET ${target_name})
+            set_target_properties(${target_name} PROPERTIES
+                    ARCHIVE_OUTPUT_NAME "${target_name}")
+        endif()
+    endforeach()
+endif()
+
 add_subdirectory(tests)
