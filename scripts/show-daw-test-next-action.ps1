@@ -108,6 +108,7 @@ Push-Location $repoRoot
 try {
     $latestArtifacts = & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
         -BuildDir $BuildDir `
+        -IncludeSmokeReports:$IncludeSmokeReports `
         -Quiet `
         -PassThru
     $reports = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
@@ -145,6 +146,7 @@ try {
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -RequireComplete"
         Write-Host ""
         Write-Host "Open commands:"
+        Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
         if ($latestArtifacts.SummaryPath) {
             Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"
@@ -187,6 +189,7 @@ try {
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath `"$($latest.Path)`""
         Write-Host ""
         Write-Host "Open commands:"
+        Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1 -OpenReport"
         if ($latestArtifacts.SummaryPath) {
             Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1 -OpenSummary"

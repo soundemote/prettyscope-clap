@@ -80,6 +80,8 @@ the DAW behavior that still needs hands-on testing.
   next action, release gates, and report index output.
 - A release candidate summary script writes a Markdown snapshot of local status,
   machine checks, release gates, next action, and latest DAW test artifacts.
+- A DAW test handoff opener opens the latest report, release summary, and
+  matching bundle folder together for hands-on testing.
 - The release candidate summary includes the DAW report index with
   `incomplete`, `pass-ready`, and `fix-needed` report labels.
 - A bundle manifest script records built artifacts, installed artifacts, and
@@ -171,6 +173,12 @@ For the immediate next DAW-test action:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-next-action.ps1
+```
+
+For opening the latest DAW test handoff files together:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
 ```
 
 For first-pass DAW release gates:

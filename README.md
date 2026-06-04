@@ -91,6 +91,13 @@ creation, and bundle verification:
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1
 ```
 
+To open the latest generated DAW report, release summary, and matching bundle
+folder together:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
+```
+
 To check which build artifacts and user-local plugin copies are currently
 present:
 

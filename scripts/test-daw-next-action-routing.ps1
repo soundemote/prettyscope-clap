@@ -102,6 +102,8 @@ Assert-Contains $incompleteOutput "review-latest-daw-test-report.ps1 -RequireCom
     "Incomplete report guidance should include the latest-report review command."
 Assert-Contains $incompleteOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Incomplete report guidance should include an open-report command."
+Assert-Contains $incompleteOutput "open-daw-test-handoff.ps1" `
+    "Incomplete report guidance should include one-command handoff opening."
 Assert-Contains $incompleteOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
     "Incomplete report guidance should include a bundle-folder open command."
 
@@ -123,6 +125,8 @@ Assert-Contains $unsubmittedOutput "Result:" `
     "Unsubmitted complete report should print its result classification."
 Assert-Contains $unsubmittedOutput "show-daw-test-next-action.ps1 -OpenReport" `
     "Unsubmitted complete report guidance should include an open-report command."
+Assert-Contains $unsubmittedOutput "open-daw-test-handoff.ps1" `
+    "Unsubmitted complete report guidance should include one-command handoff opening."
 Assert-Contains $unsubmittedOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
     "Unsubmitted complete report guidance should include a bundle-folder open command."
 

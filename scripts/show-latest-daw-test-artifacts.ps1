@@ -4,6 +4,7 @@ param(
     [switch] $OpenSummary,
     [switch] $OpenBundleFolder,
     [switch] $OpenBundleZipFolder,
+    [switch] $IncludeSmokeReports,
     [switch] $Quiet,
     [switch] $PassThru
 )
@@ -60,6 +61,9 @@ function Get-LatestGroupedReadinessReport {
     }
 
     $reports = Get-ChildItem -Path $Path -File -Filter "prettyscope-daw-test-report.md" -Recurse -ErrorAction SilentlyContinue |
+        Where-Object {
+            $IncludeSmokeReports -or $_.FullName.Replace('/', '\') -notmatch '\\build-tracer\\.*-smoke\\'
+        } |
         Sort-Object LastWriteTime -Descending
 
     foreach ($report in $reports) {

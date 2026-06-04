@@ -49,6 +49,13 @@ bundle zip paths with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
+From the repository root, open the latest report, release summary, and matching
+bundle folder together with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
+```
+
 Add `-OpenReport` to open the latest generated report or `-OpenSummary` to open
 the latest release candidate summary.
 

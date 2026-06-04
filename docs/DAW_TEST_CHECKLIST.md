@@ -181,6 +181,12 @@ Print the latest generated DAW test artifacts:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
+Open the latest report, release summary, and matching bundle folder together:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
+```
+
 Optional switches: `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, and
 `-OpenBundleZipFolder`.
 

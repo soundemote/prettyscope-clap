@@ -50,6 +50,12 @@ zip paths again later:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
+To open the latest report, release summary, and matching bundle folder together:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\open-daw-test-handoff.ps1
+```
+
 Add `-OpenReport`, `-OpenSummary`, `-OpenBundleFolder`, or
 `-OpenBundleZipFolder` when you want Windows to open the latest report, summary,
 or bundle location directly.
