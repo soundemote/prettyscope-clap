@@ -28,6 +28,7 @@ struct MainPanel : sst::jucegui::components::NamedPanel
 {
     MainPanel(PluginEditor &editor);
     void resized() override;
+    int getPreferredHeight(int width);
     void refreshDotImageStatus();
 
     struct CategorySection

@@ -32,17 +32,20 @@ MainPanel::MainPanel(PluginEditor &e)
         addAndMakeVisible(*status);
         dotImageStatusLabels[i] = std::move(status);
 
-        auto load = std::make_unique<juce::TextButton>("Load");
+        auto load = std::make_unique<juce::TextButton>("L");
+        load->setTooltip("Load dot image");
         load->onClick = [this, i]() { editor.loadDotImageOverride(i); };
         addAndMakeVisible(*load);
         dotImageLoadButtons[i] = std::move(load);
 
-        auto save = std::make_unique<juce::TextButton>("Save");
+        auto save = std::make_unique<juce::TextButton>("S");
+        save->setTooltip("Save dot image");
         save->onClick = [this, i]() { editor.saveDotImage(i); };
         addAndMakeVisible(*save);
         dotImageSaveButtons[i] = std::move(save);
 
-        auto clear = std::make_unique<juce::TextButton>("Clear");
+        auto clear = std::make_unique<juce::TextButton>("X");
+        clear->setTooltip("Clear dot image override");
         clear->onClick = [this, i]() { editor.clearDotImageOverride(i); };
         addAndMakeVisible(*clear);
         dotImageClearButtons[i] = std::move(clear);
@@ -104,13 +107,13 @@ void MainPanel::resized()
 {
     auto b = getContentArea();
     const auto right = b.getRight();
-    constexpr int spw = 82;
-    constexpr int sph = 82;
-    constexpr int labelHeight = 20;
-    constexpr int sectionGap = 4;
-    constexpr int buttonWidth = 48;
-    constexpr int buttonHeight = 22;
-    constexpr int buttonGap = 4;
+    constexpr int spw = 72;
+    constexpr int sph = 72;
+    constexpr int labelHeight = 16;
+    constexpr int sectionGap = 2;
+    constexpr int buttonWidth = 18;
+    constexpr int buttonHeight = 16;
+    constexpr int buttonGap = 2;
 
     auto y = b.getY();
     for (size_t i = 0; i < dotImageStatusLabels.size(); ++i)
@@ -171,6 +174,37 @@ void MainPanel::resized()
         }
         y += sectionGap;
     }
+}
+
+int MainPanel::getPreferredHeight(int width)
+{
+    auto b = getContentArea();
+    const auto contentWidth = std::max(1, width - (getWidth() - b.getWidth()));
+    constexpr int spw = 72;
+    constexpr int sph = 72;
+    constexpr int labelHeight = 16;
+    constexpr int sectionGap = 2;
+    constexpr int buttonHeight = 16;
+    constexpr int buttonGap = 2;
+
+    auto y = b.getY();
+    y += static_cast<int>(dotImageStatusLabels.size()) * (buttonHeight + buttonGap);
+    y += sectionGap;
+
+    for (const auto &category : categories)
+    {
+        y += labelHeight;
+
+        const auto knobsPerRow = std::max(1, contentWidth / spw);
+        const auto rowCount = category.knobIndices.empty()
+                                  ? 0
+                                  : static_cast<int>((category.knobIndices.size() + knobsPerRow - 1) /
+                                                     knobsPerRow);
+        y += rowCount * sph;
+        y += sectionGap;
+    }
+
+    return y + b.getY() + 4;
 }
 
 } // namespace baconpaul::sidequest_ns::ui

@@ -77,6 +77,7 @@ struct PluginEditor : jcmp::WindowPanel
     uint64_t scopeSnapshotReadCount{0};
 
     std::unique_ptr<MainPanel> mainPanel;
+    std::unique_ptr<juce::Viewport> mainPanelViewport;
     std::unique_ptr<ScopeOpenGLView> scopeOpenGLView;
     std::unique_ptr<ScopeSnapshotInspector> scopeInspector;
     void doSinglePanelHamburger();

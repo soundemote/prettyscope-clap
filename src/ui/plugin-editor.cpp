@@ -142,7 +142,10 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
 
     mainPanel = std::make_unique<MainPanel>(*this);
     mainPanel->hasHamburger = false;
-    addAndMakeVisible(*mainPanel);
+    mainPanelViewport = std::make_unique<juce::Viewport>("Visual Parameter Viewport");
+    mainPanelViewport->setScrollBarsShown(true, false);
+    mainPanelViewport->setViewedComponent(mainPanel.get(), false);
+    addAndMakeVisible(*mainPanelViewport);
 
     scopeOpenGLView = std::make_unique<ScopeOpenGLView>();
     scopeOpenGLView->setVisualState(currentScopeVisualState());
@@ -348,7 +351,12 @@ void PluginEditor::resized()
 
     scopeOpenGLView->setBounds(scopeArea.reduced(panelMargin, 5));
     scopeInspector->setBounds(inspectorArea.reduced(panelMargin, 5));
-    mainPanel->setBounds(panelArea.reduced(panelMargin));
+    auto visualPanelArea = panelArea.reduced(panelMargin);
+    mainPanelViewport->setBounds(visualPanelArea);
+    const auto panelWidth = std::max(1, mainPanelViewport->getMaximumVisibleWidth());
+    mainPanel->setSize(panelWidth, visualPanelArea.getHeight());
+    mainPanel->setSize(panelWidth, std::max(visualPanelArea.getHeight(),
+                                            mainPanel->getPreferredHeight(panelWidth)));
 }
 
 void PluginEditor::showTooltipOn(juce::Component *c)
@@ -1031,10 +1039,16 @@ void PluginEditor::loadDotImageOverride(size_t dotIndex)
     fileChooser = std::make_unique<juce::FileChooser>("Load " + dotName(dotIndex) + " Image",
                                                       juce::File{},
                                                       "*.png;*.jpg;*.jpeg;*.bmp;*.gif");
+    juce::Component::SafePointer<PluginEditor> safeThis(this);
     fileChooser->launchAsync(
         juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::openMode,
-        [this, dotIndex](const juce::FileChooser &chooser)
+        [safeThis, dotIndex](const juce::FileChooser &chooser)
         {
+            if (safeThis == nullptr)
+            {
+                return;
+            }
+
             const auto file = chooser.getResult();
             if (file == juce::File{})
             {
@@ -1050,18 +1064,18 @@ void PluginEditor::loadDotImageOverride(size_t dotIndex)
                 return;
             }
 
-            auto &dot = dotImageOverrides[dotIndex];
+            auto &dot = safeThis->dotImageOverrides[dotIndex];
             dot.image = image;
             dot.label = file.getFileName();
             dot.revision++;
-            syncPatchDotImagesFromEditor();
-            refreshScopeDotImages();
+            safeThis->syncPatchDotImagesFromEditor();
+            safeThis->refreshScopeDotImages();
 
-            if (mainPanel)
+            if (safeThis->mainPanel)
             {
-                mainPanel->refreshDotImageStatus();
+                safeThis->mainPanel->refreshDotImageStatus();
             }
-            repaint();
+            safeThis->repaint();
         });
 }
 
@@ -1088,11 +1102,17 @@ void PluginEditor::saveDotImage(size_t dotIndex)
                                                           juce::File::userDocumentsDirectory)
                                                           .getChildFile(defaultFileName),
                                                       "*.png");
+    juce::Component::SafePointer<PluginEditor> safeThis(this);
     fileChooser->launchAsync(
         juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::saveMode |
             juce::FileBrowserComponent::warnAboutOverwriting,
-        [this, dotIndex](const juce::FileChooser &chooser)
+        [safeThis, dotIndex](const juce::FileChooser &chooser)
         {
+            if (safeThis == nullptr)
+            {
+                return;
+            }
+
             auto file = chooser.getResult();
             if (file == juce::File{})
             {
@@ -1112,10 +1132,10 @@ void PluginEditor::saveDotImage(size_t dotIndex)
                 return;
             }
 
-            const auto &currentDot = dotImageOverrides[dotIndex];
+            const auto &currentDot = safeThis->dotImageOverrides[dotIndex];
             auto image = currentDot.hasImage() ? currentDot.image
-                                               : createGeneratedDotImage(currentScopeVisualState(),
-                                                                         dotIndex);
+                                               : createGeneratedDotImage(
+                                                     safeThis->currentScopeVisualState(), dotIndex);
             auto png = juce::PNGImageFormat();
             if (!png.writeImageToStream(image, *stream))
             {
