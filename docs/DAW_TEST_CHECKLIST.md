@@ -80,6 +80,9 @@ next to the generated report and bundle. It records image paths in the generated
 report. Use `-SkipDotImageAssets` or `-SkipBundleManifest` only for reruns that
 do not need fresh handoff assets.
 
+The release candidate summary includes machine checks, release gates, next
+action, latest artifacts, and the DAW report index with pass-readiness labels.
+
 Add `-PassThru` when automation needs the generated report and bundle manifest
 paths as pipeline output.
 

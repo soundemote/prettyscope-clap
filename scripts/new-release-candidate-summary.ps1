@@ -59,6 +59,20 @@ try {
     $latestArtifacts = Capture-Output {
         & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") -BuildDir $BuildDir
     }
+    $reportIndexRows = @(& (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
+            -BuildDir $BuildDir `
+            -IncludeBuildScratch `
+            -Limit 10 `
+            -Quiet `
+            -PassThru)
+    $reportIndex = if ($reportIndexRows.Count -gt 0) {
+        ($reportIndexRows |
+            Format-Table -AutoSize Modified, Complete, Result, Issues, Format, Daw, DawVersion, Tester, Commit, Path |
+            Out-String -Width 4096).TrimEnd()
+    }
+    else {
+        "No DAW test reports found."
+    }
 
     $visualManifest = & (Join-Path $PSScriptRoot "test-visual-control-manifest.ps1") -PassThru
     $releaseAudit = & (Join-Path $PSScriptRoot "test-release-readiness-audit.ps1") -PassThru
@@ -118,6 +132,12 @@ $nextAction
 
 ~~~text
 $latestArtifacts
+~~~
+
+## DAW Report Index
+
+~~~text
+$reportIndex
 ~~~
 
 ## Local Plugin Status
