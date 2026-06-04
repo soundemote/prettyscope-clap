@@ -27,7 +27,21 @@ function Copy-PluginArtifact {
     }
 
     Copy-Item -Recurse -Force -Path $Source -Destination $DestinationDirectory
+
+    if (!(Test-Path $destination)) {
+        throw "Install failed; missing copied artifact: $destination"
+    }
+
+    $artifact = Get-Item $destination
+    if ($artifact.PSIsContainer) {
+        $size = (Get-ChildItem -Recurse -File -Path $artifact.FullName | Measure-Object -Property Length -Sum).Sum
+    }
+    else {
+        $size = $artifact.Length
+    }
+
     Write-Host "Installed $(Split-Path $Source -Leaf) -> $DestinationDirectory"
+    Write-Host "Verified $($artifact.FullName) ($size bytes, modified $($artifact.LastWriteTime))"
 }
 
 if ($Format -eq "All" -or $Format -eq "CLAP") {

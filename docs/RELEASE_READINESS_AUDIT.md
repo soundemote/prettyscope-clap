@@ -24,6 +24,8 @@ the DAW behavior that still needs hands-on testing.
   image path.
 - Dot image labels and PNG payloads are stored in patch XML state.
 - Editor image state syncs into engine patch state for host/plugin state save.
+- The local install script verifies copied CLAP/VST3 artifact paths, sizes, and
+  timestamps after install.
 
 ## Local Verification Command
 
