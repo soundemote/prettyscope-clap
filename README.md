@@ -97,6 +97,14 @@ powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-report.ps1 -Form
 Reports are written to `docs\test-reports` by default.
 Add `-PassThru` to return the generated report path.
 
+To create known-good PNGs for Dot 1 / Dot 2 image override testing:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-dot-image-test-assets.ps1
+```
+
+The default output folder is `build-tracer\daw-test-dot-images`.
+
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads
 the same block stream.

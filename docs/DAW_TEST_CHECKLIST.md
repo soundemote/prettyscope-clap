@@ -80,18 +80,29 @@ Expected:
 
 ## Dot Image Workflow
 
+Optional: create known-good PNGs for this test:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-dot-image-test-assets.ps1
+```
+
+The default output folder is `build-tracer\daw-test-dot-images`.
+
 For Dot 1 and Dot 2:
 
 1. Click `Save`.
 2. Save the generated PNG.
 3. Click `Load`.
-4. Load the generated PNG or another small PNG/JPEG/BMP/GIF image.
+4. Load the generated PNG, one of the generated smoke-test PNGs, or another
+   small PNG/JPEG/BMP/GIF image.
 5. Raise that dot's Image Mix control.
 6. Click `Clear`.
 
 Expected:
 
 - Save writes a PNG.
+- The smoke-test soft-core image looks like a round dot, while the asymmetric
+  streak makes rotation/aspect behavior easy to see.
 - Load updates the dot status label with the active texture dimensions; long
   filenames may be abbreviated.
 - Image Mix fades generated dot drawing while adding the loaded texture.
