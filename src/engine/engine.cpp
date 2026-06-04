@@ -431,6 +431,19 @@ void Engine::processUIQueue(const clap_output_events_t *outq)
             prepForStream();
         }
         break;
+        case MainToAudioMsg::SET_VISUAL_ASSETS:
+        {
+            if (uiM->visualAssets)
+            {
+                patch.visualAssets = *uiM->visualAssets;
+                if (!patch.dirty)
+                {
+                    patch.dirty = true;
+                    audioToUi.push({AudioToUIMsg::SET_PATCH_DIRTY_STATE, patch.dirty});
+                }
+            }
+        }
+        break;
         case MainToAudioMsg::SEND_REQUEST_RESCAN:
         {
             onMainRescanParams = true;

@@ -347,7 +347,33 @@ TEST_CASE("Preset patch send queues audio updates without CLAP host", "[params]"
 
     message = mainToAudio->pop();
     REQUIRE(message.has_value());
+    REQUIRE(message->action ==
+            baconpaul::sidequest_ns::Engine::MainToAudioMsg::SET_VISUAL_ASSETS);
+    REQUIRE(message->visualAssets != nullptr);
+
+    message = mainToAudio->pop();
+    REQUIRE(message.has_value());
     REQUIRE(message->action == baconpaul::sidequest_ns::Engine::MainToAudioMsg::START_AUDIO);
+}
+
+TEST_CASE("Engine applies visual asset updates from editor queue", "[params]")
+{
+    auto engine = std::make_unique<baconpaul::sidequest_ns::Engine>();
+    auto assets = std::make_shared<baconpaul::sidequest_ns::Patch::VisualAssetState>();
+    assets->dotImages[0].label = "core-dot.png";
+    assets->dotImages[0].pngBase64 = "ZmFrZQ==";
+
+    engine->mainToAudio.push(
+        {baconpaul::sidequest_ns::Engine::MainToAudioMsg::SET_VISUAL_ASSETS,
+         0,
+         0.0f,
+         nullptr,
+         assets});
+    engine->process(nullptr, nullptr, 0, 0);
+
+    REQUIRE(engine->patch.visualAssets.dotImages[0].label == "core-dot.png");
+    REQUIRE(engine->patch.visualAssets.dotImages[0].pngBase64 == "ZmFrZQ==");
+    REQUIRE(engine->patch.dirty);
 }
 
 TEST_CASE("Engine handles parameter rescan requests without CLAP host", "[params]")

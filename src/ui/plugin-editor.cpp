@@ -934,6 +934,8 @@ void PluginEditor::sneakyStartupGrabFrom(Patch &other)
         }
     }
     strncpy(patchCopy.name, other.name, 255);
+    patchCopy.visualAssets = other.visualAssets;
+    applyPatchDotImagesToEditor();
     refreshScopeVisualState();
     postPatchChange(other.name);
 }
@@ -979,6 +981,12 @@ void PluginEditor::syncPatchDotImagesFromEditor()
         target.label = source.label.toStdString();
         target.pngBase64 = imageToPngBase64(source.image);
     }
+
+    mainToAudio.push({Engine::MainToAudioMsg::SET_VISUAL_ASSETS,
+                      0,
+                      0.0f,
+                      nullptr,
+                      std::make_shared<Patch::VisualAssetState>(patchCopy.visualAssets)});
 }
 
 void PluginEditor::applyPatchDotImagesToEditor()

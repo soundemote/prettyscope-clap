@@ -271,6 +271,11 @@ void PresetManager::sendEntirePatchToAudio(Patch &patch, Engine::mainToAudioQueu
         mainToAudio.push(
             {Engine::MainToAudioMsg::SET_PARAM_WITHOUT_NOTIFYING, p->meta.id, p->value});
     }
+    mainToAudio.push({Engine::MainToAudioMsg::SET_VISUAL_ASSETS,
+                      0,
+                      0.0f,
+                      nullptr,
+                      std::make_shared<Patch::VisualAssetState>(patch.visualAssets)});
     mainToAudio.push({Engine::MainToAudioMsg::START_AUDIO});
     mainToAudio.push({Engine::MainToAudioMsg::SEND_PATCH_IS_CLEAN, true});
     mainToAudio.push({Engine::MainToAudioMsg::SEND_POST_LOAD, true});

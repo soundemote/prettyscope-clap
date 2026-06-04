@@ -303,7 +303,11 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
         if (i == maxIts && !engine->readyForStream)
         {
             // sigh. something is wonky
-            engine->prepForStream();
+            engine->processUIQueue(nullptr);
+            if (!engine->readyForStream)
+            {
+                engine->prepForStream();
+            }
         }
 
         auto res = sst::plugininfra::patch_support::patchToOutStream(engine->patch, ostream);
@@ -395,7 +399,7 @@ template <bool multiOut> struct SideQuest : public plugHelper_t, sst::clap_juce_
             e->setZoomFactor(e->zoomFactor);
             return true;
         };
-        // res->sneakyStartupGrabFrom(engine->patch);
+        res->sneakyStartupGrabFrom(engine->patch);
         res->repaint();
 
         return res;

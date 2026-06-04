@@ -243,11 +243,13 @@ struct Engine
             SEND_REQUEST_RESCAN,
             EDITOR_ATTACH_DETATCH, // paramid is true for attach and false for detach
             SEND_PREP_FOR_STREAM,
+            SET_VISUAL_ASSETS,
             PANIC_STOP_VOICES
         } action;
         uint32_t paramId{0};
         float value{0};
         const char *uiManagedPointer{nullptr};
+        std::shared_ptr<Patch::VisualAssetState> visualAssets;
     };
     using audioToUIQueue_t = sst::cpputils::SimpleRingBuffer<AudioToUIMsg, 1024 * 16>;
     using mainToAudioQueue_T = sst::cpputils::SimpleRingBuffer<MainToAudioMsg, 1024 * 64>;
