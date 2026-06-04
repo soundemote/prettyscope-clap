@@ -1,6 +1,7 @@
 param(
     [ValidateSet("All", "CLAP", "VST3")]
-    [string] $Format = "All"
+    [string] $Format = "All",
+    [string] $BuildDir = "build-tracer"
 )
 
 $ErrorActionPreference = "Stop"
@@ -14,8 +15,8 @@ if (!(Test-Path $vcvars)) {
 
 Push-Location $repoRoot
 try {
-    cmd.exe /d /c "call `"$vcvars`" && cmake --build build-ninja && build-ninja\tests\prettyscope-clap-tests.exe"
-    & (Join-Path $PSScriptRoot "install-local-plugin.ps1") -Format $Format
+    cmd.exe /d /c "call `"$vcvars`" && cmake -S . -B `"$BuildDir`" -G Ninja && cmake --build `"$BuildDir`" && ctest --test-dir `"$BuildDir`" --output-on-failure"
+    & (Join-Path $PSScriptRoot "install-local-plugin.ps1") -Format $Format -BuildDir $BuildDir
 }
 finally {
     Pop-Location

@@ -17,7 +17,7 @@ Expected:
 
 ## Plugin Load
 
-1. Install local artifacts with `scripts\install-local-plugin.ps1` or scan the build output directly.
+1. Install local artifacts with `scripts\install-local-plugin.ps1` or scan the `build-tracer` output directly.
 2. Load Prettyscope as an audio effect/analyzer on a stereo track.
 3. Feed the track a clear stereo signal.
 4. Open the editor.

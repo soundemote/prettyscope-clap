@@ -40,9 +40,9 @@ different from the standalone golden reference.
 Useful local build artifacts after a Windows build:
 
 ```text
-build-ninja\prettyscope-clap_assets\CLAP\Prettyscope.clap
-build-ninja\prettyscope-clap_assets\VST3\Prettyscope.vst3
-build-ninja\prettyscope-clap_assets\Standalone-prettyscope-clap_standalone\Prettyscope.exe
+build-tracer\prettyscope-clap_assets\CLAP\Prettyscope.clap
+build-tracer\prettyscope-clap_assets\VST3\Prettyscope.vst3
+build-tracer\prettyscope-clap_assets\Standalone-prettyscope-clap_standalone\Prettyscope.exe
 ```
 
 To copy the built plugin artifacts into user-local Windows plugin folders for
@@ -65,7 +65,7 @@ the same block stream.
 Useful local verification command on Windows:
 
 ```powershell
-cmd.exe /d /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"" && cmake --build build-ninja && build-ninja\tests\prettyscope-clap-tests.exe"
+cmd.exe /d /c "call ""C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"" && cmake -S . -B build-tracer -G Ninja && cmake --build build-tracer && ctest --test-dir build-tracer --output-on-failure"
 ```
 
 See `docs/PLUGIN_BRIDGE_PLAN.md` for the current bridge sequence and boundaries.

@@ -1,12 +1,13 @@
 param(
     [ValidateSet("All", "CLAP", "VST3")]
-    [string] $Format = "All"
+    [string] $Format = "All",
+    [string] $BuildDir = "build-tracer"
 )
 
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-$assetRoot = Join-Path $repoRoot "build-ninja\prettyscope-clap_assets"
+$assetRoot = Join-Path $repoRoot "$BuildDir\prettyscope-clap_assets"
 
 function Copy-PluginArtifact {
     param(
