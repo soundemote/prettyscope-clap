@@ -1,5 +1,6 @@
 param(
     [string] $BuildDir = "build-tracer",
+    [string] $MatrixPath = "",
     [int] $ReportLimit = 5,
     [switch] $IncludeBuildScratch,
     [switch] $RequireFresh
@@ -8,6 +9,9 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+if (!$MatrixPath) {
+    $MatrixPath = Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md"
+}
 
 function Write-Section {
     param([string] $Title)
@@ -33,10 +37,12 @@ try {
     Write-Section "Next Action"
     & (Join-Path $PSScriptRoot "show-daw-test-next-action.ps1") `
         -BuildDir $BuildDir `
+        -MatrixPath $MatrixPath `
         -IncludeBuildScratch:$IncludeBuildScratch
 
     Write-Section "Release Gates"
-    & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1")
+    & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") `
+        -MatrixPath $MatrixPath
 
     Write-Section "Report Index"
     & (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
