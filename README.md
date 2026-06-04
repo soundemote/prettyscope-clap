@@ -58,6 +58,13 @@ To build, run tests, and install the local artifacts in one step:
 powershell -ExecutionPolicy Bypass -File .\scripts\build-test-install-local-plugin.ps1
 ```
 
+To check which build artifacts and user-local plugin copies are currently
+present:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1
+```
+
 For first visual testing, load Prettyscope as an audio effect/analyzer and feed
 it a stereo signal. The plugin passes audio through while the editor scope reads
 the same block stream.

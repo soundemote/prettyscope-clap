@@ -15,6 +15,12 @@ Expected:
 - CLAP, VST3, and standalone artifacts build.
 - `prettyscope-clap-tests` passes.
 
+Optional status check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1
+```
+
 ## Plugin Load
 
 1. Install local artifacts with `scripts\install-local-plugin.ps1` or scan the `build-tracer` output directly.

@@ -30,6 +30,8 @@ the DAW behavior that still needs hands-on testing.
 - Editor image state syncs into engine patch state for host/plugin state save.
 - The local install script verifies copied CLAP/VST3 artifact paths, sizes, and
   timestamps after install.
+- A local status script reports current build artifacts and installed plugin
+  copies with paths, sizes, timestamps, and git revision.
 
 ## Local Verification Command
 
