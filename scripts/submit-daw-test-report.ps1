@@ -4,6 +4,7 @@ param(
     [string] $MatrixPath = "",
     [switch] $AddMissing,
     [switch] $Preview,
+    [switch] $Quiet,
     [switch] $SkipDashboard
 )
 
@@ -26,13 +27,16 @@ else {
     $MatrixPath
 }
 
-Write-Host "Submitting Prettyscope DAW test report"
-Write-Host "  Report: $resolvedReportPath"
-Write-Host "  Matrix: $resolvedMatrixPath"
+if (!$Quiet) {
+    Write-Host "Submitting Prettyscope DAW test report"
+    Write-Host "  Report: $resolvedReportPath"
+    Write-Host "  Matrix: $resolvedMatrixPath"
+}
 
 & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
     -ReportPath $resolvedReportPath `
-    -RequireComplete
+    -RequireComplete `
+    -Quiet:$Quiet
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
@@ -47,6 +51,9 @@ if ($AddMissing) {
 if ($Preview) {
     $updateArgs.Preview = $true
 }
+if ($Quiet) {
+    $updateArgs.Quiet = $true
+}
 
 & (Join-Path $PSScriptRoot "update-daw-host-matrix-from-report.ps1") @updateArgs
 if ($LASTEXITCODE -ne 0) {
@@ -54,20 +61,36 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 if ($Preview) {
-    Write-Host ""
-    Write-Host "Preview only. Rerun without -Preview after the row looks correct."
+    if (!$Quiet) {
+        Write-Host ""
+        Write-Host "Preview only. Rerun without -Preview after the row looks correct."
+    }
     return
 }
 
-& (Join-Path $PSScriptRoot "test-daw-host-matrix.ps1") -MatrixPath $resolvedMatrixPath
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
+$matrixReview = & (Join-Path $PSScriptRoot "test-daw-host-matrix.ps1") `
+    -MatrixPath $resolvedMatrixPath `
+    -PassThru:$Quiet
+if ($Quiet) {
+    if (!$matrixReview.Complete) {
+        foreach ($issue in $matrixReview.Issues) {
+            Write-Host "DAW host matrix issue: $issue"
+        }
+        exit 1
+    }
+}
+else {
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+    }
 }
 
-Write-Host ""
-& (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") -MatrixPath $resolvedMatrixPath
+if (!$Quiet) {
+    Write-Host ""
+    & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") -MatrixPath $resolvedMatrixPath
+}
 
-if (!$SkipDashboard -and $resolvedMatrixPath -eq (Resolve-Path (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md")).Path) {
+if (!$Quiet -and !$SkipDashboard -and $resolvedMatrixPath -eq (Resolve-Path (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md")).Path) {
     Write-Host ""
     & (Join-Path $PSScriptRoot "show-daw-test-dashboard.ps1")
 }

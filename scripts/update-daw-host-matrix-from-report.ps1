@@ -6,6 +6,7 @@ param(
     [string] $Notes = "",
     [switch] $AddMissing,
     [switch] $Preview,
+    [switch] $Quiet,
     [string] $MatrixPath = ""
 )
 
@@ -144,18 +145,20 @@ for ($i = 0; $i -lt $lines.Count; ++$i) {
 }
 
 if ($Preview) {
-    $action = if ($rowIndex -ge 0) { "update existing row" } else { "add missing row" }
-    Write-Host "Preview DAW host matrix update"
-    Write-Host "  Matrix: $resolvedMatrixPath"
-    Write-Host "  Action: $action"
-    Write-Host "  Host:   $hostName"
-    Write-Host "  Format: $format"
-    Write-Host "  OS:     $os"
-    Write-Host "  Status: $targetStatus"
-    Write-Host "  Report: $relativeReportPath"
-    Write-Host "  Row:    $newRow"
-    if ($rowIndex -lt 0 -and !$AddMissing) {
-        Write-Host "  Note:   use -AddMissing to write this new row."
+    if (!$Quiet) {
+        $action = if ($rowIndex -ge 0) { "update existing row" } else { "add missing row" }
+        Write-Host "Preview DAW host matrix update"
+        Write-Host "  Matrix: $resolvedMatrixPath"
+        Write-Host "  Action: $action"
+        Write-Host "  Host:   $hostName"
+        Write-Host "  Format: $format"
+        Write-Host "  OS:     $os"
+        Write-Host "  Status: $targetStatus"
+        Write-Host "  Report: $relativeReportPath"
+        Write-Host "  Row:    $newRow"
+        if ($rowIndex -lt 0 -and !$AddMissing) {
+            Write-Host "  Note:   use -AddMissing to write this new row."
+        }
     }
     return
 }
@@ -187,10 +190,12 @@ else {
 
 Set-Content -Path $resolvedMatrixPath -Value $lines -Encoding utf8
 
-Write-Host "Updated DAW host matrix"
-Write-Host "  Matrix: $resolvedMatrixPath"
-Write-Host "  Host:   $hostName"
-Write-Host "  Format: $format"
-Write-Host "  OS:     $os"
-Write-Host "  Status: $targetStatus"
-Write-Host "  Report: $relativeReportPath"
+if (!$Quiet) {
+    Write-Host "Updated DAW host matrix"
+    Write-Host "  Matrix: $resolvedMatrixPath"
+    Write-Host "  Host:   $hostName"
+    Write-Host "  Format: $format"
+    Write-Host "  OS:     $os"
+    Write-Host "  Status: $targetStatus"
+    Write-Host "  Report: $relativeReportPath"
+}

@@ -125,6 +125,7 @@ function Read-MatrixStatus {
 
     $rows = & (Join-Path $PSScriptRoot "show-daw-host-matrix.ps1") `
         -MatrixPath $MatrixPath `
+        -Quiet `
         -PassThru
     $match = $rows.Rows | Where-Object {
         $_.Host -eq $HostName -and $_.Format -eq $Format -and $_.OS -eq "Windows"
@@ -162,6 +163,7 @@ Assert-True ($failReview.ResultFailureCount -eq 1) "Failing smoke report should 
     -ReportPath $passReport `
     -MatrixPath $matrixPath `
     -AddMissing `
+    -Quiet `
     -SkipDashboard
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
@@ -171,6 +173,7 @@ if ($LASTEXITCODE -ne 0) {
     -ReportPath $failReport `
     -MatrixPath $matrixPath `
     -AddMissing `
+    -Quiet `
     -SkipDashboard
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
@@ -187,7 +190,8 @@ try {
         -ReportPath $failReport `
         -MatrixPath $matrixPath `
         -Status pass `
-        -AddMissing
+        -AddMissing `
+        -Quiet
 }
 catch {
     $forcedPassRejected = $true

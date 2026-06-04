@@ -1,6 +1,7 @@
 param(
     [string] $MatrixPath = "",
     [switch] $OpenMatrix,
+    [switch] $Quiet,
     [switch] $PassThru
 )
 
@@ -47,24 +48,26 @@ $firstPassTargets = $rows | Where-Object {
     $_.Format -in @("CLAP", "VST3") -and $_.Status -ne "local smoke"
 }
 
-Write-Host "Prettyscope DAW host matrix"
-Write-Host "  Matrix: $matrixPath"
-Write-Host "  Rows:   $($rows.Count)"
-Write-Host ""
-Write-Host "Status summary"
-$statusSummary | Format-Table -AutoSize Status, Count | Out-Host
+if (!$Quiet) {
+    Write-Host "Prettyscope DAW host matrix"
+    Write-Host "  Matrix: $matrixPath"
+    Write-Host "  Rows:   $($rows.Count)"
+    Write-Host ""
+    Write-Host "Status summary"
+    $statusSummary | Format-Table -AutoSize Status, Count | Out-Host
 
-Write-Host "First-pass target rows"
-$firstPassTargets |
-    Format-Table -AutoSize Host, Format, OS, Status, LatestReport, Notes |
-    Out-Host
+    Write-Host "First-pass target rows"
+    $firstPassTargets |
+        Format-Table -AutoSize Host, Format, OS, Status, LatestReport, Notes |
+        Out-Host
 
-Write-Host "First-pass minimum gates"
-Write-Host "  - At least one CLAP host passes scan/open/audio/editor behavior."
-Write-Host "  - At least one VST3 host passes scan/open/audio/editor behavior."
-Write-Host "  - At least one host passes preset save/reload with Dot 1 and Dot 2 images."
-Write-Host "  - At least one host passes session save/reopen with Dot 1 and Dot 2 images."
-Write-Host "  - Black OpenGL, crash, failed scan, or lost image state means fix needed."
+    Write-Host "First-pass minimum gates"
+    Write-Host "  - At least one CLAP host passes scan/open/audio/editor behavior."
+    Write-Host "  - At least one VST3 host passes scan/open/audio/editor behavior."
+    Write-Host "  - At least one host passes preset save/reload with Dot 1 and Dot 2 images."
+    Write-Host "  - At least one host passes session save/reopen with Dot 1 and Dot 2 images."
+    Write-Host "  - Black OpenGL, crash, failed scan, or lost image state means fix needed."
+}
 
 if ($OpenMatrix) {
     Invoke-Item -LiteralPath $matrixPath
