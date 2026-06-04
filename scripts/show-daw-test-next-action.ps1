@@ -32,6 +32,10 @@ try {
         Write-Host "  Report: $($latest.Path)"
         Write-Host "  Issues: $($latest.Issues)"
         Write-Host ""
+        Write-Host "Latest grouped artifacts:"
+        & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
+            -BuildDir $BuildDir
+        Write-Host ""
         Write-Host "Review command:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath `"$($latest.Path)`" -RequireComplete"
         if ($OpenReport) {
@@ -46,6 +50,10 @@ try {
         $latest = $completeReports | Sort-Object Modified -Descending | Select-Object -First 1
         Write-Host "Next DAW test action: review the latest completed report and decide follow-up."
         Write-Host "  Report: $($latest.Path)"
+        Write-Host ""
+        Write-Host "Latest grouped artifacts:"
+        & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
+            -BuildDir $BuildDir
         Write-Host ""
         Write-Host "Index command:"
         Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-report-index.ps1 -CompleteOnly"
