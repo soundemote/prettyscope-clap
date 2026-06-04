@@ -108,6 +108,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -R
 
 Add `-RequireComplete` when automation should fail on missing fields.
 
+To create a local manifest of build artifacts and DAW-test handoff files:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle-manifest.ps1
+```
+
 To create known-good PNGs for Dot 1 / Dot 2 image override testing:
 
 ```powershell

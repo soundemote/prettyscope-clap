@@ -42,6 +42,8 @@ the DAW behavior that still needs hands-on testing.
 - Generated DAW test reports are kept in `docs\test-reports` by default.
 - A report review script checks filled DAW reports for blank essentials before
   handoff.
+- A bundle manifest script records built artifacts, installed artifacts, and
+  DAW-test handoff files with SHA256 hashes.
 - DAW prep/report scripts support `-PassThru` when automation needs the
   generated report path.
 - A smoke-test asset script generates known-good PNGs for Dot 1 / Dot 2 image

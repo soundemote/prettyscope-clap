@@ -31,6 +31,12 @@ After filling the report, review it for missing essentials:
 powershell -ExecutionPolicy Bypass -File .\scripts\review-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
 ```
 
+Optional handoff manifest:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-daw-test-bundle-manifest.ps1
+```
+
 Build/test only:
 
 ```powershell
