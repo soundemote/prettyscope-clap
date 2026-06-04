@@ -31,6 +31,8 @@ try {
         -BuildDir $BuildDir `
         -RequireFresh
 
+    & (Join-Path $PSScriptRoot "test-visual-control-manifest.ps1")
+
     $reportPath = Join-Path $OutputDir "prettyscope-daw-test-report.md"
     $manifestPath = Join-Path $OutputDir "prettyscope-daw-test-bundle-manifest.md"
     $prep = & (Join-Path $PSScriptRoot "prepare-daw-test.ps1") `

@@ -23,6 +23,12 @@ Dashboard:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
 ```
 
+Visual control manifest check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-visual-control-manifest.ps1
+```
+
 One-command DAW test prep:
 
 ```powershell

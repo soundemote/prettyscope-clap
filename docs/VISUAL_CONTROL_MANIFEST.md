@@ -2,6 +2,7 @@
 
 This manifest records the first DAW-test visual control surface. It should match
 the descriptor-owned parameter layer in `src\scope\visual-parameters.h`.
+Run `scripts\test-visual-control-manifest.ps1` after descriptor changes.
 
 ## Source Of Truth
 
