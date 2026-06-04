@@ -28,6 +28,9 @@ again later:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
+Add `-OpenReport`, `-OpenBundleFolder`, or `-OpenBundleZipFolder` when you want
+Windows to open the latest report or bundle location directly.
+
 ## 2. Load Prettyscope In The DAW
 
 1. Rescan plugins if the host does not already see Prettyscope.

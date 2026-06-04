@@ -1,5 +1,8 @@
 param(
     [string] $BuildDir = "build-tracer",
+    [switch] $OpenReport,
+    [switch] $OpenBundleFolder,
+    [switch] $OpenBundleZipFolder,
     [switch] $PassThru
 )
 
@@ -73,11 +76,52 @@ function Format-PathOrMissing {
     return $Item.FullName
 }
 
+function Open-ItemIfPresent {
+    param(
+        [System.IO.FileSystemInfo] $Item,
+        [string] $Label
+    )
+
+    if (!$Item) {
+        Write-Host "Cannot open ${Label}: none found"
+        return
+    }
+
+    Invoke-Item -LiteralPath $Item.FullName
+    Write-Host "Opened ${Label}: $($Item.FullName)"
+}
+
+function Open-ParentIfPresent {
+    param(
+        [System.IO.FileSystemInfo] $Item,
+        [string] $Label
+    )
+
+    if (!$Item) {
+        Write-Host "Cannot open ${Label}: none found"
+        return
+    }
+
+    $parent = Split-Path -Parent $Item.FullName
+    Invoke-Item -LiteralPath $parent
+    Write-Host "Opened ${Label}: $parent"
+}
+
 Write-Host "Latest Prettyscope DAW test artifacts"
 Write-Host "  Report:        $(Format-PathOrMissing $latestReadinessReport)"
 Write-Host "  Manifest:      $(Format-PathOrMissing $latestManifest)"
 Write-Host "  Bundle folder: $(Format-PathOrMissing $latestBundleFolder)"
 Write-Host "  Bundle zip:    $(Format-PathOrMissing $latestBundleZip)"
+
+if ($OpenReport) {
+    Open-ItemIfPresent -Item $latestReadinessReport -Label "report"
+}
+if ($OpenBundleFolder) {
+    Open-ItemIfPresent -Item $latestBundleFolder -Label "bundle folder"
+}
+if ($OpenBundleZipFolder) {
+    Open-ParentIfPresent -Item $latestBundleZip -Label "bundle zip folder"
+}
 
 if ($PassThru) {
     [PSCustomObject]@{

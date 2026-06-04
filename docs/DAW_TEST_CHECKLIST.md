@@ -95,6 +95,9 @@ Print the latest generated DAW test artifacts:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
+Optional switches: `-OpenReport`, `-OpenBundleFolder`, and
+`-OpenBundleZipFolder`.
+
 ## Plugin Load
 
 1. Install local artifacts with `scripts\install-local-plugin.ps1` or scan the `build-tracer` output directly.

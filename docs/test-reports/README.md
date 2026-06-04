@@ -32,6 +32,8 @@ paths with:
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-latest-daw-test-artifacts.ps1
 ```
 
+Add `-OpenReport` to open the latest generated report.
+
 Review a filled report before handoff with:
 
 ```powershell
