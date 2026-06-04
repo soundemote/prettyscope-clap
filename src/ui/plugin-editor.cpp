@@ -684,13 +684,16 @@ void PluginEditor::showPresetPopup()
     p.addSubMenu("User Interface", uim);
 
     p.addSeparator();
-    p.addItem("Read the Manual", false, false, []() {});
     p.addItem("Get the Source",
               []() {
                   juce::URL("https://github.com/soundemote/prettyscope-clap/")
                       .launchInDefaultBrowser();
               });
-    p.addItem("Acknowledgements", false, false, []() {});
+    p.addItem("Report Feedback",
+              []() {
+                  juce::URL("https://github.com/soundemote/prettyscope-clap/issues")
+                      .launchInDefaultBrowser();
+              });
     p.showMenuAsync(juce::PopupMenu::Options().withParentComponent(this));
 }
 

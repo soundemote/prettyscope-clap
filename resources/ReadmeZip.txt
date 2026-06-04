@@ -1,21 +1,30 @@
 Prettyscope
 Source: https://github.com/soundemote/prettyscope-clap
-Manual: (coming later)
 
 Prettyscope is an OpenGL oscilloscope and signal visualizer for DAW audio.
+This is an early build intended for testing the visual controls, audio input path,
+dot image overrides, and screen-burn/phosphor behavior.
 
-You've downloaded the zip file for either windows or linux (both have this same README) containing a clap,
-a vst3, and a standalone executable.
+This zip contains plugin builds, usually CLAP, VST3, and a standalone executable
+depending on the platform package.
 
-To install the plugin you need to move the clap or vst3 to the appropriate place on your computer
+To install the plugin, move the CLAP or VST3 bundle to the appropriate plugin folder.
 
-On windows files, move them to `c:\program files\common files\clap` or `\vst3`
-On linux, it is usually ~/.clap, ~/.vst or /usr/lib/clap and /usr/lib/vst3
+On Windows:
+- CLAP: C:\Program Files\Common Files\CLAP
+- VST3: C:\Program Files\Common Files\VST3
+- User-local CLAP: %LOCALAPPDATA%\Programs\Common\CLAP
+- User-local VST3: %LOCALAPPDATA%\Programs\Common\VST3
 
-To install just move the file into those locations using whatever mechanism you are happiest with
-in your environment.
+On Linux:
+- CLAP: ~/.clap or /usr/lib/clap
+- VST3: ~/.vst3 or /usr/lib/vst3
 
-If you have feedback or ideas, open an issue on the Prettyscope project.
+After installing, rescan plugins in your DAW. Put Prettyscope on an audio track
+or bus with signal flowing through it, then open the editor to see the scope.
+
+If you have feedback or ideas, open an issue on the Prettyscope project:
+https://github.com/soundemote/prettyscope-clap/issues
 
 The Prettyscope CLAP source code is released under the MIT license, but the final product contains GPL3 dependencies
 so this release is released under the GNU General Public License, 3 or later. You can read that license in the
