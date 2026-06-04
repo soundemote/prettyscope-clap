@@ -62,6 +62,8 @@ the DAW behavior that still needs hands-on testing.
   incomplete report, or review completed reports.
 - A DAW test dashboard script combines local plugin status, latest artifacts,
   next action, release gates, and report index output.
+- A release candidate summary script writes a Markdown snapshot of local status,
+  machine checks, release gates, next action, and latest DAW test artifacts.
 - A bundle manifest script records built artifacts, installed artifacts, and
   DAW-test handoff files with SHA256 hashes.
 - A bundle script assembles a local DAW-test folder/zip with artifacts, docs,
@@ -153,6 +155,12 @@ For first-pass DAW release gates:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
+```
+
+For a saved release-candidate summary:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\new-release-candidate-summary.ps1
 ```
 
 For submitting a completed hands-on DAW report:

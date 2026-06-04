@@ -130,6 +130,7 @@ try {
         "scripts\show-daw-test-dashboard.ps1",
         "scripts\show-daw-host-matrix.ps1",
         "scripts\show-daw-release-gates.ps1",
+        "scripts\new-release-candidate-summary.ps1",
         "scripts\update-daw-host-matrix-from-report.ps1",
         "scripts\submit-daw-test-report.ps1",
         "scripts\show-local-plugin-status.ps1"
@@ -175,6 +176,7 @@ $handoffLines
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-host-matrix.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-release-gates.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\new-release-candidate-summary.ps1
     powershell -ExecutionPolicy Bypass -File .\scripts\update-daw-host-matrix-from-report.ps1 -ReportPath .\docs\test-reports\your-report.md
     powershell -ExecutionPolicy Bypass -File .\scripts\submit-daw-test-report.ps1 -ReportPath .\docs\test-reports\your-report.md
     powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-report-classification.ps1
