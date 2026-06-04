@@ -20,6 +20,8 @@ the DAW behavior that still needs hands-on testing.
 - Screen Burn controls exist for persistence, fast decay, afterglow, and floor
   fade.
 - Dot 1 and Dot 2 image controls exist for load, generated PNG save, and clear.
+- Loaded dot images are normalized to a maximum 512 px longest side before
+  rendering/persisting.
 - Loaded dot images are uploaded to OpenGL textures and rendered through the dot
   image path.
 - Dot image labels and PNG payloads are stored in patch XML state.
@@ -52,7 +54,8 @@ Use `docs\DAW_TEST_CHECKLIST.md` to verify:
 - Preset save/reload restores dot images without needing original external
   files.
 - DAW session save/reopen restores dot images and visual parameter values.
-- Large image files do not create unacceptable host state size or save latency.
+- Large image files are resized as expected and do not create unacceptable host
+  state size or save latency.
 
 ## Known Non-Release Gaps
 

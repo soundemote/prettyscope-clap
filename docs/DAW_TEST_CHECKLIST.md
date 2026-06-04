@@ -64,6 +64,8 @@ Expected:
 - Load updates the dot status label.
 - Image Mix fades generated dot drawing while adding the loaded texture.
 - Clear returns the dot to Generated mode.
+- Loaded images are normalized to a maximum 512 px longest side before plugin
+  state storage.
 
 ## Preset Persistence
 
@@ -95,6 +97,7 @@ Expected:
 
 ## Known Watch Points
 
-- Very large image files may increase preset/session state size.
+- Very large image files are resized for plugin state storage, but unusual image
+  formats or extreme files should still be tested carefully.
 - Current image rendering is an additive point-sprite override path, not the final visual polish pass.
 - If a host saves immediately after an image load while audio is stopped, verify the session restore path carefully.
