@@ -11,6 +11,7 @@
 #define PRETTYSCOPE_UI_SCOPE_RENDERER_H
 
 #include <algorithm>
+#include <array>
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_opengl/juce_opengl.h>
@@ -31,13 +32,26 @@ struct ScopeRenderContext
     bool hasDrawableArea() const { return pixelWidth() > 0 && pixelHeight() > 0; }
 };
 
+struct ScopeDotImageSlot
+{
+    juce::Image image;
+    uint64_t revision{};
+
+    bool hasImage() const { return image.isValid(); }
+};
+
+struct ScopeDotImages
+{
+    std::array<ScopeDotImageSlot, 2> slots;
+};
+
 struct IScopeRenderer
 {
     virtual ~IScopeRenderer() = default;
 
     virtual void initialise(juce::OpenGLContext &context) = 0;
     virtual void render(const ScopeRenderContext &context, const ScopeAudioSnapshot &snapshot,
-                        const ScopeVisualState &visualState) = 0;
+                        const ScopeVisualState &visualState, const ScopeDotImages &dotImages) = 0;
     virtual void shutdown() = 0;
 };
 } // namespace baconpaul::sidequest_ns::ui

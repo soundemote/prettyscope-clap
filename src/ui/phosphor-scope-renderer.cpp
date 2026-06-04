@@ -49,6 +49,12 @@ struct BeamVertex
     float corner{};
 };
 
+struct DotPointVertex
+{
+    float x{};
+    float y{};
+};
+
 struct SignalBuffer
 {
     std::vector<float> left;
@@ -238,6 +244,36 @@ void main()
 }
 )GLSL";
 
+constexpr const char *kDotImageVertex = R"GLSL(
+#version 150
+
+in vec2 dotPosition;
+uniform vec2 viewportSize;
+uniform float pointSize;
+
+void main()
+{
+    gl_Position = vec4(dotPosition, 0.0, 1.0);
+    gl_PointSize = pointSize;
+}
+)GLSL";
+
+constexpr const char *kDotImageFragment = R"GLSL(
+#version 150
+
+uniform sampler2D dotTexture;
+uniform float intensity;
+uniform float imageMix;
+
+out vec4 fragColor;
+
+void main()
+{
+    vec4 texel = texture(dotTexture, gl_PointCoord);
+    fragColor = vec4(texel.rgb * intensity, texel.a * imageMix);
+}
+)GLSL";
+
 constexpr const char *kDecayFragment = R"GLSL(
 #version 150
 
@@ -334,6 +370,35 @@ GlId createBeamProgram()
     glBindAttribLocation(program, 0, "segmentStart");
     glBindAttribLocation(program, 1, "segmentEnd");
     glBindAttribLocation(program, 2, "cornerIndex");
+    glLinkProgram(program);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    int success = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (success == GL_FALSE)
+    {
+        char log[1024] = {};
+        glGetProgramInfoLog(program, sizeof(log), nullptr, log);
+        glDeleteProgram(program);
+        throw std::runtime_error(std::string("OpenGL shader link failed: ") + log);
+    }
+
+    return program;
+}
+
+GlId createDotImageProgram()
+{
+    using namespace juce::gl;
+
+    const GlId vertexShader = compileShader(GL_VERTEX_SHADER, kDotImageVertex);
+    const GlId fragmentShader = compileShader(GL_FRAGMENT_SHADER, kDotImageFragment);
+    const GlId program = glCreateProgram();
+
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
+    glBindAttribLocation(program, 0, "dotPosition");
     glLinkProgram(program);
 
     glDeleteShader(vertexShader);
@@ -531,6 +596,197 @@ class BeamRenderer
     std::vector<BeamVertex> vertices;
 };
 
+class DotImageRenderer
+{
+  public:
+    void initialise()
+    {
+        using namespace juce::gl;
+
+        program = createDotImageProgram();
+
+        glGenVertexArrays(1, &vertexArray);
+        glBindVertexArray(vertexArray);
+
+        glGenBuffers(1, &vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(DotPointVertex), nullptr);
+
+        glBindVertexArray(0);
+    }
+
+    int uploadPoints(const SignalBuffer &signal, const PhosphorParams &params, int width,
+                     int height)
+    {
+        using namespace juce::gl;
+
+        points.clear();
+        if (!signal.renderable())
+        {
+            return 0;
+        }
+
+        points.reserve(signal.size());
+        for (size_t i = 0; i < signal.size(); ++i)
+        {
+            const auto p = mapSample(signal, i, params, width, height);
+            points.push_back({p.x, p.y});
+        }
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER,
+                     static_cast<ptrdiff_t>(points.size() * sizeof(DotPointVertex)),
+                     points.data(), GL_DYNAMIC_DRAW);
+        return static_cast<int>(points.size());
+    }
+
+    void updateTextures(const ScopeDotImages &dotImages)
+    {
+        for (size_t i = 0; i < textures.size(); ++i)
+        {
+            if (revisions[i] == dotImages.slots[i].revision)
+            {
+                continue;
+            }
+
+            revisions[i] = dotImages.slots[i].revision;
+            uploadTexture(i, dotImages.slots[i].image);
+        }
+    }
+
+    void draw(size_t dotIndex, int pointCount, float pointSize, float intensity, float imageMix,
+              int viewportWidth, int viewportHeight) const
+    {
+        using namespace juce::gl;
+
+        if (dotIndex >= textures.size() || textures[dotIndex] == 0 || pointCount <= 0 ||
+            imageMix <= 0.0f || intensity <= 0.0f)
+        {
+            return;
+        }
+
+        glEnable(0x8642); // GL_PROGRAM_POINT_SIZE
+        glUseProgram(program);
+        glUniform2f(glGetUniformLocation(program, "viewportSize"),
+                    static_cast<float>(viewportWidth), static_cast<float>(viewportHeight));
+        glUniform1f(glGetUniformLocation(program, "pointSize"), pointSize);
+        glUniform1f(glGetUniformLocation(program, "intensity"), intensity);
+        glUniform1f(glGetUniformLocation(program, "imageMix"), imageMix);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures[dotIndex]);
+        glUniform1i(glGetUniformLocation(program, "dotTexture"), 0);
+        glBindVertexArray(vertexArray);
+        glDrawArrays(GL_POINTS, 0, pointCount);
+        glBindVertexArray(0);
+        glUseProgram(0);
+    }
+
+    void destroy()
+    {
+        using namespace juce::gl;
+
+        for (auto &texture : textures)
+        {
+            if (texture != 0)
+            {
+                glDeleteTextures(1, &texture);
+                texture = 0;
+            }
+        }
+        if (vertexBuffer != 0)
+        {
+            glDeleteBuffers(1, &vertexBuffer);
+            vertexBuffer = 0;
+        }
+        if (vertexArray != 0)
+        {
+            glDeleteVertexArrays(1, &vertexArray);
+            vertexArray = 0;
+        }
+        if (program != 0)
+        {
+            glDeleteProgram(program);
+            program = 0;
+        }
+        points.clear();
+        revisions = {};
+    }
+
+  private:
+    static Point mapSample(const SignalBuffer &signal, size_t index, const PhosphorParams &params,
+                           int width, int height)
+    {
+        const auto aspect = width > height ? static_cast<float>(height) / static_cast<float>(width)
+                                           : 1.0f;
+        const auto verticalAspect =
+            height > width ? static_cast<float>(width) / static_cast<float>(height) : 1.0f;
+        return {signal.l(index) * params.traceGain * 0.82f * aspect,
+                signal.r(index) * params.traceGain * 0.82f * verticalAspect};
+    }
+
+    void uploadTexture(size_t dotIndex, const juce::Image &image)
+    {
+        using namespace juce::gl;
+
+        if (dotIndex >= textures.size())
+        {
+            return;
+        }
+
+        if (textures[dotIndex] != 0)
+        {
+            glDeleteTextures(1, &textures[dotIndex]);
+            textures[dotIndex] = 0;
+        }
+
+        if (!image.isValid())
+        {
+            return;
+        }
+
+        const auto converted = image.convertedToFormat(juce::Image::ARGB);
+        const auto width = converted.getWidth();
+        const auto height = converted.getHeight();
+        if (width <= 0 || height <= 0)
+        {
+            return;
+        }
+
+        std::vector<unsigned char> pixels(static_cast<size_t>(width * height * 4));
+        for (int y = 0; y < height; ++y)
+        {
+            for (int x = 0; x < width; ++x)
+            {
+                const auto c = converted.getPixelAt(x, y);
+                const auto offset = static_cast<size_t>((y * width + x) * 4);
+                pixels[offset + 0] = c.getRed();
+                pixels[offset + 1] = c.getGreen();
+                pixels[offset + 2] = c.getBlue();
+                pixels[offset + 3] = c.getAlpha();
+            }
+        }
+
+        glGenTextures(1, &textures[dotIndex]);
+        glBindTexture(GL_TEXTURE_2D, textures[dotIndex]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixels.data());
+    }
+
+    GlId program{};
+    GlId vertexArray{};
+    GlId vertexBuffer{};
+    std::array<GlId, 2> textures{};
+    std::array<uint64_t, 2> revisions{};
+    std::vector<DotPointVertex> points;
+};
+
 class PersistenceBuffer
 {
   public:
@@ -692,6 +948,7 @@ struct PhosphorScopeRenderer::Impl
 {
     ScreenQuad quad;
     BeamRenderer beam;
+    DotImageRenderer dotImages;
     PersistenceBuffer persistence;
     SignalBuffer signal;
     bool initialised{false};
@@ -700,6 +957,7 @@ struct PhosphorScopeRenderer::Impl
     {
         quad.initialise();
         beam.initialise();
+        dotImages.initialise();
         persistence.initialise();
         initialised = true;
     }
@@ -707,6 +965,7 @@ struct PhosphorScopeRenderer::Impl
     void shutdown()
     {
         persistence.destroy();
+        dotImages.destroy();
         beam.destroy();
         quad.destroy();
         signal.left.clear();
@@ -717,7 +976,7 @@ struct PhosphorScopeRenderer::Impl
     }
 
     void render(const ScopeRenderContext &context, const ScopeAudioSnapshot &snapshot,
-                const ScopeVisualState &visualState)
+                const ScopeVisualState &visualState, const ScopeDotImages &dotImageState)
     {
         using namespace juce::gl;
 
@@ -738,6 +997,16 @@ struct PhosphorScopeRenderer::Impl
             (visualState.dot1Halo / 0.35f) * visualState.dotOverallHalo;
         const auto dot2HaloRatio =
             (visualState.dot2Halo / 0.65f) * visualState.dotOverallHalo;
+        const auto dot1ImageMix =
+            dotImageState.slots[0].hasImage()
+                ? std::clamp(visualState.dot1ImageMix * visualState.dotOverallImageMix, 0.0f,
+                             1.0f)
+                : 0.0f;
+        const auto dot2ImageMix =
+            dotImageState.slots[1].hasImage()
+                ? std::clamp(visualState.dot2ImageMix * visualState.dotOverallImageMix, 0.0f,
+                             1.0f)
+                : 0.0f;
 
         params.persistence =
             std::clamp(visualState.phosphorDecay * persistenceRatio, 0.0f, 0.9995f);
@@ -751,12 +1020,14 @@ struct PhosphorScopeRenderer::Impl
                                       0.25f, 160.0f);
         params.coreIntensity = std::clamp(1.15f * visualState.beamIntensity / 1.6f *
                                               visualState.dot1Intensity *
-                                              visualState.dotOverallIntensity,
+                                              visualState.dotOverallIntensity *
+                                              (1.0f - dot1ImageMix),
                                           0.0f, 12.0f);
         params.glowIntensity =
             std::clamp(visualState.beamGlowStrength * visualState.beamIntensity / 1.6f *
                            (visualState.dot2Intensity / 0.45f) *
-                           visualState.dotOverallIntensity * dot2HaloRatio,
+                           visualState.dotOverallIntensity * dot2HaloRatio *
+                           (1.0f - dot2ImageMix),
                        0.0f, 12.0f);
         params.fastDecay =
             std::clamp(visualState.phosphorFastDecay * fastDecayRatio, 0.0f, 1.0f);
@@ -766,6 +1037,8 @@ struct PhosphorScopeRenderer::Impl
 
         signal.append(snapshot, visualState.timeScale, snapshot.serial);
         const auto vertexCount = beam.uploadSegments(signal, params, width, height);
+        const auto pointCount = dotImages.uploadPoints(signal, params, width, height);
+        dotImages.updateTextures(dotImageState);
 
         persistence.beginFrame(params, width, height, quad);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -773,6 +1046,12 @@ struct PhosphorScopeRenderer::Impl
                   height);
         beam.draw(vertexCount, params.traceColor, params.coreWidth, params.coreIntensity, width,
                   height);
+        dotImages.draw(1, pointCount, params.glowWidth, visualState.dot2Intensity *
+                                                        visualState.dotOverallIntensity,
+                       dot2ImageMix, width, height);
+        dotImages.draw(0, pointCount, params.coreWidth, visualState.dot1Intensity *
+                                                        visualState.dotOverallIntensity,
+                       dot1ImageMix, width, height);
         persistence.endFrame(quad, width, height);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -791,9 +1070,10 @@ void PhosphorScopeRenderer::initialise(juce::OpenGLContext &)
 
 void PhosphorScopeRenderer::render(const ScopeRenderContext &context,
                                    const ScopeAudioSnapshot &snapshot,
-                                   const ScopeVisualState &visualState)
+                                   const ScopeVisualState &visualState,
+                                   const ScopeDotImages &dotImages)
 {
-    impl->render(context, snapshot, visualState);
+    impl->render(context, snapshot, visualState, dotImages);
 }
 
 void PhosphorScopeRenderer::shutdown()

@@ -38,6 +38,7 @@
 #include "presets/preset-manager.h"
 #include "scope/scope-audio-snapshot.h"
 #include "scope/scope-visual-state.h"
+#include "scope-renderer.h"
 #include "preset-data-binding.h"
 #include "ui-defaults.h"
 
@@ -141,7 +142,9 @@ struct PluginEditor : jcmp::WindowPanel
     void sneakyStartupGrabFrom(Patch &other);
 
     ScopeVisualState currentScopeVisualState() const;
+    ScopeDotImages currentScopeDotImages() const;
     void refreshScopeVisualState();
+    void refreshScopeDotImages();
 
     struct DotImageOverride
     {

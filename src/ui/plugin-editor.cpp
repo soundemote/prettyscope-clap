@@ -128,6 +128,7 @@ PluginEditor::PluginEditor(Engine::audioToUIQueue_t &atou, Engine::mainToAudioQu
 
     scopeOpenGLView = std::make_unique<ScopeOpenGLView>();
     scopeOpenGLView->setVisualState(currentScopeVisualState());
+    scopeOpenGLView->setDotImages(currentScopeDotImages());
     addAndMakeVisible(*scopeOpenGLView);
 
     scopeInspector = std::make_unique<ScopeSnapshotInspector>();
@@ -908,11 +909,30 @@ ScopeVisualState PluginEditor::currentScopeVisualState() const
     return patchCopy.visualParams.visualState();
 }
 
+ScopeDotImages PluginEditor::currentScopeDotImages() const
+{
+    auto images = ScopeDotImages{};
+    for (size_t i = 0; i < dotImageOverrides.size(); ++i)
+    {
+        images.slots[i].image = dotImageOverrides[i].image;
+        images.slots[i].revision = dotImageOverrides[i].revision;
+    }
+    return images;
+}
+
 void PluginEditor::refreshScopeVisualState()
 {
     if (scopeOpenGLView)
     {
         scopeOpenGLView->setVisualState(currentScopeVisualState());
+    }
+}
+
+void PluginEditor::refreshScopeDotImages()
+{
+    if (scopeOpenGLView)
+    {
+        scopeOpenGLView->setDotImages(currentScopeDotImages());
     }
 }
 
@@ -969,6 +989,7 @@ void PluginEditor::loadDotImageOverride(size_t dotIndex)
             dot.image = image;
             dot.label = file.getFileName();
             dot.revision++;
+            refreshScopeDotImages();
 
             if (mainPanel)
             {
@@ -1039,6 +1060,7 @@ void PluginEditor::clearDotImageOverride(size_t dotIndex)
     dot.image = {};
     dot.label = "Generated";
     dot.revision++;
+    refreshScopeDotImages();
 
     if (mainPanel)
     {

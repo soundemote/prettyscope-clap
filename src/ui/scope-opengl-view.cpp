@@ -47,6 +47,12 @@ void ScopeOpenGLView::setVisualState(const ScopeVisualState &visualState)
     latestVisualState = sanitizedScopeVisualState(visualState);
 }
 
+void ScopeOpenGLView::setDotImages(const ScopeDotImages &dotImages)
+{
+    const juce::ScopedLock lock(snapshotLock);
+    latestDotImages = dotImages;
+}
+
 void ScopeOpenGLView::resized()
 {
     const juce::ScopedLock lock(snapshotLock);
@@ -92,11 +98,13 @@ void ScopeOpenGLView::renderOpenGL()
 {
     ScopeAudioSnapshot snapshot;
     ScopeVisualState visualState;
+    ScopeDotImages dotImages;
     juce::Rectangle<int> bounds;
     {
         const juce::ScopedLock lock(snapshotLock);
         snapshot = latestSnapshot;
         visualState = latestVisualState;
+        dotImages = latestDotImages;
         bounds = renderBounds;
     }
 
@@ -106,7 +114,7 @@ void ScopeOpenGLView::renderOpenGL()
         {
             renderer->render({openGLContext, bounds,
                               static_cast<float>(openGLContext.getRenderingScale())},
-                             snapshot, visualState);
+                             snapshot, visualState, dotImages);
         }
         catch (const std::exception &e)
         {

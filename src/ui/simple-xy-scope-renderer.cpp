@@ -19,7 +19,8 @@ void SimpleXyScopeRenderer::shutdown() {}
 
 void SimpleXyScopeRenderer::render(const ScopeRenderContext &context,
                                    const ScopeAudioSnapshot &snapshot,
-                                   const ScopeVisualState &visualState)
+                                   const ScopeVisualState &visualState,
+                                   const ScopeDotImages &)
 {
     using namespace juce::gl;
 
