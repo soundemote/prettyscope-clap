@@ -143,7 +143,12 @@ foreach ($required in $requiredEntries) {
 }
 
 $manifestText = Read-BundleTextFile $resolvedBundlePath "prettyscope-daw-test-bundle-manifest.md"
-foreach ($needle in @("Built CLAP", "Built VST3", "Built Standalone", "scripts\new-daw-test-bundle.ps1")) {
+foreach ($needle in @(
+        "Built CLAP",
+        "Built VST3",
+        "Built Standalone",
+        "scripts\new-daw-test-bundle.ps1",
+        "scripts\submit-latest-daw-test-report.ps1")) {
     if (!$manifestText.Contains($needle)) {
         $issues.Add("Manifest does not mention: $needle") | Out-Null
     }
