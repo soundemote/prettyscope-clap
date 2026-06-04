@@ -34,6 +34,8 @@ Require-Text "active dot image save" 'Save exports the generated texture in Gene
 Require-Text "Dot image state persistence" 'Dot image labels and PNG payloads are stored in patch XML state'
 Require-Text "loaded image aspect source verifier" 'dot-image renderer source verifier checks that loaded image aspect'
 Require-Text "loaded image aspect preservation coverage" 'Loaded image aspect preservation'
+Require-Text "dot overall source verifier" 'dot-overall renderer source verifier checks that shared intensity'
+Require-Text "dot overall source verifier coverage" 'Descriptor/editor/renderer/source-verifier coverage for shared intensity'
 Require-Text "screen burn source verifier" 'screen-burn renderer source verifier checks that persistence'
 Require-Text "screen burn source verifier coverage" 'Descriptor/editor/renderer/source-verifier coverage for persistence'
 Require-Text "DAW testing still required" '## DAW Testing Still Required'

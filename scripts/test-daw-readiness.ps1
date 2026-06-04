@@ -32,6 +32,7 @@ try {
         -RequireFresh
 
     & (Join-Path $PSScriptRoot "test-dot-image-renderer-source.ps1")
+    & (Join-Path $PSScriptRoot "test-dot-overall-renderer-source.ps1")
     & (Join-Path $PSScriptRoot "test-screen-burn-renderer-source.ps1")
     & (Join-Path $PSScriptRoot "test-visual-control-manifest.ps1")
     & (Join-Path $PSScriptRoot "test-release-readiness-audit.ps1")

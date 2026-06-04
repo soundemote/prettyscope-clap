@@ -121,6 +121,9 @@ the DAW behavior that still needs hands-on testing.
 - A dot-image renderer source verifier checks that loaded image aspect
   preservation remains wired through the shader, texture upload, and uniform
   binding paths.
+- A dot-overall renderer source verifier checks that shared intensity, size,
+  halo, and image mix multipliers remain wired through generated-dot export,
+  beam rendering, and loaded-image rendering paths.
 - A screen-burn renderer source verifier checks that persistence, fast decay,
   afterglow, and floor fade remain wired through descriptor/state fields, decay
   shader uniforms, finite keep/floor-fade math, and uniform binding paths.
@@ -135,7 +138,7 @@ the DAW behavior that still needs hands-on testing.
 | Generated dot texture export | `Save` exports the generated texture in Generated mode. | Tester confirms exported PNG is usable in DAW workflow. |
 | Loaded image export | `Save` exports the loaded/normalized image when an override is active. | Tester confirms loaded override export in DAW workflow. |
 | Loaded image aspect preservation | Renderer source verification checks native image aspect handling before Dot Aspect stretch. | Tester confirms asymmetric streak behavior in a DAW. |
-| Overall dot multipliers | Descriptor/editor/renderer coverage for shared intensity, size, halo, and image mix. | Hands-on visual feel with real audio. |
+| Overall dot multipliers | Descriptor/editor/renderer/source-verifier coverage for shared intensity, size, halo, and image mix. | Hands-on visual feel with real audio. |
 | Screen burn controls | Descriptor/editor/renderer/source-verifier coverage for persistence, fast decay, afterglow, and floor fade. | Hands-on decay feel with real audio and host frame pacing. |
 | Release-path handoff | Quickstart, checklist, host matrix, report generator/reviewer, readiness script, bundle script, and bundle verifier. | At least one CLAP and one VST3 host report. |
 
