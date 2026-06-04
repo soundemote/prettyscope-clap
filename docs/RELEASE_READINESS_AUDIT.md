@@ -49,7 +49,7 @@ the DAW behavior that still needs hands-on testing.
 - A next-action script recommends whether to prepare a test package, fill an
   incomplete report, or review completed reports.
 - A DAW test dashboard script combines local plugin status, latest artifacts,
-  next action, and report index output.
+  next action, release gates, and report index output.
 - A bundle manifest script records built artifacts, installed artifacts, and
   DAW-test handoff files with SHA256 hashes.
 - A bundle script assembles a local DAW-test folder/zip with artifacts, docs,

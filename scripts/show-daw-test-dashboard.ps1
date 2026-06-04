@@ -35,6 +35,9 @@ try {
         -BuildDir $BuildDir `
         -IncludeBuildScratch:$IncludeBuildScratch
 
+    Write-Section "Release Gates"
+    & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1")
+
     Write-Section "Report Index"
     & (Join-Path $PSScriptRoot "show-daw-test-report-index.ps1") `
         -BuildDir $BuildDir `
