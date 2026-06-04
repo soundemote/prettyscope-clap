@@ -56,6 +56,10 @@ try {
             -BuildDir $BuildDir `
             -MatrixPath $MatrixPath
     }
+    $reportGaps = Capture-Output {
+        & (Join-Path $PSScriptRoot "show-daw-test-gaps.ps1") `
+            -BuildDir $BuildDir
+    }
     $latestArtifacts = Capture-Output {
         & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") -BuildDir $BuildDir
     }
@@ -145,6 +149,12 @@ $coverageRows
 
 ~~~text
 $nextAction
+~~~
+
+## Current Report Gaps
+
+~~~text
+$reportGaps
 ~~~
 
 ## Latest DAW Test Artifacts

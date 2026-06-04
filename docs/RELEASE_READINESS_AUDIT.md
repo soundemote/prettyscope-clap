@@ -91,9 +91,11 @@ the DAW behavior that still needs hands-on testing.
   `build-tracer` by default, with `-DocsOnlyReports` available for docs-only
   report scans.
 - A DAW test dashboard script combines local plugin status, latest artifacts,
-  next action, release gates, and report index output.
+  next action, current report gaps, release gates, and report index output.
 - A release candidate summary script writes a Markdown snapshot of local status,
   machine checks, release gates, next action, and latest DAW test artifacts.
+- The release candidate summary includes current report gaps so the DAW evidence
+  checklist travels with release snapshots.
 - The release candidate summary includes objective coverage separating local
   implementation evidence from DAW evidence gates.
 - A DAW test handoff opener opens the latest report, release summary, and

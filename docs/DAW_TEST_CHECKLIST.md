@@ -29,6 +29,8 @@ The next-action helper and dashboard include generated readiness reports under
 want reports from `docs\test-reports`.
 When the next-action helper points at a report, it prints an open command for
 the active report and, when available, the paired release summary.
+The dashboard also includes a current report gap summary so missing DAW report
+fields are visible without running another command.
 
 Visual control manifest check:
 

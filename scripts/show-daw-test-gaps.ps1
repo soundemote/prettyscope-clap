@@ -33,11 +33,11 @@ function Resolve-LatestReportPath {
             Select-Object -First 1
     }
 
-    if (!$selected) {
-        throw "No DAW test reports found."
+    if ($selected) {
+        return $selected.Path
     }
 
-    return $selected.Path
+    return ""
 }
 
 function Add-Unique {
@@ -53,6 +53,28 @@ function Add-Unique {
 
 if (!$ReportPath) {
     $ReportPath = Resolve-LatestReportPath
+}
+if (!$ReportPath) {
+    if (!$PassThru) {
+        Write-Host "Prettyscope DAW test gaps"
+        Write-Host "  No DAW test reports found."
+    }
+    else {
+        [PSCustomObject]@{
+            ReportPath = ""
+            Complete = $false
+            IssueCount = 0
+            ArtifactFields = @()
+            ResultAreas = @()
+            VisualNoteFields = @()
+            ReleaseDecisionFields = @()
+            SessionFields = @()
+            PreflightFields = @()
+            OtherIssues = @("No DAW test reports found.")
+            Review = $null
+        }
+    }
+    return
 }
 if (!(Test-Path $ReportPath)) {
     throw "Report file is missing: $ReportPath"

@@ -50,6 +50,17 @@ try {
             -DocsOnlyReports
     }
 
+    Write-Section "Current Report Gaps"
+    if ($scanBuildScratch) {
+        & (Join-Path $PSScriptRoot "show-daw-test-gaps.ps1") `
+            -BuildDir $BuildDir
+    }
+    else {
+        & (Join-Path $PSScriptRoot "show-daw-test-gaps.ps1") `
+            -BuildDir $BuildDir `
+            -DocsOnlyReports
+    }
+
     Write-Section "Release Gates"
     & (Join-Path $PSScriptRoot "show-daw-release-gates.ps1") `
         -MatrixPath $MatrixPath

@@ -32,7 +32,8 @@ To see status, latest artifacts, next action, and report index together:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-dashboard.ps1
 ```
 
-The dashboard also includes readiness reports under `build-tracer` by default.
+The dashboard also includes readiness reports under `build-tracer` by default
+and shows the current report gap summary.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Format CLAP -Daw "Your DAW" -Tester "Your Name"
