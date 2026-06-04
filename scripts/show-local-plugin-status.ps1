@@ -38,6 +38,57 @@ function Write-ArtifactStatus {
     Write-Host "  Modified: $($artifact.LastWriteTime)"
 }
 
+function Get-ArtifactInfo {
+    param([string] $Path)
+
+    if (!(Test-Path $Path)) {
+        return $null
+    }
+
+    $artifact = Get-Item $Path
+    return [PSCustomObject]@{
+        Path = $artifact.FullName
+        Size = Get-ArtifactSize $artifact
+        LastWriteTime = $artifact.LastWriteTime
+    }
+}
+
+function Write-InstallComparison {
+    param(
+        [string] $Label,
+        [string] $BuiltPath,
+        [string] $InstalledPath
+    )
+
+    $built = Get-ArtifactInfo $BuiltPath
+    $installed = Get-ArtifactInfo $InstalledPath
+
+    if ($null -eq $built -and $null -eq $installed) {
+        Write-Host "${Label}: missing build and install"
+        return
+    }
+
+    if ($null -eq $built) {
+        Write-Host "${Label}: missing build artifact"
+        return
+    }
+
+    if ($null -eq $installed) {
+        Write-Host "${Label}: not installed"
+        return
+    }
+
+    $timeDelta = [Math]::Abs(($built.LastWriteTime - $installed.LastWriteTime).TotalSeconds)
+    if ($built.Size -eq $installed.Size -and $timeDelta -le 2.0) {
+        Write-Host "${Label}: installed copy matches build artifact"
+    }
+    else {
+        Write-Host "${Label}: installed copy may be stale"
+        Write-Host "  Built:     $($built.Size) bytes, modified $($built.LastWriteTime)"
+        Write-Host "  Installed: $($installed.Size) bytes, modified $($installed.LastWriteTime)"
+    }
+}
+
 Push-Location $repoRoot
 try {
     $branch = (& git branch --show-current 2>$null)
@@ -70,6 +121,17 @@ try {
     Write-Host "Installed user-local artifacts"
     Write-ArtifactStatus "Installed CLAP" (Join-Path $env:LOCALAPPDATA "Programs\Common\CLAP\Prettyscope.clap")
     Write-ArtifactStatus "Installed VST3" (Join-Path $env:LOCALAPPDATA "Programs\Common\VST3\Prettyscope.vst3")
+    Write-Host ""
+
+    Write-Host "Install freshness"
+    Write-InstallComparison `
+        "CLAP" `
+        (Join-Path $assetRoot "CLAP\Prettyscope.clap") `
+        (Join-Path $env:LOCALAPPDATA "Programs\Common\CLAP\Prettyscope.clap")
+    Write-InstallComparison `
+        "VST3" `
+        (Join-Path $assetRoot "VST3\Prettyscope.vst3") `
+        (Join-Path $env:LOCALAPPDATA "Programs\Common\VST3\Prettyscope.vst3")
 }
 finally {
     Pop-Location

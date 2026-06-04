@@ -21,6 +21,11 @@ Optional status check:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1
 ```
 
+Expected:
+
+- The status script reports installed CLAP/VST3 copies.
+- Install freshness says the installed copies match the build artifacts.
+
 ## Plugin Load
 
 1. Install local artifacts with `scripts\install-local-plugin.ps1` or scan the `build-tracer` output directly.
