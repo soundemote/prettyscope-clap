@@ -118,6 +118,9 @@ the DAW behavior that still needs hands-on testing.
   `docs\VISUAL_CONTROL_MANIFEST.md`.
 - A visual control manifest verifier checks the manifest against
   `src\scope\visual-parameters.h`.
+- A dot-image renderer source verifier checks that loaded image aspect
+  preservation remains wired through the shader, texture upload, and uniform
+  binding paths.
 
 ## Objective Coverage
 
@@ -128,6 +131,7 @@ the DAW behavior that still needs hands-on testing.
 | Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; state stores PNG payloads and labels. | Host preset/session restore with real DAW reports. |
 | Generated dot texture export | `Save` exports the generated texture in Generated mode. | Tester confirms exported PNG is usable in DAW workflow. |
 | Loaded image export | `Save` exports the loaded/normalized image when an override is active. | Tester confirms loaded override export in DAW workflow. |
+| Loaded image aspect preservation | Renderer source verification checks native image aspect handling before Dot Aspect stretch. | Tester confirms asymmetric streak behavior in a DAW. |
 | Overall dot multipliers | Descriptor/editor/renderer coverage for shared intensity, size, halo, and image mix. | Hands-on visual feel with real audio. |
 | Screen burn controls | Descriptor/editor/renderer coverage for persistence, fast decay, afterglow, and floor fade. | Hands-on decay feel with real audio and host frame pacing. |
 | Release-path handoff | Quickstart, checklist, host matrix, report generator/reviewer, readiness script, bundle script, and bundle verifier. | At least one CLAP and one VST3 host report. |

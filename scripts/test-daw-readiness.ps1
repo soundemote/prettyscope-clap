@@ -31,6 +31,7 @@ try {
         -BuildDir $BuildDir `
         -RequireFresh
 
+    & (Join-Path $PSScriptRoot "test-dot-image-renderer-source.ps1")
     & (Join-Path $PSScriptRoot "test-visual-control-manifest.ps1")
     & (Join-Path $PSScriptRoot "test-release-readiness-audit.ps1")
     & (Join-Path $PSScriptRoot "test-daw-host-matrix.ps1")

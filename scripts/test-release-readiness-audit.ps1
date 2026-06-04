@@ -32,6 +32,8 @@ Require-Text "Dot Overall controls" 'Overall dot controls multiply shared dot in
 Require-Text "Screen Burn controls" 'Screen Burn controls exist for persistence, fast decay, afterglow, and floor\s+fade'
 Require-Text "active dot image save" 'Save exports the generated texture in Generated mode and the loaded/normalized\s+image when an override is active'
 Require-Text "Dot image state persistence" 'Dot image labels and PNG payloads are stored in patch XML state'
+Require-Text "loaded image aspect source verifier" 'dot-image renderer source verifier checks that loaded image aspect'
+Require-Text "loaded image aspect preservation coverage" 'Loaded image aspect preservation'
 Require-Text "DAW testing still required" '## DAW Testing Still Required'
 Require-Text "host matrix" 'Host coverage is tracked in `docs\\DAW_HOST_MATRIX\.md`'
 Require-Text "produced artifacts" 'DAW reports require concrete generated/loaded dot PNG export paths'
