@@ -40,6 +40,7 @@ Require-Text "release gates require pass-ready evidence" 'Release gates re-read 
 Require-Text "report classification smoke" 'report classification smoke test verifies pass-ready reports'
 Require-Text "next-action routing smoke" 'next-action routing smoke test verifies incomplete-report'
 Require-Text "release candidate summary" 'release candidate summary script writes a Markdown snapshot'
+Require-Text "readiness release summary" 'DAW readiness script writes a release candidate summary'
 
 if ($PassThru) {
     [PSCustomObject]@{

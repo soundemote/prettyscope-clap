@@ -31,6 +31,7 @@ The script prints paths for:
 - a bundle manifest
 - a verified bundle folder
 - a verified bundle zip
+- a release candidate summary
 
 The blank report warnings are expected before DAW testing. Leave the generated
 report open or keep its path handy.

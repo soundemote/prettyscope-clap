@@ -71,9 +71,10 @@ Use `-SkipBuildInstall` only when strict freshness already passes and you only
 need another report.
 
 The prep command also creates known-good Dot 1 / Dot 2 image test PNGs and a
-bundle manifest. It records image paths in the generated report. Use
-`-SkipDotImageAssets` or `-SkipBundleManifest` only for reruns that do not need
-fresh handoff assets.
+bundle manifest. The readiness command also writes a release candidate summary
+next to the generated report and bundle. It records image paths in the generated
+report. Use `-SkipDotImageAssets` or `-SkipBundleManifest` only for reruns that
+do not need fresh handoff assets.
 
 Add `-PassThru` when automation needs the generated report and bundle manifest
 paths as pipeline output.

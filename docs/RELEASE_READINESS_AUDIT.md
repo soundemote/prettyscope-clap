@@ -74,6 +74,8 @@ the DAW behavior that still needs hands-on testing.
   zip.
 - A DAW readiness script runs local freshness, report prep, self-verifying
   bundle creation, bundle verification, and report review smoke.
+- The DAW readiness script writes a release candidate summary beside the
+  generated report and bundle.
 - The readiness script avoids repeating the freshness check after its initial
   strict preflight.
 - A DAW test quickstart gives the short first hands-on test path.

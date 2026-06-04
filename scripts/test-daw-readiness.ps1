@@ -60,6 +60,12 @@ try {
         -ZipPath $bundleZip `
         -PassThru
 
+    $summaryPath = Join-Path $OutputDir "prettyscope-release-candidate-summary.md"
+    $summary = & (Join-Path $PSScriptRoot "new-release-candidate-summary.ps1") `
+        -BuildDir $BuildDir `
+        -OutputPath $summaryPath `
+        -PassThru
+
     & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
         -ReportPath $prep.ReportPath
 
@@ -73,6 +79,7 @@ try {
     Write-Host "  Prep manifest: $($prep.BundleManifestPath)"
     Write-Host "  Bundle folder: $($bundle.BundleDirectory)"
     Write-Host "  Bundle zip: $($bundle.ZipPath)"
+    Write-Host "  Release summary: $($summary.SummaryPath)"
 
     if ($PassThru) {
         [PSCustomObject]@{
@@ -81,6 +88,7 @@ try {
             BundleDirectory = $bundle.BundleDirectory
             BundleZipPath = $bundle.ZipPath
             BundleManifestPath = $bundle.ManifestPath
+            ReleaseSummaryPath = $summary.SummaryPath
         }
     }
 }
