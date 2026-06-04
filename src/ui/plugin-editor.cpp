@@ -1065,20 +1065,28 @@ void PluginEditor::loadDotImageOverride(size_t dotIndex)
         });
 }
 
-void PluginEditor::saveGeneratedDotImage(size_t dotIndex)
+void PluginEditor::saveDotImage(size_t dotIndex)
 {
     if (dotIndex >= dotImageOverrides.size())
     {
         return;
     }
 
+    const auto &dot = dotImageOverrides[dotIndex];
+    auto defaultFileName = dotName(dotIndex).replaceCharacter(' ', '-').toLowerCase() + ".png";
+    if (dot.hasImage())
+    {
+        auto stem = juce::File(dot.label).getFileNameWithoutExtension();
+        if (stem.isNotEmpty())
+        {
+            defaultFileName = stem.replaceCharacter(' ', '-').toLowerCase() + ".png";
+        }
+    }
+
     fileChooser = std::make_unique<juce::FileChooser>("Save " + dotName(dotIndex) + " Image",
                                                       juce::File::getSpecialLocation(
                                                           juce::File::userDocumentsDirectory)
-                                                          .getChildFile(dotName(dotIndex)
-                                                                        .replaceCharacter(' ', '-')
-                                                                        .toLowerCase() +
-                                                                        ".png"),
+                                                          .getChildFile(defaultFileName),
                                                       "*.png");
     fileChooser->launchAsync(
         juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::saveMode |
@@ -1104,9 +1112,12 @@ void PluginEditor::saveGeneratedDotImage(size_t dotIndex)
                 return;
             }
 
-            auto generated = createGeneratedDotImage(currentScopeVisualState(), dotIndex);
+            const auto &currentDot = dotImageOverrides[dotIndex];
+            auto image = currentDot.hasImage() ? currentDot.image
+                                               : createGeneratedDotImage(currentScopeVisualState(),
+                                                                         dotIndex);
             auto png = juce::PNGImageFormat();
-            if (!png.writeImageToStream(generated, *stream))
+            if (!png.writeImageToStream(image, *stream))
             {
                 juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
                                                        "Dot Image Save Failed",

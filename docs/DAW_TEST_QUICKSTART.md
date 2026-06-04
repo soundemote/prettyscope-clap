@@ -84,7 +84,7 @@ For Dot 1 and Dot 2:
 2. Load one of the smoke-test PNGs.
 3. Raise Image Mix.
 4. Move rotation/aspect.
-5. Click `Save` and save the generated PNG somewhere temporary.
+5. Click `Save` and export the active loaded image PNG somewhere temporary.
 6. Click `Clear`.
 
 Expected:
@@ -92,6 +92,8 @@ Expected:
 - Loaded image dimensions appear in the status row.
 - The soft-core PNG behaves like a round dot.
 - The asymmetric streak makes rotation/aspect easy to see.
+- Save exports the generated dot in Generated mode and the loaded/normalized
+  image when an override is active.
 - Clear returns the slot to generated mode.
 
 ## 5. Test Preset And Session Restore

@@ -19,7 +19,9 @@ the DAW behavior that still needs hands-on testing.
 - Overall dot controls multiply shared dot intensity, size, halo, and image mix.
 - Screen Burn controls exist for persistence, fast decay, afterglow, and floor
   fade.
-- Dot 1 and Dot 2 image controls exist for load, generated PNG save, and clear.
+- Dot 1 and Dot 2 image controls exist for load, active PNG save, and clear.
+- Save exports the generated texture in Generated mode and the loaded/normalized
+  image when an override is active.
 - Loaded dot images are normalized to a maximum 512 px longest side before
   rendering/persisting.
 - Dot image status labels show the active texture dimensions after load/restore

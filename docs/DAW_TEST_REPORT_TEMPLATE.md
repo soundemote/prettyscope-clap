@@ -64,6 +64,8 @@ DAW/build combination.
   - Note whether burn fades slowly but surely, stays forever, or disappears too quickly.
 - Dot image appearance:
   - Compare generated dots against loaded images; note size, halo, rotation, aspect, and mix behavior.
+- Dot image save behavior:
+  - Save once in Generated mode and once with a loaded override; note whether both PNG exports succeed.
 - Control layout pain points:
   - Note controls that are hard to find, too sensitive, too cramped, or unclear in the DAW editor.
 - Performance/frame-rate notes:

@@ -160,7 +160,7 @@ struct PluginEditor : jcmp::WindowPanel
     std::array<DotImageOverride, 2> dotImageOverrides;
     juce::String dotImageStatusText(size_t dotIndex) const;
     void loadDotImageOverride(size_t dotIndex);
-    void saveGeneratedDotImage(size_t dotIndex);
+    void saveDotImage(size_t dotIndex);
     void clearDotImageOverride(size_t dotIndex);
 };
 

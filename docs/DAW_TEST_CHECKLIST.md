@@ -187,16 +187,19 @@ report's `Dot Image Test Assets` section.
 For Dot 1 and Dot 2:
 
 1. Click `Save`.
-2. Save the generated PNG.
+2. Save the generated PNG while the slot is in Generated mode.
 3. Click `Load`.
 4. Load the generated PNG, one of the generated smoke-test PNGs, or another
    small PNG/JPEG/BMP/GIF image.
 5. Raise that dot's Image Mix control.
-6. Click `Clear`.
+6. Click `Save` again and confirm the loaded/normalized image can be exported
+   as PNG.
+7. Click `Clear`.
 
 Expected:
 
-- Save writes a PNG.
+- Save writes a PNG; in Generated mode it exports the generated dot texture, and
+  with a loaded override it exports the active normalized image.
 - The smoke-test soft-core image looks like a round dot, while the asymmetric
   streak makes rotation/aspect behavior easy to see.
 - Load updates the dot status label with the active texture dimensions; long

@@ -38,7 +38,7 @@ MainPanel::MainPanel(PluginEditor &e)
         dotImageLoadButtons[i] = std::move(load);
 
         auto save = std::make_unique<juce::TextButton>("Save");
-        save->onClick = [this, i]() { editor.saveGeneratedDotImage(i); };
+        save->onClick = [this, i]() { editor.saveDotImage(i); };
         addAndMakeVisible(*save);
         dotImageSaveButtons[i] = std::move(save);
 

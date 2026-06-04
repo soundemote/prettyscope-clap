@@ -60,7 +60,8 @@ For Dot 1 and Dot 2:
   rendering and persistence.
 - Loaded image labels and PNG payloads are stored in patch/plugin state, so
   presets and DAW sessions should restore without the original file path.
-- `Save` writes the current generated dot PNG.
+- `Save` writes the active dot PNG: loaded/normalized override if present,
+  otherwise the current generated dot texture.
 - `Clear` returns the slot to generated mode.
 - Image Mix fades generated dot drawing while adding the loaded texture.
 
