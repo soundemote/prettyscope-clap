@@ -47,6 +47,8 @@ powershell -ExecutionPolicy Bypass -File ..\..\scripts\show-daw-test-report-inde
 ```
 
 Add `-IncludeBuildScratch` to also scan scratch reports under `build-tracer`.
+Add `-IncompleteOnly` or `-CompleteOnly` to filter by review status. Add
+`-OpenLatest` to open the newest report after filtering.
 
 The reviewer expects real Dot Image Test Assets, all visual control groups, all
 required result rows, visual notes, and release decision fields before a report

@@ -45,6 +45,9 @@ List generated reports and completion state:
 powershell -ExecutionPolicy Bypass -File .\scripts\show-daw-test-report-index.ps1
 ```
 
+Use `-IncompleteOnly -OpenLatest` to jump to the newest report that still needs
+test results filled in.
+
 The reviewer checks session fields, preflight fields, Dot Image Test Assets,
 visual control groups, required result rows, visual notes, and release decision
 fields. Add `-RequireComplete` when the report should fail automation if any of

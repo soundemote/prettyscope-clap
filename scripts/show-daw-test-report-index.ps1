@@ -2,10 +2,17 @@ param(
     [string] $BuildDir = "build-tracer",
     [int] $Limit = 20,
     [switch] $IncludeBuildScratch,
+    [switch] $CompleteOnly,
+    [switch] $IncompleteOnly,
+    [switch] $OpenLatest,
     [switch] $PassThru
 )
 
 $ErrorActionPreference = "Stop"
+
+if ($CompleteOnly -and $IncompleteOnly) {
+    throw "Use either -CompleteOnly or -IncompleteOnly, not both."
+}
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $reportRoots = New-Object System.Collections.Generic.List[string]
@@ -68,7 +75,16 @@ foreach ($root in $reportRoots) {
         }
 }
 
-$sortedReports = @($reports | Sort-Object Modified -Descending | Select-Object -First $Limit)
+$filteredReports = @($reports | Where-Object {
+        if ($CompleteOnly) {
+            return $_.Complete -eq "yes"
+        }
+        if ($IncompleteOnly) {
+            return $_.Complete -eq "no"
+        }
+        return $true
+    })
+$sortedReports = @($filteredReports | Sort-Object Modified -Descending | Select-Object -First $Limit)
 
 Write-Host "Prettyscope DAW test reports"
 if ($sortedReports.Count -eq 0) {
@@ -78,6 +94,17 @@ else {
     $sortedReports |
         Format-Table -AutoSize Modified, Complete, Issues, Format, Daw, DawVersion, Tester, Commit, Path |
         Out-Host
+}
+
+if ($OpenLatest) {
+    $latestReport = $sortedReports | Select-Object -First 1
+    if (!$latestReport) {
+        Write-Host "Cannot open latest report: none found"
+    }
+    else {
+        Invoke-Item -LiteralPath $latestReport.Path
+        Write-Host "Opened latest report: $($latestReport.Path)"
+    }
 }
 
 if ($PassThru) {
