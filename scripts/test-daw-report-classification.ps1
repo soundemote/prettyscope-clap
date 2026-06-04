@@ -156,6 +156,7 @@ $passReport = Join-Path $OutputDir "passing-daw-test-report.md"
 $failReport = Join-Path $OutputDir "failing-daw-test-report.md"
 $failWithoutIssueReport = Join-Path $OutputDir "failing-without-issue-daw-test-report.md"
 $matrixPath = Join-Path $OutputDir "DAW_HOST_MATRIX.md"
+$latestSubmitMatrixPath = Join-Path $OutputDir "latest-submit-DAW_HOST_MATRIX.md"
 
 New-SmokeReport -Path $passReport -Format "CLAP"
 New-SmokeReport -Path $failReport -Format "VST3" -Fail
@@ -166,6 +167,7 @@ $failWithoutIssueContent = $failWithoutIssueContent -replace
     '| none | none | none | none |'
 Set-Content -Path $failWithoutIssueReport -Value $failWithoutIssueContent -Encoding UTF8
 Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $matrixPath -Force
+Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $latestSubmitMatrixPath -Force
 
 $passReview = & (Join-Path $PSScriptRoot "review-daw-test-report.ps1") `
     -ReportPath $passReport `
@@ -227,6 +229,19 @@ Assert-True ((Read-MatrixStatus -MatrixPath $matrixPath -HostName "SmokeHost" -F
 Assert-True ((Read-MatrixStatus -MatrixPath $matrixPath -HostName "SmokeHost" -Format "VST3") -eq "fix needed") `
     "Failing smoke report should update matrix as fix needed."
 
+& (Join-Path $PSScriptRoot "submit-latest-daw-test-report.ps1") `
+    -BuildDir ($OutputDir.Substring($repoRoot.Path.Length).TrimStart('\', '/')) `
+    -IncludeSmokeReports `
+    -MatrixPath $latestSubmitMatrixPath `
+    -AddMissing `
+    -Quiet `
+    -SkipDashboard
+if ($LASTEXITCODE -ne 0) {
+    exit $LASTEXITCODE
+}
+Assert-True ((Read-MatrixStatus -MatrixPath $latestSubmitMatrixPath -HostName "SmokeHost" -Format "VST3") -eq "fix needed") `
+    "Latest completed smoke report should submit through the latest-report helper."
+
 $forcedPassRejected = $false
 try {
     & (Join-Path $PSScriptRoot "update-daw-host-matrix-from-report.ps1") `
@@ -279,6 +294,7 @@ if ($PassThru) {
         PassingReport = (Resolve-Path $passReport).Path
         FailingReport = (Resolve-Path $failReport).Path
         MatrixPath = (Resolve-Path $matrixPath).Path
+        LatestSubmitMatrixPath = (Resolve-Path $latestSubmitMatrixPath).Path
         ManualPassMatrixPath = (Resolve-Path $manualPassMatrixPath).Path
     }
 }
