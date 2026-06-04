@@ -267,6 +267,7 @@ uniform float intensity;
 uniform float imageMix;
 uniform float rotationRadians;
 uniform float dotAspect;
+uniform float textureAspect;
 
 out vec4 fragColor;
 
@@ -278,6 +279,14 @@ void main()
     vec2 rotated = vec2(c * centered.x + s * centered.y,
                         -s * centered.x + c * centered.y);
     rotated.x /= max(dotAspect, 0.001);
+
+    float sourceAspect = max(textureAspect, 0.001);
+    if (sourceAspect >= 1.0) {
+        rotated.y *= sourceAspect;
+    } else {
+        rotated.x /= sourceAspect;
+    }
+
     vec2 uv = rotated + vec2(0.5);
     if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
     {
@@ -693,6 +702,7 @@ class DotImageRenderer
                     rotationDegrees * pi / 180.0f);
         glUniform1f(glGetUniformLocation(program, "dotAspect"),
                     std::clamp(aspect, 0.1f, 10.0f));
+        glUniform1f(glGetUniformLocation(program, "textureAspect"), textureAspects[dotIndex]);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures[dotIndex]);
         glUniform1i(glGetUniformLocation(program, "dotTexture"), 0);
@@ -759,6 +769,7 @@ class DotImageRenderer
             glDeleteTextures(1, &textures[dotIndex]);
             textures[dotIndex] = 0;
         }
+        textureAspects[dotIndex] = 1.0f;
 
         if (!image.isValid())
         {
@@ -772,6 +783,7 @@ class DotImageRenderer
         {
             return;
         }
+        textureAspects[dotIndex] = static_cast<float>(width) / static_cast<float>(height);
 
         std::vector<unsigned char> pixels(static_cast<size_t>(width * height * 4));
         for (int y = 0; y < height; ++y)
@@ -803,6 +815,7 @@ class DotImageRenderer
     GlId vertexBuffer{};
     std::array<GlId, 2> textures{};
     std::array<uint64_t, 2> revisions{};
+    std::array<float, 2> textureAspects{1.0f, 1.0f};
     std::vector<DotPointVertex> points;
 };
 

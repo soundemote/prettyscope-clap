@@ -70,6 +70,8 @@ For Dot 1 and Dot 2:
 - Dot Overall controls should multiply Dot 1 and Dot 2 behavior together.
 - Screen Burn controls should change persistence without making the trace stay
   forever.
+- Loaded images should preserve their source aspect ratio before Dot 1 / Dot 2
+  Aspect applies additional artistic stretch.
 - The asymmetric smoke-test PNG should make loaded-image rotation/aspect behavior
   obvious.
 - The soft-core smoke-test PNG should behave like a round dot.

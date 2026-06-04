@@ -141,6 +141,7 @@ Require-ManifestText "clear returns generated mode" '`Clear` returns the slot to
 Require-ManifestText "image mix blend behavior" 'Image Mix fades generated dot drawing while adding the loaded texture'
 Require-ManifestText "dot overall multiplier expectation" 'Dot Overall controls should multiply Dot 1 and Dot 2 behavior together'
 Require-ManifestText "screen burn finite persistence expectation" 'Screen Burn controls should change persistence without making the trace stay\s+forever'
+Require-ManifestText "loaded image source aspect expectation" 'Loaded images should preserve their source aspect ratio'
 Require-ManifestText "preset session restore expectation" 'Preset reload and DAW session reopen should restore loaded images and visual\s+parameter values'
 
 if ($PassThru) {
