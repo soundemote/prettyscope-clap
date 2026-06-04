@@ -73,6 +73,8 @@ the DAW behavior that still needs hands-on testing.
 - The next-action script prints an open command for the active report and, when
   available, the paired release summary when a report needs fill/review or
   submission.
+- The next-action script recommends refreshing the DAW test package when the
+  latest incomplete report was generated from an older repo commit.
 - The next-action script and dashboard include generated readiness reports under
   `build-tracer` by default, with `-DocsOnlyReports` available for docs-only
   report scans.

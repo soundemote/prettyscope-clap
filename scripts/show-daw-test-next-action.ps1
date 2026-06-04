@@ -104,8 +104,13 @@ function Format-LatestSubmitCommand {
     return $command
 }
 
+function Format-TestPrepCommand {
+    return "powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Format CLAP -Daw `"Your DAW`" -Tester `"Your Name`""
+}
+
 Push-Location $repoRoot
 try {
+    $currentCommit = (& git rev-parse --short HEAD 2>$null)
     $latestArtifacts = & (Join-Path $PSScriptRoot "show-latest-daw-test-artifacts.ps1") `
         -BuildDir $BuildDir `
         -IncludeSmokeReports:$IncludeSmokeReports `
@@ -128,6 +133,17 @@ try {
     $incompleteReports = @($reports | Where-Object { $_.Complete -eq "no" })
     if ($incompleteReports.Count -gt 0) {
         $latest = $incompleteReports | Sort-Object Modified -Descending | Select-Object -First 1
+        if ($currentCommit -and $latest.Commit -and $latest.Commit -ne $currentCommit) {
+            Write-Host "Next DAW test action: refresh the DAW test package."
+            Write-Host "  Latest incomplete report commit: $($latest.Commit)"
+            Write-Host "  Current repo commit:             $currentCommit"
+            Write-Host "  Report: $($latest.Path)"
+            Write-Host ""
+            Write-Host "Prep command:"
+            Write-Host "  $(Format-TestPrepCommand)"
+            return
+        }
+
         Write-Host "Next DAW test action: fill the latest incomplete report."
         Write-Host "  Report: $($latest.Path)"
         Write-Host "  Issues: $($latest.Issues)"
@@ -224,7 +240,7 @@ try {
     Write-Host "  Release gates still need pass-ready DAW evidence."
     Write-Host ""
     Write-Host "Prep command:"
-    Write-Host "  powershell -ExecutionPolicy Bypass -File .\scripts\test-daw-readiness.ps1 -Format CLAP -Daw `"Your DAW`" -Tester `"Your Name`""
+    Write-Host "  $(Format-TestPrepCommand)"
 }
 finally {
     Pop-Location

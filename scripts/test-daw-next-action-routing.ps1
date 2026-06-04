@@ -90,6 +90,11 @@ foreach ($dir in @($incompleteDir, $unsubmittedDir, $submittedNotReadyDir, $read
 
 $incompleteReport = Join-Path $incompleteDir "prettyscope-daw-test-report.md"
 Copy-Item (Join-Path $repoRoot "docs\DAW_TEST_REPORT_TEMPLATE.md") $incompleteReport -Force
+$currentCommit = (& git -C $repoRoot rev-parse --short HEAD 2>$null)
+$incompleteContent = Get-Content -Raw -Path $incompleteReport
+$incompleteContent = $incompleteContent -replace '- Prettyscope commit:[^\r\n]*',
+    "- Prettyscope commit: $currentCommit"
+Set-Content -Path $incompleteReport -Value $incompleteContent -Encoding UTF8
 Add-GroupedBundleMarker -Directory $incompleteDir
 $incompleteMatrix = Join-Path $incompleteDir "DAW_HOST_MATRIX.md"
 Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $incompleteMatrix -Force
@@ -106,6 +111,25 @@ Assert-Contains $incompleteOutput "open-daw-test-handoff.ps1" `
     "Incomplete report guidance should include one-command handoff opening."
 Assert-Contains $incompleteOutput "show-latest-daw-test-artifacts.ps1 -OpenBundleFolder" `
     "Incomplete report guidance should include a bundle-folder open command."
+
+$staleDir = Join-Path $OutputDir "stale-incomplete"
+New-Item -ItemType Directory -Force -Path $staleDir | Out-Null
+$staleReport = Join-Path $staleDir "prettyscope-daw-test-report.md"
+Copy-Item (Join-Path $repoRoot "docs\DAW_TEST_REPORT_TEMPLATE.md") $staleReport -Force
+$staleContent = Get-Content -Raw -Path $staleReport
+$staleContent = $staleContent -replace '- Prettyscope commit:[^\r\n]*',
+    "- Prettyscope commit: stale123"
+Set-Content -Path $staleReport -Value $staleContent -Encoding UTF8
+Add-GroupedBundleMarker -Directory $staleDir
+$staleMatrix = Join-Path $staleDir "DAW_HOST_MATRIX.md"
+Copy-Item (Join-Path $repoRoot "docs\DAW_HOST_MATRIX.md") $staleMatrix -Force
+$staleOutput = Invoke-NextAction `
+    -BuildDir ($staleDir.Substring($repoRoot.Path.Length).TrimStart('\', '/')) `
+    -MatrixPath $staleMatrix
+Assert-Contains $staleOutput "Next DAW test action: refresh the DAW test package." `
+    "Stale incomplete reports should route to a refreshed readiness package."
+Assert-Contains $staleOutput "Current repo commit:" `
+    "Stale report guidance should show the current repo commit."
 
 $unsubmittedReport = Join-Path $unsubmittedDir "prettyscope-daw-test-report.md"
 Copy-Item $classification.PassingReport $unsubmittedReport -Force
