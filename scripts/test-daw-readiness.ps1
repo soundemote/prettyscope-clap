@@ -32,6 +32,7 @@ try {
         -RequireFresh
 
     & (Join-Path $PSScriptRoot "test-visual-control-manifest.ps1")
+    & (Join-Path $PSScriptRoot "test-release-readiness-audit.ps1")
     & (Join-Path $PSScriptRoot "test-daw-host-matrix.ps1")
 
     $reportPath = Join-Path $OutputDir "prettyscope-daw-test-report.md"

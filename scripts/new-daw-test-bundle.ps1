@@ -71,6 +71,7 @@ try {
         "scripts\new-daw-test-report.ps1",
         "scripts\review-daw-test-report.ps1",
         "scripts\test-visual-control-manifest.ps1",
+        "scripts\test-release-readiness-audit.ps1",
         "scripts\test-daw-host-matrix.ps1",
         "scripts\new-dot-image-test-assets.ps1",
         "scripts\new-daw-test-bundle-manifest.ps1",

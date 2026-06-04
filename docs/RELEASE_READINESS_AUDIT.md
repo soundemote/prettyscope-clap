@@ -76,6 +76,19 @@ the DAW behavior that still needs hands-on testing.
 - A visual control manifest verifier checks the manifest against
   `src\scope\visual-parameters.h`.
 
+## Objective Coverage
+
+| Requirement | Current Evidence | Remaining Gate |
+| --- | --- | --- |
+| Dot 1 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
+| Dot 2 controls | Descriptor/editor/renderer coverage for intensity, size, halo, image mix, rotation, and aspect. | Hands-on DAW usability. |
+| Dot image override load/save workflow | Editor `Load`, active `Save`, and `Clear`; state stores PNG payloads and labels. | Host preset/session restore with real DAW reports. |
+| Generated dot texture export | `Save` exports the generated texture in Generated mode. | Tester confirms exported PNG is usable in DAW workflow. |
+| Loaded image export | `Save` exports the loaded/normalized image when an override is active. | Tester confirms loaded override export in DAW workflow. |
+| Overall dot multipliers | Descriptor/editor/renderer coverage for shared intensity, size, halo, and image mix. | Hands-on visual feel with real audio. |
+| Screen burn controls | Descriptor/editor/renderer coverage for persistence, fast decay, afterglow, and floor fade. | Hands-on decay feel with real audio and host frame pacing. |
+| Release-path handoff | Quickstart, checklist, host matrix, report generator/reviewer, readiness script, bundle script, and bundle verifier. | At least one CLAP and one VST3 host report. |
+
 ## Local Verification Command
 
 From `C:\Users\argit\Documents\_PROGRAMMING\prettyscope-clap`:
@@ -117,6 +130,12 @@ For visual control manifest drift checks:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\test-visual-control-manifest.ps1
+```
+
+For release-readiness audit drift checks:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test-release-readiness-audit.ps1
 ```
 
 ## DAW Testing Still Required
