@@ -18,13 +18,14 @@ Expected:
 Optional status check:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\show-local-plugin-status.ps1 -RequireFresh
 ```
 
 Expected:
 
 - The status script reports installed CLAP/VST3 copies.
 - Install freshness says the installed copies match the build artifacts.
+- The command exits successfully.
 
 ## Plugin Load
 

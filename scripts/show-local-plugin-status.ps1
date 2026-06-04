@@ -1,5 +1,6 @@
 param(
-    [string] $BuildDir = "build-tracer"
+    [string] $BuildDir = "build-tracer",
+    [switch] $RequireFresh
 )
 
 $ErrorActionPreference = "Stop"
@@ -65,27 +66,29 @@ function Write-InstallComparison {
 
     if ($null -eq $built -and $null -eq $installed) {
         Write-Host "${Label}: missing build and install"
-        return
+        return $false
     }
 
     if ($null -eq $built) {
         Write-Host "${Label}: missing build artifact"
-        return
+        return $false
     }
 
     if ($null -eq $installed) {
         Write-Host "${Label}: not installed"
-        return
+        return $false
     }
 
     $timeDelta = [Math]::Abs(($built.LastWriteTime - $installed.LastWriteTime).TotalSeconds)
     if ($built.Size -eq $installed.Size -and $timeDelta -le 2.0) {
         Write-Host "${Label}: installed copy matches build artifact"
+        return $true
     }
     else {
         Write-Host "${Label}: installed copy may be stale"
         Write-Host "  Built:     $($built.Size) bytes, modified $($built.LastWriteTime)"
         Write-Host "  Installed: $($installed.Size) bytes, modified $($installed.LastWriteTime)"
+        return $false
     }
 }
 
@@ -124,14 +127,18 @@ try {
     Write-Host ""
 
     Write-Host "Install freshness"
-    Write-InstallComparison `
+    $clapFresh = Write-InstallComparison `
         "CLAP" `
         (Join-Path $assetRoot "CLAP\Prettyscope.clap") `
         (Join-Path $env:LOCALAPPDATA "Programs\Common\CLAP\Prettyscope.clap")
-    Write-InstallComparison `
+    $vst3Fresh = Write-InstallComparison `
         "VST3" `
         (Join-Path $assetRoot "VST3\Prettyscope.vst3") `
         (Join-Path $env:LOCALAPPDATA "Programs\Common\VST3\Prettyscope.vst3")
+
+    if ($RequireFresh -and !($clapFresh -and $vst3Fresh)) {
+        throw "Installed plugin artifacts are missing or stale."
+    }
 }
 finally {
     Pop-Location

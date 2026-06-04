@@ -32,6 +32,8 @@ the DAW behavior that still needs hands-on testing.
   timestamps after install.
 - A local status script reports current build artifacts and installed plugin
   copies with paths, sizes, timestamps, git revision, and install freshness.
+- The status script supports `-RequireFresh` for machine-checkable local DAW
+  test preflight.
 
 ## Local Verification Command
 
