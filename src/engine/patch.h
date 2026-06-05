@@ -158,6 +158,7 @@ struct Patch : pats::PatchBase<Patch, Param>
               beamIntensity(makeParam(kBeamIntensityVisualParameterId)),
               inputGain(makeParam(kInputGainVisualParameterId)),
               timeScale(makeParam(kTimeScaleVisualParameterId)),
+              discontinuitySkipSamples(makeParam(kDiscontinuitySkipSamplesVisualParameterId)),
               phosphorFastDecay(makeParam(kPhosphorFastDecayVisualParameterId)),
               phosphorAfterglow(makeParam(kPhosphorAfterglowVisualParameterId)),
               beamGlowStrength(makeParam(kBeamGlowStrengthVisualParameterId)),
@@ -221,6 +222,7 @@ struct Patch : pats::PatchBase<Patch, Param>
         Param beamIntensity;
         Param inputGain;
         Param timeScale;
+        Param discontinuitySkipSamples;
         Param phosphorFastDecay;
         Param phosphorAfterglow;
         Param beamGlowStrength;
@@ -250,14 +252,15 @@ struct Patch : pats::PatchBase<Patch, Param>
         std::vector<Param *> params()
         {
             std::vector<Param *> res{&phosphorDecay, &beamIntensity, &inputGain, &timeScale,
-                                     &phosphorFastDecay, &phosphorAfterglow, &beamGlowStrength,
-                                     &beamTraceWidth, &beamGlowWidth, &dot1Intensity, &dot1Size,
-                                     &dot1Halo, &dot1ImageMix, &dot1Rotation, &dot1Aspect,
-                                     &dot2Intensity, &dot2Size, &dot2Halo, &dot2ImageMix,
-                                     &dot2Rotation, &dot2Aspect, &dotOverallIntensity,
-                                     &dotOverallSize, &dotOverallHalo, &dotOverallImageMix,
-                                     &screenBurnPersistence, &screenBurnFastDecay,
-                                     &screenBurnAfterglow, &screenBurnFloorFade};
+                                     &discontinuitySkipSamples, &phosphorFastDecay,
+                                     &phosphorAfterglow, &beamGlowStrength, &beamTraceWidth,
+                                     &beamGlowWidth, &dot1Intensity, &dot1Size, &dot1Halo,
+                                     &dot1ImageMix, &dot1Rotation, &dot1Aspect, &dot2Intensity,
+                                     &dot2Size, &dot2Halo, &dot2ImageMix, &dot2Rotation,
+                                     &dot2Aspect, &dotOverallIntensity, &dotOverallSize,
+                                     &dotOverallHalo, &dotOverallImageMix, &screenBurnPersistence,
+                                     &screenBurnFastDecay, &screenBurnAfterglow,
+                                     &screenBurnFloorFade};
             return res;
         }
 
@@ -268,6 +271,7 @@ struct Patch : pats::PatchBase<Patch, Param>
             state.beamIntensity = beamIntensity.value;
             state.inputGain = inputGain.value;
             state.timeScale = timeScale.value;
+            state.discontinuitySkipSamples = discontinuitySkipSamples.value;
             state.phosphorFastDecay = phosphorFastDecay.value;
             state.phosphorAfterglow = phosphorAfterglow.value;
             state.beamGlowStrength = beamGlowStrength.value;

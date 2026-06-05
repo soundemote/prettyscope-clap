@@ -143,6 +143,7 @@ struct PhosphorParams
     float fastDecay{0.25f};
     float afterglow{0.95f};
     float floorFade{0.00035f};
+    int discontinuitySkipSamples{1};
     int clearRevision{0};
 };
 
@@ -561,8 +562,22 @@ class BeamRenderer
 
         vertices.reserve((signal.size() - 1) * 6);
         constexpr float corners[6] = {0.0f, 1.0f, 2.0f, 2.0f, 1.0f, 3.0f};
+        size_t skipThroughIndex = 0;
         for (size_t i = 1; i < signal.size(); ++i)
         {
+            if (i <= skipThroughIndex)
+            {
+                continue;
+            }
+
+            if (isDiscontinuity(signal, i - 1, i, params.discontinuitySkipSamples))
+            {
+                skipThroughIndex =
+                    std::max(skipThroughIndex,
+                             i + static_cast<size_t>(params.discontinuitySkipSamples) - 1);
+                continue;
+            }
+
             const auto a = mapSample(signal, i - 1, params, width, height);
             const auto b = mapSample(signal, i, params, width, height);
 
@@ -623,6 +638,19 @@ class BeamRenderer
     }
 
   private:
+    static bool isDiscontinuity(const SignalBuffer &signal, size_t previousIndex, size_t index,
+                                int skipSamples)
+    {
+        if (skipSamples <= 0)
+        {
+            return false;
+        }
+
+        constexpr float jumpThreshold = 0.85f;
+        return std::abs(signal.l(index) - signal.l(previousIndex)) > jumpThreshold ||
+               std::abs(signal.r(index) - signal.r(previousIndex)) > jumpThreshold;
+    }
+
     static Point mapSample(const SignalBuffer &signal, size_t index, const PhosphorParams &params,
                            int width, int height)
     {
@@ -1086,6 +1114,8 @@ struct PhosphorScopeRenderer::Impl
         params.afterglow =
             std::clamp(visualState.phosphorAfterglow * afterglowRatio, 0.0f, 1.0f);
         params.floorFade = visualState.screenBurnFloorFade;
+        params.discontinuitySkipSamples =
+            std::clamp(static_cast<int>(std::round(visualState.discontinuitySkipSamples)), 0, 2);
 
         signal.append(snapshot, visualState.timeScale, snapshot.serial);
         const auto vertexCount = beam.uploadSegments(signal, params, width, height);

@@ -33,6 +33,8 @@ struct ScopeVisualState
     float beamIntensity{defaultVisualFloat(kBeamIntensityVisualParameterId, 1.6f)};
     float inputGain{defaultVisualFloat(kInputGainVisualParameterId, 1.0f)};
     float timeScale{defaultVisualFloat(kTimeScaleVisualParameterId, 1.0f)};
+    float discontinuitySkipSamples{
+        defaultVisualFloat(kDiscontinuitySkipSamplesVisualParameterId, 1.0f)};
     float phosphorFastDecay{defaultVisualFloat(kPhosphorFastDecayVisualParameterId, 0.25f)};
     float phosphorAfterglow{defaultVisualFloat(kPhosphorAfterglowVisualParameterId, 0.95f)};
     float beamGlowStrength{defaultVisualFloat(kBeamGlowStrengthVisualParameterId, 0.35f)};
@@ -79,6 +81,9 @@ inline ScopeVisualState sanitizedScopeVisualState(ScopeVisualState state)
         clampVisualFloat(kBeamIntensityVisualParameterId, state.beamIntensity);
     state.inputGain = clampVisualFloat(kInputGainVisualParameterId, state.inputGain);
     state.timeScale = clampVisualFloat(kTimeScaleVisualParameterId, state.timeScale);
+    state.discontinuitySkipSamples =
+        clampVisualFloat(kDiscontinuitySkipSamplesVisualParameterId,
+                         state.discontinuitySkipSamples);
     state.phosphorFastDecay =
         clampVisualFloat(kPhosphorFastDecayVisualParameterId, state.phosphorFastDecay);
     state.phosphorAfterglow =

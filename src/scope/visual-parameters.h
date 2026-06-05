@@ -43,6 +43,8 @@ inline constexpr std::string_view kPhosphorDecayVisualParameterId{"phosphor_deca
 inline constexpr std::string_view kBeamIntensityVisualParameterId{"beam_intensity"};
 inline constexpr std::string_view kInputGainVisualParameterId{"input_gain"};
 inline constexpr std::string_view kTimeScaleVisualParameterId{"time_scale"};
+inline constexpr std::string_view kDiscontinuitySkipSamplesVisualParameterId{
+    "discontinuity_skip_samples"};
 inline constexpr std::string_view kPhosphorFastDecayVisualParameterId{"phosphor_fast_decay"};
 inline constexpr std::string_view kPhosphorAfterglowVisualParameterId{"phosphor_afterglow"};
 inline constexpr std::string_view kBeamGlowStrengthVisualParameterId{"beam_glow_strength"};
@@ -69,7 +71,7 @@ inline constexpr std::string_view kScreenBurnFastDecayVisualParameterId{"screen_
 inline constexpr std::string_view kScreenBurnAfterglowVisualParameterId{"screen_burn_afterglow"};
 inline constexpr std::string_view kScreenBurnFloorFadeVisualParameterId{"screen_burn_floor_fade"};
 
-inline constexpr std::array<VisualFloatParameterDescriptor, 29> kVisualFloatParameters{{
+inline constexpr std::array<VisualFloatParameterDescriptor, 30> kVisualFloatParameters{{
     {kPhosphorDecayVisualParameterId, {1000}, "Phosphor Decay", "Phosphor", 0.98f, 0.80f,
      0.95f, 0.999f, true, true},
     {kBeamIntensityVisualParameterId, {1001}, "Beam Intensity", "Beam", 1.6f, 0.0f, 1.0f,
@@ -78,6 +80,8 @@ inline constexpr std::array<VisualFloatParameterDescriptor, 29> kVisualFloatPara
      true, true},
     {kTimeScaleVisualParameterId, {1003}, "Time Scale", "Signal", 1.0f, 0.25f, 1.0f, 4.0f,
      true, true},
+    {kDiscontinuitySkipSamplesVisualParameterId, {1029}, "Skip Samples", "Signal", 1.0f,
+     0.0f, 1.0f, 2.0f, true, true},
     {kPhosphorFastDecayVisualParameterId, {1004}, "Fast Decay", "Phosphor", 0.25f, 0.0f,
      0.25f, 1.0f, true, true},
     {kPhosphorAfterglowVisualParameterId, {1005}, "Afterglow", "Phosphor", 0.95f, 0.0f,

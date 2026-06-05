@@ -661,6 +661,7 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     patch.visualParams.beamIntensity.value = 2.25f;
     patch.visualParams.inputGain.value = 3.5f;
     patch.visualParams.timeScale.value = 1.75f;
+    patch.visualParams.discontinuitySkipSamples.value = 2.0f;
     patch.visualParams.phosphorFastDecay.value = 0.65f;
     patch.visualParams.phosphorAfterglow.value = 0.85f;
     patch.visualParams.beamGlowStrength.value = 0.55f;
@@ -693,6 +694,7 @@ TEST_CASE("Prettyscope patch visual params produce renderer visual state", "[par
     REQUIRE(state.beamIntensity == Approx(2.25f));
     REQUIRE(state.inputGain == Approx(3.5f));
     REQUIRE(state.timeScale == Approx(1.75f));
+    REQUIRE(state.discontinuitySkipSamples == Approx(2.0f));
     REQUIRE(state.phosphorFastDecay == Approx(0.65f));
     REQUIRE(state.phosphorAfterglow == Approx(0.85f));
     REQUIRE(state.beamGlowStrength == Approx(0.55f));
@@ -727,6 +729,7 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     patch.visualParams.beamIntensity.value = -1.0f;
     patch.visualParams.inputGain.value = 99.0f;
     patch.visualParams.timeScale.value = 0.01f;
+    patch.visualParams.discontinuitySkipSamples.value = 99.0f;
     patch.visualParams.phosphorFastDecay.value = 2.0f;
     patch.visualParams.phosphorAfterglow.value = -2.0f;
     patch.visualParams.beamGlowStrength.value = 100.0f;
@@ -759,6 +762,7 @@ TEST_CASE("Prettyscope renderer visual state is clamped to descriptor ranges", "
     REQUIRE(state.beamIntensity == Approx(0.0f));
     REQUIRE(state.inputGain == Approx(32.0f));
     REQUIRE(state.timeScale == Approx(0.25f));
+    REQUIRE(state.discontinuitySkipSamples == Approx(2.0f));
     REQUIRE(state.phosphorFastDecay == Approx(1.0f));
     REQUIRE(state.phosphorAfterglow == Approx(0.0f));
     REQUIRE(state.beamGlowStrength == Approx(2.0f));
